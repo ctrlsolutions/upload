@@ -40,13 +40,13 @@ import BaseFormButton from '@/components/Global/BaseFormButton.vue';
 
 const emit = defineEmits(["close", "submit"]);
 
-const fullName = ref('');
+const password = ref('');
 const gender = ref('');
 const dob = ref('');
-const email = ref('');
+const retype = ref('');
 
 const handleSubmit = () => {
-  emit('submit', { fullName: fullName.value, gender: gender.value, dob: dob.value, email: email.value });
+  emit('submit', { password: password.value, gender: gender.value, dob: dob.value, retype: retype.value });
 };
 
 const closeModal = () => {
