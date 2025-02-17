@@ -28,7 +28,8 @@
                   v-model="sex"
                   value="male"
                   class="registration-radio-input"
-                />
+
+                  />
                 <label for="male" class="registration-radio-label">Male</label>
               </div>
               <div class="registration-radio-group">
