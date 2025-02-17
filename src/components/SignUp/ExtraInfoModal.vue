@@ -1,273 +1,143 @@
 <template>
-  <div class="registration-container">
-    <div class="registration-modal">
-      <header class="registration-header">
-        <!-- <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/0a9e4e2d3601b6a2e449ba033449a9a393f64134d26a03425103d950035f25c2?apiKey=b97adb845ad745fdabf283f95e3c166e&" alt="Logo" class="registration-logo" /> -->
-      </header>
-      <div class="registration-content">
-        <h2 class="registration-title">Before you proceed...</h2>
-        <p class="registration-subtitle">We need a few more info from you.</p>
-        <form @submit.prevent="handleSubmit" class="registration-form">
-          <div class="registration-form-row">
-            <div class="registration-form-group">
-              <label for="birthdate" class="registration-label">Birthdate:</label>
-              <input
-                type="text"
-                id="birthdate"
-                v-model="birthdate"
-                placeholder="dd/mm/yyyy"
-                class="registration-input"
-              />
+  <div class="modal-overlay">
+    <div class="modal-container">
+      <img src="@/assets/up-logo.png" alt="uplogo" className="imageLogo max-w-full h-auto" />
+      <div class="modal-content">
+        <h1 class="modal-title">Before you proceed...</h1>
+        <h5 class="modal-subtitle">We need a few more info from you.</h5>
+        <form @submit.prevent="handleSubmit" class="form-container">
+          <div class="input-container">
+            <label class="label">Birthdate:</label>
+            <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
+            <div class="gender-container">
+              <label class="label">Sex:</label>
+              <BaseFormRadio id="male" label="Male" v-model="gender" />
+              <BaseFormRadio id="female" label="Female" v-model="gender" />
             </div>
-            <fieldset class="registration-fieldset">
-              <legend class="registration-label">Sex:</legend>
-              <div class="registration-radio-group">
-                <input
-                  type="radio"
-                  id="male"
-                  v-model="sex"
-                  value="male"
-                  class="registration-radio-input"
+          </div>
 
-                  />
-                <label for="male" class="registration-radio-label">Male</label>
-              </div>
-              <div class="registration-radio-group">
-                <input
-                  type="radio"
-                  id="female"
-                  v-model="sex"
-                  value="female"
-                  class="registration-radio-input"
-                />
-                <label for="female" class="registration-radio-label">Female</label>
-              </div>
-            </fieldset>
+          <BaseTextInput id="password" type="password" v-model="password" placeholder="Password" class="password" />
+          <BaseTextInput id="retype" type="password" v-model="password" placeholder="Re-enter password" class="retype"/>
+
+          <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
+
+          <div class="button-container">
+            <BaseFormButton type="button" variant="black" route="" @click="closeModal">Cancel</BaseFormButton>
+            <BaseFormButton type="submit" variant="red" route="" @click="handleSubmit">Proceed</BaseFormButton>
           </div>
-          <div class="registration-form-group">
-            <label for="password" class="registration-label">Password</label>
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              class="registration-input"
-            />
-          </div>
-          <div class="registration-form-group">
-            <label for="confirmPassword" class="registration-label">Re-enter password</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              v-model="confirmPassword"
-              class="registration-input"
-            />
-          </div>
-          <p class="registration-info-text">
-            Please fill up the required fields and click proceed to continue.
-          </p>
-          <div class="registration-button-container">
-            <button
-              type="button"
-              @click="handleCancel"
-              class="registration-button registration-button-cancel"
-            >
-              CANCEL
-            </button>
-            <button
-              type="submit"
-              class="registration-button registration-button-proceed"
-            >
-              PROCEED
-            </button>
-          </div>
-        </form>
+          </form>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'RegistrationModal',
-  data() {
-    return {
-      birthdate: '',
-      sex: '',
-      password: '',
-      confirmPassword: '',
-    };
-  },
-  methods: {
-    handleSubmit() {
-      // Handle form submission
-    },
-    handleCancel() {
-      // Handle cancel action
-    },
-  },
+<script setup>
+import { ref, defineEmits } from 'vue';
+import BaseTextInput from '@/components/Global/BaseTextInput.vue';
+import BaseFormRadio from '@/components/Global/BaseFormRadio.vue';
+import BaseDateInput from '@/components/Global/BaseDateInput.vue';
+import BaseFormButton from '@/components/Global/BaseFormButton.vue';
+
+const emit = defineEmits(["close", "submit"]);
+
+const fullName = ref('');
+const gender = ref('');
+const dob = ref('');
+const email = ref('');
+
+const handleSubmit = () => {
+  emit('submit', { fullName: fullName.value, gender: gender.value, dob: dob.value, email: email.value });
+};
+
+const closeModal = () => {
+  emit('close');
 };
 </script>
 
-<style scoped>
-.registration-container {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto -5px;
-  padding: 40px;
-}
-
-.registration-modal {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
-  margin: 0 auto;
-  overflow: hidden;
-}
-
-.registration-header {
-  background-color: #166534;
-  padding: 16px 24px;
+<style lang="scss" scoped>
+.form-container {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
 }
 
-.registration-logo {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
+.imageLogo {
+  max-width: 100%;
+  height: auto;
 }
 
-.registration-content {
-  padding: 24px;
-}
-
-.registration-title {
-  color: #111827;
-  margin-bottom: 8px;
-  font: 600 24px "Inter", sans-serif;
-}
-
-.registration-subtitle {
-  color: #6b7280;
-  margin-bottom: 24px;
-  font: 14px "Inter", sans-serif;
-}
-
-.registration-form-row {
-  display: flex;
-  gap: 24px;
-  margin-bottom: 16px;
-}
-
-.registration-form-group {
-  flex: 1;
-  margin-bottom: 16px;
-}
-
-.registration-label {
-  color: #6b7280;
-  margin-bottom: 8px;
-  font: 14px "Inter", sans-serif;
-  display: block;
-}
-
-.registration-input {
+.modal-overlay {
+  font-family: 'Inter', sans-serif;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  color: #111827;
-  font: 14px "Inter", sans-serif;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.registration-fieldset {
-  border: none;
-  padding: 0;
-  margin: 0;
+.modal-content {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  text-align: left;
 }
 
-.registration-radio-group {
+.modal-title {
+  text-align: left;
+  font-weight: 800;
+}
+
+.modal-subtitle {
+  align-self: flex-start;
+  font-weight: 700;
+  color: rgb(85, 84, 84);
+}
+
+.modal-container {
+  background: white;
+  border-radius: 0.8rem;
+  width: 40rem;
+  height: 30rem;
+  text-align: center;
+}
+
+.label {
+  font-weight: 600;
+  color: rgb(85, 84, 84);
+}
+
+.input-container {
+  width: 100%;
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
+  padding-top: 1rem;
 }
 
-.registration-radio-input {
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  accent-color: #166534;
+.password {
+  margin-bottom: 2rem;
+  width: 100%;
+  height: 3rem;
 }
 
-.registration-radio-label {
-  color: #374151;
-  font: 14px "Inter", sans-serif;
+.retype {
+  margin-bottom: 1rem;
+  width: 100%;
+  height: 3rem;
 }
 
-.registration-info-text {
-  color: #6b7280;
-  margin-top: 16px;
-  font: 12px "Inter", sans-serif;
-}
-
-.registration-button-container {
+.gender-container {
   display: flex;
-  gap: 16px;
-  margin-top: 24px;
+  justify-content: center;
+  gap: 1rem;
 }
 
-.registration-button {
-  padding: 10px 24px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: none;
-  font: 500 14px "Inter", sans-serif;
-}
-
-.registration-button-cancel {
-  background-color: #1f2937;
-  color: #ffffff;
-}
-
-.registration-button-proceed {
-  background-color: #991b1b;
-  color: #ffffff;
-}
-
-@media (max-width: 991px) {
-  .registration-container {
-    padding: 24px;
-  }
-
-  .registration-modal {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .registration-container {
-    padding: 16px;
-  }
-
-  .registration-content {
-    padding: 16px;
-  }
-
-  .registration-form-row {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .registration-button-container {
-    flex-direction: column;
-  }
-
-  .registration-button {
-    width: 100%;
-  }
+.button-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 0.5rem;
 }
 </style>
