@@ -100,7 +100,7 @@ const closeModal = () => {
   background: white;
   border-radius: 0.8rem;
   width: 40rem;
-  height: 30rem;
+  height: 31rem;
   text-align: center;
 }
 
@@ -139,6 +139,6 @@ const closeModal = () => {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  margin-top: 0.5rem;
+  margin-top: 0.8rem;
 }
 </style>
