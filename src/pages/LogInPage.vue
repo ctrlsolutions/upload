@@ -32,6 +32,7 @@
         {{ errors.password }}
       </p>
     </div>
+
     <div class="forgot-password">
       <a href="#" class="forgotp">Forgot Password?</a>
     </div>
