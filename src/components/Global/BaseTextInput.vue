@@ -1,59 +1,61 @@
 <template>
-  <input 
-  :id="id"
-  :type="type" 
-  :class="['input-box',variantClass]" 
-  :style="boxStyle" 
-  :placeholder="placeholder"
-  v-bind="$attrs"
+  <input
+    :id="id"
+    :type="type"
+    :class="['input-box', variantClass]"
+    :style="boxStyle"
+    :placeholder="placeholder"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+    v-bind="$attrs"
   />
 </template>
 
 <script>
 export default {
-text: String,
-props: {
-  id: {
-    type: String,
-    required: true,
+  props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    type: {
+      type: String,
+      default: 'text',
+    },
+    placeholder: {
+      type: String,
+      default: 'Placeholder',
+    },
+    variant: {
+      type: String,
+      default: 'red',
+    },
+    width: {
+      type: String,
+      default: 'null',
+    },
+    height: {
+      type: String,
+      default: 'null',
+    },
+    modelValue: {
+      type: String,
+      default: '',
+    },
   },
-  type: {
-    type: String,
-    default: 'text',
+  computed: {
+    variantClass() {
+      return `input-box--${this.variant}`;
+    },
+    boxStyle() {
+      const styles = { height: this.height };
+      if (this.width) {
+        styles.width = this.width;
+      }
+      return styles;
+    },
   },
-  placeholder: {
-    type: String,
-    default: 'Placeholder',
-  },
-  variant: {
-    type: String,
-    default: 'red',
-  },
-  width: {
-    type: String,
-    default: 'null',
-  },
-  height: {
-    type:String,
-    default: 'null',
-  },
-},
-computed: {
-  variantClass() {
-    return `input-box--${this.variant}`
-  },
-  boxStyle() {
-    const styles = {
-      height: this.height,
-    }
-    if(this.width) {
-      styles.width = this.width
-    }
-
-    return styles
-  }
-},
-}
+};
 </script>
 
 <style lang="scss" scoped>

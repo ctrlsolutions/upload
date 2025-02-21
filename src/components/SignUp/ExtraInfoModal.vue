@@ -19,7 +19,10 @@
           </div>
 
           <BaseTextInput id="password" type="password" v-model="password" placeholder="Password" class="password" />
-          <BaseTextInput id="retype" type="password" v-model="password" placeholder="Re-enter password" class="retype"/>
+          <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
+
+          <BaseTextInput id="retype" type="password" v-model="retype" placeholder="Re-enter password" class="retype"/>
+          <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
 
           <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
 
@@ -43,12 +46,38 @@ import BaseFormButton from '@/components/Global/BaseFormButton.vue';
 const emit = defineEmits(["close", "submit"]);
 
 const password = ref('');
+const retype = ref('');
 const gender = ref('');
 const dob = ref('');
-const retype = ref('');
+const errors = ref({
+  password: '',
+  retype: ''
+});
 
 const handleSubmit = () => {
-  emit('submit', { password: password.value, gender: gender.value, dob: dob.value, retype: retype.value });
+  errors.value.password = '';
+  errors.value.retype = '';
+
+  const trimmedPassword = password.value.trim();
+  const trimmedRetype = retype.value.trim();
+
+  if (!trimmedPassword) {
+    errors.value.password = "Password is required.";
+  } else if (trimmedPassword.length < 8) {
+    errors.value.password = "Password must be at least 8 characters.";
+  }
+
+  if (!trimmedRetype) {
+    errors.value.retype = "Please re-enter your password.";
+  } else if (trimmedPassword !== trimmedRetype && trimmedRetype.length >= 8) {
+    errors.value.retype = "Passwords do not match.";
+  } else if (trimmedRetype.length < 8) {
+    errors.value.retype = "Password must be at least 8 characters.";
+  }
+
+  if (!errors.value.password && !errors.value.retype) {
+    emit('submit', { password: trimmedPassword, gender: gender.value, dob: dob.value });
+  }
 };
 
 const closeModal = () => {
@@ -136,13 +165,13 @@ const closeModal = () => {
 }
 
 .password {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   height: 3rem;
 }
 
 .retype {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   height: 3rem;
 }
@@ -157,6 +186,13 @@ const closeModal = () => {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
+}
+
+.error-message {
+  color: red;
+  margin-top: -1.5rem;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
 }
 </style>
