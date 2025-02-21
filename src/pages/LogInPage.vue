@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <form class="login-container" v-on:submit.prevent="loginUser">
     <div class="login-header">
       <h1>Log in</h1>
     </div>
@@ -110,6 +110,23 @@ export default {
     };
   }
 };
+const updatePassword = (e) => {
+  userData.value.password = e.target.value;
+};
+
+const loginUser = async () => {
+  console.log(userData.value.email);
+  console.log(userData.value.password);
+
+  try {
+    const response = await axios.post('http://127.0.0.1:8000/api/user/login/', userData.value,);
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  
 </script>
 
 <style lang="scss" scoped>
