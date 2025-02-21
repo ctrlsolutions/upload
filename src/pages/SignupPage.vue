@@ -6,7 +6,7 @@
     <div class="form-wrapper">
       <div class="signup-form">
         <InputField :value="userData.email" @input="updateEmail" id="email" type="email" placeholder="Email" variant = "red" width ="100%" />
-        <InputField :value="userData.password1" @input="updatePassword1" id="password" type="password" placeholder="Password" variant="red" width="100%" />
+        <InputField :value="userData.password" @input="updatePassword" id="password" type="password" placeholder="Password" variant="red" width="100%" />
         <InputField :value="userData.password2" @input="updatePassword2" type="password" placeholder="Re-enter password" variant="red" width="100%" />
 
         <div class="separator"></div>
@@ -20,8 +20,8 @@
 
         <div class="radio-group">
           <label class="label">Sex</label>
-          <FormRadio id="male" label="Male" value="userData.sex" @input="sex" />
-          <FormRadio id="female" label="Female" value="userData.sex" @input="sex" />
+          <FormRadio id="M" label="Male" value="userData.sex" @input="sex" />
+          <FormRadio id="F" label="Female" value="userData.sex" @input="sex" />
         </div>
 
         <div class="dob-group">
@@ -38,7 +38,7 @@
 
     <div class="button-group">
       <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem" :onclick="submitForm">SUBMIT</FormButton>
+      <FormButton variant="red" width="12rem" :click="submitForm">SUBMIT</FormButton>
     </div>
 
     <p class="or-text">OR</p>
@@ -57,7 +57,7 @@ import BaseDateInput from "@/components/Global/BaseDateInput.vue";
 
 const userData = ref({
   email: '',
-  password1: '',
+  password: '',
   password2: '',
   first_name: '',
   middle_name: '',
@@ -71,8 +71,8 @@ const userData = ref({
 const updateEmail = (event) => {
   userData.value.email = event.target.value;
 };
-const updatePassword1 = (event) => {
-  userData.value.password1 = event.target.value;
+const updatePassword = (event) => {
+  userData.value.password = event.target.value;
 };
 const updatePassword2 = (event) => {
   userData.value.password2 = event.target.value;
@@ -99,7 +99,7 @@ const birthdate = (event) => {
 
 const submitForm = async () => {
   console.log("DATA: " + userData.value.email);
-  console.log("DATA: " + userData.value.password1);
+  console.log("DATA: " + userData.value.password);
   console.log("DATA: " + userData.value.password2);
   console.log("DATA: " + userData.value.first_name);
   console.log("DATA: " + userData.value.middle_name);
