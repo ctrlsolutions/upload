@@ -1,7 +1,9 @@
 <template>
   <div class="modal-overlay">
     <div class="modal-container">
-      <img src="@/assets/up-logo.png" alt="uplogo" className="imageLogo max-w-full h-auto" />
+      <div className="header">
+        <img src="@/assets/up-logo.png" alt="uplogo" className="image-logo"/>
+      </div>
       <div class="modal-content">
         <h1 class="modal-title">Before you proceed...</h1>
         <h5 class="modal-subtitle">We need a few more info from you.</h5>
@@ -61,9 +63,24 @@ const closeModal = () => {
   align-items: center;
 }
 
-.imageLogo {
-  max-width: 100%;
-  height: auto;
+.header {
+  background: linear-gradient(90deg, $green, #014421, #036A34, #036934, #058E46);
+  height: 3.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 1rem;
+  position: relative;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  overflow: hidden;
+}
+
+.image-logo {
+  width: 25%;
+  margin-right: 1rem;
+  overflow: hidden;
 }
 
 .modal-overlay {
@@ -80,6 +97,7 @@ const closeModal = () => {
 }
 
 .modal-content {
+  margin-top: 0.8rem;
   padding-left: 2.5rem;
   padding-right: 2.5rem;
   text-align: left;
@@ -98,9 +116,9 @@ const closeModal = () => {
 
 .modal-container {
   background: white;
-  border-radius: 0.8rem;
+  border-radius: 1.1rem;
   width: 40rem;
-  height: 31rem;
+  height: 32rem;
   text-align: center;
 }
 
@@ -139,6 +157,6 @@ const closeModal = () => {
   width: 100%;
   display: flex;
   justify-content: space-around;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
 }
 </style>
