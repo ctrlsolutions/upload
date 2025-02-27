@@ -1,7 +1,6 @@
 <template>
   <input
-    :id="name"
-    :name="name"
+    :id="id"
     :type="type"
     :class="['input-box', variantClass]"
     :style="boxStyle"
@@ -15,7 +14,7 @@
 <script>
 export default {
   props: {
-    name: {
+    id: {
       type: String,
       required: true,
     },
@@ -39,16 +38,17 @@ export default {
       type: String,
       default: 'null',
     },
-    modelValue: String,
+    modelValue: {
+      type: String,
+      default: '',
+    },
   },
   computed: {
     variantClass() {
       return `input-box--${this.variant}`;
     },
     boxStyle() {
-      const styles = {
-        height: this.height,
-      };
+      const styles = { height: this.height };
       if (this.width) {
         styles.width = this.width;
       }
