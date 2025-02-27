@@ -43,9 +43,9 @@
     <div class="or-text">
       <p>OR</p>
     </div>
-    <div class="cont-google">
+    <form class="cont-google">
       <BaseFormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton>
-    </div>
+    </form>
   </div>
 </template>
 
