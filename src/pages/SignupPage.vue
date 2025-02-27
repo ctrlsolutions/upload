@@ -5,18 +5,53 @@
 
     <div class="form-wrapper">
       <form class="signup-form">
-        <InputField id="email" type="text" placeholder="Email" variant = "red" width ="100%" />
-        <InputField id="password" type="text" placeholder="Password" variant="red" width="100%" />
-        <InputField id="re-password" type="text" placeholder="Re-enter password" variant="red" width="100%" />
+        <InputField
+          id="email"
+          type="text"
+          placeholder="Email"
+          variant="red"
+          width="100%"
+        />
+        <InputField
+          id="password"
+          type="text"
+          placeholder="Password"
+          variant="red"
+          width="100%"
+        />
+        <InputField
+          id="re-password"
+          type="text"
+          placeholder="Re-enter password"
+          variant="red"
+          width="100%"
+        />
 
         <div class="separator"></div>
 
         <div class="name-fields">
-          <InputField id="first-name" type="text" placeholder="First name" variant = "red" width ="100%" />
-          <InputField id="middle-name" type="text" placeholder="Middle name" variant="red" width="100%" />
-
+          <InputField
+            id="first-name"
+            type="text"
+            placeholder="First name"
+            variant="red"
+            width="100%"
+          />
+          <InputField
+            id="middle-name"
+            type="text"
+            placeholder="Middle name"
+            variant="red"
+            width="100%"
+          />
         </div>
-        <InputField id="last-name" type="text" placeholder="Last name" variant="red" width="100%" />
+        <InputField
+          id="last-name"
+          type="text"
+          placeholder="Last name"
+          variant="red"
+          width="100%"
+        />
 
         <div class="radio-group">
           <label class="label">Sex</label>
@@ -26,11 +61,11 @@
 
         <div class="dob-group">
           <label class="label">Date of Birth</label>
-          <BaseDateInput 
-            v-model="selectedDate" 
-            width="15rem" 
-            :min="'2000-01-01'" 
-            :max="'2020-12-31'" 
+          <BaseDateInput
+            v-model="selectedDate"
+            width="15rem"
+            :min="'2000-01-01'"
+            :max="'2020-12-31'"
           />
         </div>
       </form>
@@ -42,37 +77,53 @@
     </div>
 
     <p class="or-text">OR</p>
-    <FormButton variant="red" width="25rem">CONTINUE WITH GOOGLE</FormButton>
+
+    <GoogleLogin :callback="googleSignUp" prompt auto-login
+      ><FormButton variant="red" width="25rem"
+        >CONTINUE WITH GOOGLE</FormButton
+      ></GoogleLogin
+    >
   </div>
 </template>
 
-
 <script setup>
-import { ref } from 'vue';
-import FormRadio from '@/components/Global/BaseFormRadio.vue';
-import InputField from '@/components/Global/BaseTextInput.vue';
-import FormButton from '@/components/Global/BaseFormButton.vue';
-import BaseDateInput from "@/components/Global/BaseDateInput.vue";
+import { ref } from 'vue'
+import FormRadio from '@/components/Global/BaseFormRadio.vue'
+import InputField from '@/components/Global/BaseTextInput.vue'
+import FormButton from '@/components/Global/BaseFormButton.vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { decodeCredential } from 'vue3-google-login'
+
+const router = useRouter()
+
+const googleSignUp = response => {
+  console.log('GOOGLE LOGIN RESPONSE', response)
+
+  let profile = decodeCredential(response.credential)
+
+  localStorage.setItem('user', JSON.stringify(profile))
+  // router.push('/dashboard')
+}
 
 const selectedDate = ref('')
 
-const selectedSex = ref('male');
+const selectedSex = ref('male')
 </script>
 
-
 <style lang="scss" scoped>
-
 .BaseDateInput {
   margin-left: 100rem;
 }
 
 .radio-group {
-    display: flex;
-    align-items: center;
-    gap: -0.5rem;
-    margin: -0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: -0.5rem;
+  margin: -0.5rem 0;
 }
-  
+
 .signup-container {
   max-width: 25rem;
   margin: auto;
@@ -89,11 +140,11 @@ const selectedSex = ref('male');
 }
 
 .form-wrapper {
-  max-height: 19.5rem; 
+  max-height: 19.5rem;
   overflow-y: auto;
   padding-right: 1rem;
   margin-bottom: -2rem;
-  margin-top: 2rem; 
+  margin-top: 2rem;
 }
 
 .form-wrapper::-webkit-scrollbar {
@@ -106,13 +157,13 @@ const selectedSex = ref('male');
 
 .form-wrapper::-webkit-scrollbar-thumb {
   background: rgba($red, 0.5);
-  border-radius: 1rem; 
+  border-radius: 1rem;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap:1.2rem;
+  gap: 1.2rem;
 }
 
 .label {
@@ -128,7 +179,7 @@ const selectedSex = ref('male');
   height: 0.1rem;
   background-color: $red;
   margin: 0.5rem 0;
-  opacity:80%;
+  opacity: 80%;
 }
 
 .name-fields {
@@ -160,9 +211,8 @@ const selectedSex = ref('male');
   padding-bottom: 0.5rem;
 }
 
-.subtitle{
-  font-weight:800;
-  color:#6f6f6f;
+.subtitle {
+  font-weight: 800;
+  color: #6f6f6f;
 }
-
 </style>
