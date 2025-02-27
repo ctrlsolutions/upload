@@ -79,7 +79,8 @@ export default {
   color: $white;
   text-align: center;
   font-size: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: -0.3rem;
+  margin-top:0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;

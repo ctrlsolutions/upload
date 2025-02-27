@@ -58,24 +58,25 @@ export default {
 };
 </script>
 
+
 <style lang="scss" scoped>
   .input-box {
     font-family: "Inter", serif;
     height: fit-content;
-    border-radius: 0.8rem;
+    border-radius: 0.6rem;
     @include sm {
       width: 15rem;
-      padding: 0.5rem 0.6rem;
+      padding: 0.6rem 0.6rem;
       font-size: 1em;
     }
     @include md {
       width: 18rem;
-      padding: 0.5rem 0.8rem;
+      padding: 0.6rem 0.8rem;
       font-size: 1em;
     }
     @include lg {
       width: 20rem;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       font-size: 1.3em;
     }
 
@@ -85,10 +86,11 @@ export default {
     }
 
     &--red {
-      border: 0.15rem $red;
+      font-size:0.9rem;
+      border: 0.08rem $red;
       border-style: solid;
       outline: none;
-      font-weight: bold;
+      font-weight: 850;
       color: $red;
 
       &::placeholder {
