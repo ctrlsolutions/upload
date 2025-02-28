@@ -87,23 +87,27 @@ export default {
   transition: all 0.3s ease;
 
   @include sm {
-    width: 8rem;
+    width: 9rem;
     height: 0.5rem;
+    font-size: .4rem
   }
 
   @include md {
-    width: 10rem;
+    width: 13rem;
     height: 1rem;
+    font-size: .7rem;
   }
 
   @include lg {
-    width: 15rem;
+    width: 16.5rem;
     height: 2rem;
+    font-size: .75rem;
   }
 
   @include xl {
-    width: 16rem;
+    width: 16.5rem;
     height: 3.5rem;
+    font-size: .75rem;
   }
 }
 
