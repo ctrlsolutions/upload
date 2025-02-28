@@ -2,15 +2,20 @@
   <div class="modal-overlay">
     <div class="modal-container">
       <div className="header">
-        <img src="@/assets/up-logo.png" alt="uplogo" className="image-logo"/>
+        <img src="@/assets/up-logo.png" alt="uplogo" className="image-logo" />
       </div>
       <div class="modal-content">
         <h1 class="modal-title">Before you proceed...</h1>
-        <h5 class="modal-subtitle">We need a few more info from you.</h5>
+        <h5 class="modal-subtitle">We need more information from you.</h5>
         <form @submit.prevent="handleSubmit" class="form-container">
           <div class="input-container">
             <label class="label">Birthdate:</label>
-            <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
+            <BaseDateInput
+              id="date"
+              type="date"
+              v-model="dob"
+              placeholder="Birthdate"
+            />
             <div class="gender-container">
               <label class="label">Sex:</label>
               <BaseFormRadio id="male" label="Male" v-model="gender" />
@@ -18,71 +23,101 @@
             </div>
           </div>
 
-          <BaseTextInput id="password" type="password" v-model="password" placeholder="Password" class="password" />
-          <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
+          <BaseTextInput
+            id="password"
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            class="password"
+          />
+          <p v-if="errors.password" class="error-message">
+            {{ errors.password }}
+          </p>
 
-          <BaseTextInput id="retype" type="password" v-model="retype" placeholder="Re-enter password" class="retype"/>
+          <BaseTextInput
+            id="retype"
+            type="password"
+            v-model="retype"
+            placeholder="Re-enter password"
+            class="retype"
+          />
           <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
 
-          <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
+          <h5 class="modal-subtitle">
+            Please fill up the required fields and click proceed to continue.
+          </h5>
 
           <div class="button-container">
-            <BaseFormButton type="button" variant="black" route="" @click="closeModal">Cancel</BaseFormButton>
-            <BaseFormButton type="submit" variant="red" route="" @click="handleSubmit">Proceed</BaseFormButton>
+            <BaseFormButton
+              type="button"
+              variant="black"
+              route=""
+              @click="closeModal"
+              >Cancel</BaseFormButton
+            >
+            <BaseFormButton
+              type="submit"
+              variant="red"
+              route=""
+              @click="handleSubmit"
+              >Proceed</BaseFormButton
+            >
           </div>
-          </form>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue';
-import BaseTextInput from '@/components/Global/BaseTextInput.vue';
-import BaseFormRadio from '@/components/Global/BaseFormRadio.vue';
-import BaseDateInput from '@/components/Global/BaseDateInput.vue';
-import BaseFormButton from '@/components/Global/BaseFormButton.vue';
+import { ref, defineEmits } from 'vue'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+import BaseFormRadio from '@/components/Global/BaseFormRadio.vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 
-const emit = defineEmits(["close", "submit"]);
+const emit = defineEmits(['close', 'submit'])
 
-const password = ref('');
-const retype = ref('');
-const gender = ref('');
-const dob = ref('');
+const password = ref('')
+const retype = ref('')
+const gender = ref('')
+const dob = ref('')
 const errors = ref({
   password: '',
-  retype: ''
-});
+  retype: '',
+})
 
 const handleSubmit = () => {
-  errors.value.password = '';
-  errors.value.retype = '';
+  errors.value.password = ''
+  errors.value.retype = ''
 
-  const trimmedPassword = password.value.trim();
-  const trimmedRetype = retype.value.trim();
+  const trimmedPassword = password.value.trim()
+  const trimmedRetype = retype.value.trim()
 
   if (!trimmedPassword) {
-    errors.value.password = "Password is required.";
+    errors.value.password = 'Password is required.'
   } else if (trimmedPassword.length < 8) {
-    errors.value.password = "Password must be at least 8 characters.";
+    errors.value.password = 'Password must be at least 8 characters.'
   }
 
   if (!trimmedRetype) {
-    errors.value.retype = "Please re-enter your password.";
+    errors.value.retype = 'Please re-enter your password.'
   } else if (trimmedPassword !== trimmedRetype && trimmedRetype.length >= 8) {
-    errors.value.retype = "Passwords do not match.";
-  } else if (trimmedRetype.length < 8) {
-    errors.value.retype = "Password must be at least 8 characters.";
+    errors.value.retype = 'Passwords do not match.'
   }
 
   if (!errors.value.password && !errors.value.retype) {
-    emit('submit', { password: trimmedPassword, gender: gender.value, dob: dob.value });
+    emit('submit', {
+      password: trimmedPassword,
+      gender: gender.value,
+      dob: dob.value,
+    })
   }
-};
+}
 
 const closeModal = () => {
-  emit('close');
-};
+  emit('close')
+}
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +128,14 @@ const closeModal = () => {
 }
 
 .header {
-  background: linear-gradient(90deg, $green, #014421, #036A34, #036934, #058E46);
+  background: linear-gradient(
+    90deg,
+    $green,
+    #014421,
+    #036a34,
+    #036934,
+    #058e46
+  );
   height: 3.5rem;
   width: 100%;
   display: flex;

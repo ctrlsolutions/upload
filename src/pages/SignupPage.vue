@@ -78,11 +78,17 @@
 
     <p class="or-text">OR</p>
 
-    <GoogleLogin :callback="googleSignUp" prompt auto-login
-      ><FormButton variant="red" width="25rem"
+    <GoogleLogin :callback="googleSignUp" prompt popup-type="TOKEN"
+      ><FormButton variant="red" width="25rem" type="button"
         >CONTINUE WITH GOOGLE</FormButton
       ></GoogleLogin
     >
+    <ExtraInfoModal
+      v-if="showModal"
+      :profile="googleProfile"
+      @submit="submitToBackend"
+      @close="showModal = false"
+    />
   </div>
 </template>
 
@@ -92,19 +98,43 @@ import FormRadio from '@/components/Global/BaseFormRadio.vue'
 import InputField from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import ExtraInfoModal from '@/components/SignUp/ExtraInfoModal.vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-import { decodeCredential } from 'vue3-google-login'
+
+const googleProfile = ref(null)
+const accessToken = ref(null)
+const showModal = ref(false)
 
 const router = useRouter()
 
 const googleSignUp = response => {
   console.log('GOOGLE LOGIN RESPONSE', response)
 
-  let profile = decodeCredential(response.credential)
+  accessToken.value = response.access_token
 
-  localStorage.setItem('user', JSON.stringify(profile))
-  // router.push('/dashboard')
+  showModal.value = true
+}
+// const extraInfo = ref(null)
+const submitToBackend = async extraInfo => {
+  console.log(extraInfo)
+  try {
+    const response = await axios.post(
+      import.meta.env.VITE_API_BASE_URL + '/user/google/signup/',
+      {
+        access_token: accessToken.value, // Send the Google token
+        extra_info: extraInfo, // Include the extra user data
+      },
+    )
+
+    console.log('Signup successful:', response.data)
+    showModal.value = false // Close modal
+  } catch (error) {
+    console.error(
+      'Error submitting form:',
+      error.response?.data || error.message,
+    )
+  }
 }
 
 const selectedDate = ref('')
