@@ -5,110 +5,37 @@
     </div>
     <p>Welcome! Log in to access your dashboard.</p>
     <div class="input-group">
-      <BaseTextInput
-        name="email"
-        type="email"
-        placeholder="Email"
-        variant="green"
-        width="100%"
-        height="3.5rem"
-        v-model="form.email"
-        @input="clearError('email')"
-      />
-      <p v-if="hasAttemptedSubmit && errors.email" class="error-message">
-        {{ errors.email }}
-      </p>
-
-      <BaseTextInput
-        name="password"
-        type="password"
-        placeholder="Password"
-        variant="green"
-        width="100%"
-        height="3.5rem"
-        v-model="form.password"
-        @input="clearError('password')"
-      />
-      <p v-if="hasAttemptedSubmit && errors.password" class="error-message">
-        {{ errors.password }}
-      </p>
+      <BaseTextInput :value="userData.email" @input="updateEmail" id="email" type="email" placeholder="Email" variant="green" width="100%" height="3.5rem"/>
+      <BaseTextInput :value="userData.password" @input="updatePassword" id="password" type="password" placeholder="Password" v-model="password" variant="green" width="100%" height="3.5rem"/>
     </div>
-
     <div class="forgot-password">
       <a href="#" class="forgotp">Forgot Password?</a>
     </div>
     <div class="login-button">
-      <BaseFormButton variant="green" width="100%" @click="validateForm">LOG IN</BaseFormButton>
+      <BaseFormButton variant="green" width="100%" :click="loginUser">LOG IN</BaseFormButton>
     </div>
     <div class="or-text">
       <p>OR</p>
     </div>
-    <form class="cont-google">
+    <div class="cont-google">
       <BaseFormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton>
-    </form>
-  </div>
+    </div>
+  </form>
 </template>
 
-<script>
-import { reactive, ref } from "vue";
+<script setup>
 import BaseTextInput from "@/components/Global/BaseTextInput.vue";
 import BaseFormButton from "@/components/Global/BaseFormButton.vue";
+import { ref } from "vue";
+import axios from 'axios';
 
-export default {
-  components: {
-    BaseTextInput,
-    BaseFormButton,
-  },
+const userData = ref({
+  email: "",
+  password: "",
+});
 
-  setup() {
-    const form = reactive({
-      email: "",
-      password: "",
-    });
-
-    const errors = reactive({
-      email: "",
-      password: "",
-    });
-
-    const hasAttemptedSubmit = ref(false);
-
-    const validateForm = () => {
-      hasAttemptedSubmit.value = true;
-
-      errors.email = "";
-      errors.password = "";
-
-      if (!form.email) {
-        errors.email = "Email is required.";
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        errors.email = "Invalid email format.";
-      }
-
-      if (!form.password) {
-        errors.password = "Password is required.";
-      } else if (form.password.length < 6) {
-        errors.password = "Password must be at least 6 characters.";
-      }
-      console.log("Errors object:", errors);
-      if (!errors.email && !errors.password) {
-        console.log("Form submitted successfully!", form);
-      }
-
-    };
-
-    const clearError = (field) => {
-      errors[field] = "";
-    };
-
-    return {
-      form,
-      errors,
-      hasAttemptedSubmit,
-      validateForm,
-      clearError,
-    };
-  }
+const updateEmail = (e) => {
+  userData.value.email = e.target.value;
 };
 const updatePassword = (e) => {
   userData.value.password = e.target.value;
@@ -130,14 +57,10 @@ const loginUser = async () => {
 </script>
 
 <style lang="scss" scoped>
-
 .error-message {
   color: red;
-  font-size: 0.7rem;
-  margin-top: -1rem;
-  margin-bottom: 0rem;
-  padding: 0;
-  line-height: 0;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .login-container {
@@ -240,9 +163,9 @@ const loginUser = async () => {
 }
 
 .forgot-password {
-  width: 100%;
-  text-align: right;
-  margin-top: -0.5rem;
+  width: 100%;     
+  text-align: right;   
+  margin-top: -0.5rem; 
   padding-right: 1rem;
   margin-bottom: 1.5rem;
 
