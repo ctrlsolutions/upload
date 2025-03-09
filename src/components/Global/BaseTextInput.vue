@@ -58,6 +58,7 @@ export default {
 }
 </script>
 
+
 <style lang="scss" scoped>
 .input-box {
   font-family: 'Inter', serif;

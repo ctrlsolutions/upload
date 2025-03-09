@@ -1,5 +1,5 @@
 <template>
-  <div class="signup-container">
+  <form class="signup-container" v-on:submit.prevent="submitForm">
     <h1 class="title">Sign up</h1>
     <p class="subtitle">New here? Create a new account below.</p>
 
@@ -55,8 +55,8 @@
 
         <div class="radio-group">
           <label class="label">Sex</label>
-          <FormRadio id="male" label="Male" v-model="selectedSex" />
-          <FormRadio id="female" label="Female" v-model="selectedSex" />
+          <FormRadio id="male" label="Male" value="userData.sex" @input="sex" />
+          <FormRadio id="female" label="Female" value="userData.sex" @input="sex" />
         </div>
 
         <div class="dob-group">
@@ -68,16 +68,15 @@
             :max="'2020-12-31'"
           />
         </div>
-      </form>
+      </div>
     </div>
 
     <div class="button-group">
       <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem">SUBMIT</FormButton>
+      <FormButton variant="red" width="12rem" :onclick="submitForm">SUBMIT</FormButton>
     </div>
 
     <p class="or-text">OR</p>
-
     <GoogleLogin :callback="googleSignUp" prompt popup-type="TOKEN"
       ><FormButton variant="red" width="25rem" type="button"
         >CONTINUE WITH GOOGLE</FormButton
@@ -137,7 +136,83 @@ const submitToBackend = async extraInfo => {
   }
 }
 
-const selectedDate = ref('')
+const userData = ref({
+  email: '',
+  password1: '',
+  password2: '',
+  first_name: '',
+  middle_name: '',
+  last_name: '',
+  sex: '',
+  birthdate: ''
+});
+
+
+// Update functions for each input field
+const updateEmail = (event) => {
+  userData.value.email = event.target.value;
+};
+const updatePassword1 = (event) => {
+  userData.value.password1 = event.target.value;
+};
+const updatePassword2 = (event) => {
+  userData.value.password2 = event.target.value;
+};
+const updateFirstName = (event) => {
+  userData.value.first_name = event.target.value;
+};
+const updateMiddleName = (event) => {
+  userData.value.middle_name = event.target.value;
+};
+const updateLastName = (event) => {
+  userData.value.last_name = event.target.value;
+};
+
+const sex = (event) => {
+  userData.value.sex = event.target.value;
+};
+const birthdate = (event) => {
+  userData.value.birthdate = event.target.value;
+};
+
+
+
+
+const submitForm = async () => {
+  console.log("DATA: " + userData.value.email);
+  console.log("DATA: " + userData.value.password1);
+  console.log("DATA: " + userData.value.password2);
+  console.log("DATA: " + userData.value.first_name);
+  console.log("DATA: " + userData.value.middle_name);
+  console.log("DATA: " + userData.value.last_name);
+  console.log("DATA: " + userData.value.sex);
+  console.log("DATA: " + userData.value.birthdate);
+  try {
+    const response = await axios.post(
+      'http://127.0.0.1:8000/api/user/signup/',
+      userData.value, // Ensure userData is structured correctly
+      {
+        headers: {
+          'Content-Type': 'application/json', // Explicitly set headers (optional)
+        },
+      }
+    );
+    console.log("Success:", response.data);
+    
+  } catch (error) {
+    // Better error handling
+    if (error.response) {
+      // Server responded with 4xx/5xx status code
+      console.error("Server Error:", error.response.data);
+    } else if (error.request) {
+      // Request made, but no response received
+      console.error("Network Error:", error.request);
+    } else {
+      // Other errors (e.g., Axios setup issues)
+      console.error("Error:", error.message);
+    }
+  }
+};
 
 const selectedSex = ref('male')
 </script>
@@ -175,6 +250,34 @@ const selectedSex = ref('male')
   padding-right: 1rem;
   margin-bottom: -2rem;
   margin-top: 2rem;
+}
+
+
+.cont-google {
+  width: 100%;
+}
+
+.google {
+  padding-left: 1.3rem;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  align-items: flex-end;
+
+  @include sm {
+    padding-left: 0.8rem;
+    font-size: 0.8em;
+  }
+
+  @include md {
+    padding-left: 1rem;
+    font-size: 0.9em;
+  }
+
+  @include lg {
+    padding-left: 1.3rem;
+    font-size: 1em;
+  }
 }
 
 .form-wrapper::-webkit-scrollbar {
