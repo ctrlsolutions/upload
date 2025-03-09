@@ -6,7 +6,7 @@
     <p>Welcome! Log in to access your dashboard.</p>
     <div class="input-group">
       <BaseTextInput
-        name="email"
+        id="email"
         type="email"
         placeholder="Email"
         variant="green"
@@ -18,9 +18,8 @@
       <p v-if="hasAttemptedSubmit && errors.email" class="error-message">
         {{ errors.email }}
       </p>
-
       <BaseTextInput
-        name="password"
+        id="password"
         type="password"
         placeholder="Password"
         variant="green"
@@ -38,21 +37,26 @@
       <a href="#" class="forgotp">Forgot Password?</a>
     </div>
     <div class="login-button">
-      <BaseFormButton variant="green" width="100%" @click="validateForm">LOG IN</BaseFormButton>
+      <BaseFormButton variant="green" width="100%" @click="validateForm"
+        >LOG IN</BaseFormButton
+      >
     </div>
     <div class="or-text">
       <p>OR</p>
     </div>
     <form class="cont-google">
-      <BaseFormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton>
+      <BaseFormButton variant="red" width="100%"
+        ><v-icon name="fc-google" scale="1.2"></v-icon
+        ><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton
+      >
     </form>
   </div>
 </template>
 
 <script>
-import { reactive, ref } from "vue";
-import BaseTextInput from "@/components/Global/BaseTextInput.vue";
-import BaseFormButton from "@/components/Global/BaseFormButton.vue";
+import { reactive, ref } from 'vue'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 
 export default {
   components: {
@@ -62,44 +66,43 @@ export default {
 
   setup() {
     const form = reactive({
-      email: "",
-      password: "",
-    });
+      email: '',
+      password: '',
+    })
 
     const errors = reactive({
-      email: "",
-      password: "",
-    });
+      email: '',
+      password: '',
+    })
 
-    const hasAttemptedSubmit = ref(false);
+    const hasAttemptedSubmit = ref(false)
 
     const validateForm = () => {
-      hasAttemptedSubmit.value = true;
+      hasAttemptedSubmit.value = true
 
-      errors.email = "";
-      errors.password = "";
+      errors.email = ''
+      errors.password = ''
 
       if (!form.email) {
-        errors.email = "Email is required.";
+        errors.email = 'Email is required.'
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        errors.email = "Invalid email format.";
+        errors.email = 'Invalid email format.'
       }
 
       if (!form.password) {
-        errors.password = "Password is required.";
+        errors.password = 'Password is required.'
       } else if (form.password.length < 6) {
-        errors.password = "Password must be at least 6 characters.";
+        errors.password = 'Password must be at least 6 characters.'
       }
-      console.log("Errors object:", errors);
+      console.log('Errors object:', errors)
       if (!errors.email && !errors.password) {
-        console.log("Form submitted successfully!", form);
+        console.log('Form submitted successfully!', form)
       }
+    }
 
-    };
-
-    const clearError = (field) => {
-      errors[field] = "";
-    };
+    const clearError = field => {
+      errors[field] = ''
+    }
 
     return {
       form,
@@ -107,13 +110,12 @@ export default {
       hasAttemptedSubmit,
       validateForm,
       clearError,
-    };
-  }
-};
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
-
 .error-message {
   color: red;
   font-size: 0.7rem;
@@ -141,7 +143,6 @@ export default {
   @include md {
     width: 15rem;
     padding: 1.5rem;
-
   }
 
   @include lg {
@@ -246,9 +247,9 @@ export default {
 }
 
 .forgotp {
-    color: $green;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: $green;
+  text-decoration: none;
+  font-size: 0.9rem;
 
   &:hover {
     text-decoration: underline;
