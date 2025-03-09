@@ -6,8 +6,11 @@
     <div class="form-wrapper">
       <div class="signup-form">
         <InputField :value="userData.email" @input="updateEmail" id="email" type="email" placeholder="Email" variant = "red" width ="100%" />
+        <p v-if="signupError" class="text-red-600 text-sm mt-1">{{ signupError }}</p>
         <InputField :value="userData.password" @input="updatePassword" id="password" type="password" placeholder="Password" variant="red" width="100%" />
         <InputField :value="userData.password2" @input="updatePassword2" type="password" placeholder="Re-enter password" variant="red" width="100%" />
+
+        <p v-if="passwordError" class="text-red-600 text-sm mt-1">{{ passwordError }}</p>
 
         <div class="separator"></div>
 
@@ -20,8 +23,8 @@
 
         <div class="radio-group">
           <label class="label">Sex</label>
-          <FormRadio id="M" label="Male" value="userData.sex" @input="sex" />
-          <FormRadio id="F" label="Female" value="userData.sex" @input="sex" />
+          <FormRadio id="M" label="Male" v-model="userData.sex" value="M" />
+          <FormRadio id="F" label="Female" v-model="userData.sex" value="F" />
         </div>
 
         <div class="dob-group">
@@ -33,19 +36,24 @@
             :max="'2020-12-31'" 
           />
         </div>
+        
+        <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">{{ signupSuccess }}</p>
+        <!-- <p v-if="signupError" class="text-red-600 text-sm mt-2">{{ signupError }}</p>  -->
+      
       </div>
     </div>
-
+    
+    
     <div class="button-group">
       <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem" :click="submitForm">SUBMIT</FormButton>
+      <FormButton variant="red" width="12rem" @click="submitForm">SUBMIT</FormButton>
     </div>
+
 
     <p class="or-text">OR</p>
     <FormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></FormButton>
   </form>
 </template>
-
 
 <script setup>
 import { ref } from 'vue';
@@ -66,16 +74,20 @@ const userData = ref({
   birthdate: ''
 });
 
-
+const passwordError = ref(""); // Define passwordError as a reactive reference
+const signupSuccess = ref("");  // Success message
+const signupError = ref("");    // General error message
 // Update functions for each input field
 const updateEmail = (event) => {
   userData.value.email = event.target.value;
 };
 const updatePassword = (event) => {
   userData.value.password = event.target.value;
+  validatePasswordMatch();
 };
 const updatePassword2 = (event) => {
   userData.value.password2 = event.target.value;
+  validatePasswordMatch();
 };
 const updateFirstName = (event) => {
   userData.value.first_name = event.target.value;
@@ -86,7 +98,6 @@ const updateMiddleName = (event) => {
 const updateLastName = (event) => {
   userData.value.last_name = event.target.value;
 };
-
 const sex = (event) => {
   userData.value.sex = event.target.value;
 };
@@ -94,49 +105,68 @@ const birthdate = (event) => {
   userData.value.birthdate = event.target.value;
 };
 
-
-
+// Validate password match
+const validatePasswordMatch = () => {
+  passwordError.value = userData.value.password !== userData.value.password2 ? "Passwords do not match." : "";
+};
 
 const submitForm = async () => {
-  console.log("DATA: " + userData.value.email);
-  console.log("DATA: " + userData.value.password);
-  console.log("DATA: " + userData.value.password2);
-  console.log("DATA: " + userData.value.first_name);
-  console.log("DATA: " + userData.value.middle_name);
-  console.log("DATA: " + userData.value.last_name);
-  console.log("DATA: " + userData.value.sex);
-  console.log("DATA: " + userData.value.birthdate);
+  signupSuccess.value = "";
+  signupError.value = ""; 
+
+  if (userData.value.password !== userData.value.password2) {
+    passwordError.value = "Passwords do not match.";
+    return;
+  }
+
   try {
     const response = await axios.post(
       'http://127.0.0.1:8000/api/user/signup/',
-      userData.value, // Ensure userData is structured correctly
+      userData.value,
       {
-        headers: {
-          'Content-Type': 'application/json', // Explicitly set headers (optional)
-        },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
-    console.log("Success:", response.data);
-    
+
+    signupSuccess.value = "Sign-up successful! Redirecting...";
+    signupError.value = "";
+
+    // Clear input fields
+    userData.value = {
+      email: '', password: '', password2: '',
+      first_name: '', middle_name: '',
+      last_name: '', sex: '', birthdate: ''
+    };
+
+    setTimeout(() => {
+      window.location.href = "http://localhost:5173/auth/login";
+    }, 2000);
   } catch (error) {
-    // Better error handling
-    if (error.response) {
-      // Server responded with 4xx/5xx status code
-      console.error("Server Error:", error.response.data);
-    } else if (error.request) {
-      // Request made, but no response received
-      console.error("Network Error:", error.request);
+    if (error.response?.data) {
+      // Check if there are field-specific errors
+      const errors = error.response.data;
+      
+      if (errors.email) {
+        signupError.value = errors.email[0]; // Show email error
+      } else {
+        signupError.value = "Sign-up failed. Please try again.";
+      }
     } else {
-      // Other errors (e.g., Axios setup issues)
-      console.error("Error:", error.message);
+      signupError.value = "Sign-up failed. Please try again.";
     }
   }
 };
 
 </script>
 
-
 <style lang="scss" scoped>
+
+.text-red-600 {
+  color: $red;
+  margin-bottom: -1rem;
+  margin-top: -0.5rem;
+  margin-right: 2rem;
+}
 
 .BaseDateInput {
   margin-left: 100rem;
