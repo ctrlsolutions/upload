@@ -4,7 +4,7 @@
     <p class="subtitle">New here? Create a new account below.</p>
 
     <div class="form-wrapper">
-      <form class="signup-form">
+      <div class="signup-form">
         <InputField
           id="email"
           type="text"
@@ -55,8 +55,8 @@
 
         <div class="radio-group">
           <label class="label">Sex</label>
-          <FormRadio id="male" label="Male" value="userData.sex" @input="sex" />
-          <FormRadio id="female" label="Female" value="userData.sex" @input="sex" />
+          <FormRadio id="M" label="Male" value="userData.sex" @input="sex" />
+          <FormRadio id="F" label="Female" value="userData.sex" @input="sex" />
         </div>
 
         <div class="dob-group">
@@ -73,7 +73,9 @@
 
     <div class="button-group">
       <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem" :onclick="submitForm">SUBMIT</FormButton>
+      <FormButton variant="red" width="12rem" :onclick="submitForm"
+        >SUBMIT</FormButton
+      >
     </div>
 
     <p class="or-text">OR</p>
@@ -88,7 +90,7 @@
       @submit="submitToBackend"
       @close="showModal = false"
     />
-  </div>
+  </form>
 </template>
 
 <script setup>
@@ -144,49 +146,45 @@ const userData = ref({
   middle_name: '',
   last_name: '',
   sex: '',
-  birthdate: ''
-});
-
+  birthdate: '',
+})
 
 // Update functions for each input field
-const updateEmail = (event) => {
-  userData.value.email = event.target.value;
-};
-const updatePassword1 = (event) => {
-  userData.value.password1 = event.target.value;
-};
-const updatePassword2 = (event) => {
-  userData.value.password2 = event.target.value;
-};
-const updateFirstName = (event) => {
-  userData.value.first_name = event.target.value;
-};
-const updateMiddleName = (event) => {
-  userData.value.middle_name = event.target.value;
-};
-const updateLastName = (event) => {
-  userData.value.last_name = event.target.value;
-};
+const updateEmail = event => {
+  userData.value.email = event.target.value
+}
+const updatePassword1 = event => {
+  userData.value.password1 = event.target.value
+}
+const updatePassword2 = event => {
+  userData.value.password2 = event.target.value
+}
+const updateFirstName = event => {
+  userData.value.first_name = event.target.value
+}
+const updateMiddleName = event => {
+  userData.value.middle_name = event.target.value
+}
+const updateLastName = event => {
+  userData.value.last_name = event.target.value
+}
 
-const sex = (event) => {
-  userData.value.sex = event.target.value;
-};
-const birthdate = (event) => {
-  userData.value.birthdate = event.target.value;
-};
-
-
-
+const sex = event => {
+  userData.value.sex = event.target.value
+}
+const birthdate = event => {
+  userData.value.birthdate = event.target.value
+}
 
 const submitForm = async () => {
-  console.log("DATA: " + userData.value.email);
-  console.log("DATA: " + userData.value.password1);
-  console.log("DATA: " + userData.value.password2);
-  console.log("DATA: " + userData.value.first_name);
-  console.log("DATA: " + userData.value.middle_name);
-  console.log("DATA: " + userData.value.last_name);
-  console.log("DATA: " + userData.value.sex);
-  console.log("DATA: " + userData.value.birthdate);
+  console.log('DATA: ' + userData.value.email)
+  console.log('DATA: ' + userData.value.password1)
+  console.log('DATA: ' + userData.value.password2)
+  console.log('DATA: ' + userData.value.first_name)
+  console.log('DATA: ' + userData.value.middle_name)
+  console.log('DATA: ' + userData.value.last_name)
+  console.log('DATA: ' + userData.value.sex)
+  console.log('DATA: ' + userData.value.birthdate)
   try {
     const response = await axios.post(
       'http://127.0.0.1:8000/api/user/signup/',
@@ -195,24 +193,23 @@ const submitForm = async () => {
         headers: {
           'Content-Type': 'application/json', // Explicitly set headers (optional)
         },
-      }
-    );
-    console.log("Success:", response.data);
-    
+      },
+    )
+    console.log('Success:', response.data)
   } catch (error) {
     // Better error handling
     if (error.response) {
       // Server responded with 4xx/5xx status code
-      console.error("Server Error:", error.response.data);
+      console.error('Server Error:', error.response.data)
     } else if (error.request) {
       // Request made, but no response received
-      console.error("Network Error:", error.request);
+      console.error('Network Error:', error.request)
     } else {
       // Other errors (e.g., Axios setup issues)
-      console.error("Error:", error.message);
+      console.error('Error:', error.message)
     }
   }
-};
+}
 
 const selectedSex = ref('male')
 </script>
@@ -251,7 +248,6 @@ const selectedSex = ref('male')
   margin-bottom: -2rem;
   margin-top: 2rem;
 }
-
 
 .cont-google {
   width: 100%;
