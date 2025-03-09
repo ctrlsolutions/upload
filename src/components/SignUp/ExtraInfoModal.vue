@@ -18,8 +18,8 @@
             />
             <div class="gender-container">
               <label class="label">Sex:</label>
-              <BaseFormRadio id="male" label="Male" v-model="gender" />
-              <BaseFormRadio id="female" label="Female" v-model="gender" />
+              <BaseFormRadio id="M" label="Male" v-model="gender" />
+              <BaseFormRadio id="F" label="Female" v-model="gender" />
             </div>
           </div>
 

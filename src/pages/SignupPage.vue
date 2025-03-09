@@ -14,14 +14,14 @@
         />
         <InputField
           id="password"
-          type="text"
+          type="password"
           placeholder="Password"
           variant="red"
           width="100%"
         />
         <InputField
           id="re-password"
-          type="text"
+          type="password"
           placeholder="Re-enter password"
           variant="red"
           width="100%"
