@@ -4,7 +4,7 @@
     <p class="subtitle">New here? Create a new account below.</p>
 
     <div class="form-wrapper">
-      <form class="signup-form">
+      <div class="signup-form">
         <InputField
           id="email"
           type="text"
@@ -12,7 +12,9 @@
           variant="red"
           width="100%"
         />
-        <p v-if="signupError" class="text-red-600 text-sm mt-1">{{ signupError }}</p>
+        <p v-if="signupError" class="text-red-600 text-sm mt-1">
+          {{ signupError }}
+        </p>
         <InputField
           id="password"
           type="password"
@@ -28,7 +30,9 @@
           width="100%"
         />
 
-        <p v-if="passwordError" class="text-red-600 text-sm mt-1">{{ passwordError }}</p>
+        <p v-if="passwordError" class="text-red-600 text-sm mt-1">
+          {{ passwordError }}
+        </p>
 
         <div class="separator"></div>
 
@@ -71,18 +75,19 @@
             :max="'2020-12-31'"
           />
         </div>
-        
-        <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">{{ signupSuccess }}</p>
-      
+
+        <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
+          {{ signupSuccess }}
+        </p>
       </div>
     </div>
-    
-    
+
     <div class="button-group">
       <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem" @click="submitForm">SUBMIT</FormButton>
+      <FormButton variant="red" width="12rem" @click="submitForm"
+        >SUBMIT</FormButton
+      >
     </div>
-
 
     <p class="or-text">OR</p>
     <GoogleLogin :callback="googleSignUp" prompt popup-type="TOKEN"
@@ -96,7 +101,7 @@
       @submit="submitToBackend"
       @close="showModal = false"
     />
-  </div>
+  </form>
 </template>
 
 <script setup>
@@ -152,52 +157,55 @@ const userData = ref({
   middle_name: '',
   last_name: '',
   sex: '',
-  birthdate: ''
-});
+  birthdate: '',
+})
 
-const passwordError = ref(""); // Define passwordError as a reactive reference
-const signupSuccess = ref("");  // Success message
-const signupError = ref("");    // General error message
+const passwordError = ref('') // Define passwordError as a reactive reference
+const signupSuccess = ref('') // Success message
+const signupError = ref('') // General error message
 // Update functions for each input field
-const updateEmail = (event) => {
-  userData.value.email = event.target.value;
-};
-const updatePassword = (event) => {
-  userData.value.password = event.target.value;
-  validatePasswordMatch();
-};
-const updatePassword2 = (event) => {
-  userData.value.password2 = event.target.value;
-  validatePasswordMatch();
-};
-const updateFirstName = (event) => {
-  userData.value.first_name = event.target.value;
-};
-const updateMiddleName = (event) => {
-  userData.value.middle_name = event.target.value;
-};
-const updateLastName = (event) => {
-  userData.value.last_name = event.target.value;
-};
-const sex = (event) => {
-  userData.value.sex = event.target.value;
-};
-const birthdate = (event) => {
-  userData.value.birthdate = event.target.value;
-};
+const updateEmail = event => {
+  userData.value.email = event.target.value
+}
+const updatePassword = event => {
+  userData.value.password = event.target.value
+  validatePasswordMatch()
+}
+const updatePassword2 = event => {
+  userData.value.password2 = event.target.value
+  validatePasswordMatch()
+}
+const updateFirstName = event => {
+  userData.value.first_name = event.target.value
+}
+const updateMiddleName = event => {
+  userData.value.middle_name = event.target.value
+}
+const updateLastName = event => {
+  userData.value.last_name = event.target.value
+}
+const sex = event => {
+  userData.value.sex = event.target.value
+}
+const birthdate = event => {
+  userData.value.birthdate = event.target.value
+}
 
 // Validate password match
 const validatePasswordMatch = () => {
-  passwordError.value = userData.value.password !== userData.value.password2 ? "Passwords do not match." : "";
-};
+  passwordError.value =
+    userData.value.password !== userData.value.password2
+      ? 'Passwords do not match.'
+      : ''
+}
 
 const submitForm = async () => {
-  signupSuccess.value = "";
-  signupError.value = ""; 
+  signupSuccess.value = ''
+  signupError.value = ''
 
   if (userData.value.password !== userData.value.password2) {
-    passwordError.value = "Passwords do not match.";
-    return;
+    passwordError.value = 'Passwords do not match.'
+    return
   }
 
   try {
@@ -206,37 +214,42 @@ const submitForm = async () => {
       userData.value,
       {
         headers: { 'Content-Type': 'application/json' },
-      }
-    );
+      },
+    )
 
-    signupSuccess.value = "Sign-up successful! Redirecting...";
-    signupError.value = "";
+    signupSuccess.value = 'Sign-up successful! Redirecting...'
+    signupError.value = ''
 
     // Clear input fields
     userData.value = {
-      email: '', password: '', password2: '',
-      first_name: '', middle_name: '',
-      last_name: '', sex: '', birthdate: ''
-    };
+      email: '',
+      password: '',
+      password2: '',
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      sex: '',
+      birthdate: '',
+    }
 
     setTimeout(() => {
-      window.location.href = "http://localhost:5173/auth/login";
-    }, 2000);
+      window.location.href = 'http://localhost:5173/auth/login'
+    }, 2000)
   } catch (error) {
     if (error.response?.data) {
       // Check if there are field-specific errors
-      const errors = error.response.data;
-      
+      const errors = error.response.data
+
       if (errors.email) {
-        signupError.value = errors.email[0]; // Show email error
+        signupError.value = errors.email[0] // Show email error
       } else {
-        signupError.value = "Sign-up failed. Please try again.";
+        signupError.value = 'Sign-up failed. Please try again.'
       }
     } else {
-      signupError.value = "Sign-up failed. Please try again.";
+      signupError.value = 'Sign-up failed. Please try again.'
     }
   }
-};
+}
 
 const selectedSex = ref('male')
 </script>
@@ -281,7 +294,6 @@ const selectedSex = ref('male')
   margin-bottom: -2rem;
   margin-top: 2rem;
 }
-
 
 .cont-google {
   width: 100%;
