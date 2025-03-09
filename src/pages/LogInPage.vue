@@ -5,36 +5,126 @@
     </div>
     <p>Welcome! Log in to access your dashboard.</p>
     <div class="input-group">
-      <BaseTextInput id="email" type="email" placeholder="Email" variant="green" width="100%" height="3.5rem"/>
-      <BaseTextInput id="password" type="password" placeholder="Password" variant="green" width="100%" height="3.5rem"/>
+      <BaseTextInput
+        id="email"
+        type="email"
+        placeholder="Email"
+        variant="green"
+        width="100%"
+        height="3.5rem"
+        v-model="form.email"
+        @input="clearError('email')"
+      />
+      <p v-if="hasAttemptedSubmit && errors.email" class="error-message">
+        {{ errors.email }}
+      </p>
+      <BaseTextInput
+        id="password"
+        type="password"
+        placeholder="Password"
+        variant="green"
+        width="100%"
+        height="3.5rem"
+        v-model="form.password"
+        @input="clearError('password')"
+      />
+      <p v-if="hasAttemptedSubmit && errors.password" class="error-message">
+        {{ errors.password }}
+      </p>
     </div>
+
     <div class="forgot-password">
       <a href="#" class="forgotp">Forgot Password?</a>
     </div>
     <div class="login-button">
-      <BaseFormButton variant="green" width="100%">LOG IN</BaseFormButton>
+      <BaseFormButton variant="green" width="100%" @click="validateForm"
+        >LOG IN</BaseFormButton
+      >
     </div>
     <div class="or-text">
       <p>OR</p>
     </div>
-    <div class="cont-google">
-      <BaseFormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton>
-    </div>
+    <form class="cont-google">
+      <BaseFormButton variant="red" width="100%"
+        ><v-icon name="fc-google" scale="1.2"></v-icon
+        ><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton
+      >
+    </form>
   </div>
 </template>
 
 <script>
-import BaseTextInput from "@/components/Global/BaseTextInput.vue";
-import BaseFormButton from "@/components/Global/BaseFormButton.vue";
+import { reactive, ref } from 'vue'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
+
 export default {
   components: {
     BaseTextInput,
     BaseFormButton,
   },
-};
+
+  setup() {
+    const form = reactive({
+      email: '',
+      password: '',
+    })
+
+    const errors = reactive({
+      email: '',
+      password: '',
+    })
+
+    const hasAttemptedSubmit = ref(false)
+
+    const validateForm = () => {
+      hasAttemptedSubmit.value = true
+
+      errors.email = ''
+      errors.password = ''
+
+      if (!form.email) {
+        errors.email = 'Email is required.'
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+        errors.email = 'Invalid email format.'
+      }
+
+      if (!form.password) {
+        errors.password = 'Password is required.'
+      } else if (form.password.length < 6) {
+        errors.password = 'Password must be at least 6 characters.'
+      }
+      console.log('Errors object:', errors)
+      if (!errors.email && !errors.password) {
+        console.log('Form submitted successfully!', form)
+      }
+    }
+
+    const clearError = field => {
+      errors[field] = ''
+    }
+
+    return {
+      form,
+      errors,
+      hasAttemptedSubmit,
+      validateForm,
+      clearError,
+    }
+  },
+}
 </script>
 
 <style lang="scss" scoped>
+.error-message {
+  color: red;
+  font-size: 0.7rem;
+  margin-top: -1rem;
+  margin-bottom: 0rem;
+  padding: 0;
+  line-height: 0;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
@@ -53,7 +143,6 @@ export default {
   @include md {
     width: 15rem;
     padding: 1.5rem;
-
   }
 
   @include lg {
@@ -135,9 +224,9 @@ export default {
 }
 
 .forgot-password {
-  width: 100%;     
-  text-align: right;   
-  margin-top: -0.5rem; 
+  width: 100%;
+  text-align: right;
+  margin-top: -0.5rem;
   padding-right: 1rem;
   margin-bottom: 1.5rem;
 
@@ -158,9 +247,9 @@ export default {
 }
 
 .forgotp {
-    color: $green;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: $green;
+  text-decoration: none;
+  font-size: 0.9rem;
 
   &:hover {
     text-decoration: underline;

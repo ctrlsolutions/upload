@@ -4,22 +4,57 @@
     <p class="subtitle">New here? Create a new account below.</p>
 
     <div class="form-wrapper">
-      <div class="signup-form">
-        <InputField :value="userData.email" @input="updateEmail" id="email" type="email" placeholder="Email" variant = "red" width ="100%" />
+      <form class="signup-form">
+        <InputField
+          id="email"
+          type="text"
+          placeholder="Email"
+          variant="red"
+          width="100%"
+        />
         <p v-if="signupError" class="text-red-600 text-sm mt-1">{{ signupError }}</p>
-        <InputField :value="userData.password" @input="updatePassword" id="password" type="password" placeholder="Password" variant="red" width="100%" />
-        <InputField :value="userData.password2" @input="updatePassword2" type="password" placeholder="Re-enter password" variant="red" width="100%" />
+        <InputField
+          id="password"
+          type="password"
+          placeholder="Password"
+          variant="red"
+          width="100%"
+        />
+        <InputField
+          id="re-password"
+          type="password"
+          placeholder="Re-enter password"
+          variant="red"
+          width="100%"
+        />
 
         <p v-if="passwordError" class="text-red-600 text-sm mt-1">{{ passwordError }}</p>
 
         <div class="separator"></div>
 
         <div class="name-fields">
-          <InputField :value="userData.first_name" @input="updateFirstName" id="first-name" type="text" placeholder="First name" variant = "red" width ="100%" />
-          <InputField :value="userData.middle_name" @input="updateMiddleName" id="middle-name" type="text" placeholder="Middle name" variant="red" width="100%" />
-
+          <InputField
+            id="first-name"
+            type="text"
+            placeholder="First name"
+            variant="red"
+            width="100%"
+          />
+          <InputField
+            id="middle-name"
+            type="text"
+            placeholder="Middle name"
+            variant="red"
+            width="100%"
+          />
         </div>
-        <InputField :value="userData.last_name" @input="updateLastName" id="last-name" type="text" placeholder="Last name" variant="red" width="100%" />
+        <InputField
+          id="last-name"
+          type="text"
+          placeholder="Last name"
+          variant="red"
+          width="100%"
+        />
 
         <div class="radio-group">
           <label class="label">Sex</label>
@@ -29,11 +64,11 @@
 
         <div class="dob-group">
           <label class="label">Date of Birth</label>
-          <BaseDateInput 
-            value="userData.birthdate" @input="birthdate"
-            width="15rem" 
-            :min="'2000-01-01'" 
-            :max="'2020-12-31'" 
+          <BaseDateInput
+            v-model="selectedDate"
+            width="15rem"
+            :min="'2000-01-01'"
+            :max="'2020-12-31'"
           />
         </div>
         
@@ -50,17 +85,64 @@
 
 
     <p class="or-text">OR</p>
-    <FormButton variant="red" width="100%"><v-icon name="fc-google" scale="1.2"></v-icon><span class="google">CONTINUE WITH GOOGLE</span></FormButton>
-  </form>
+    <GoogleLogin :callback="googleSignUp" prompt popup-type="TOKEN"
+      ><FormButton variant="red" width="25rem" type="button"
+        >CONTINUE WITH GOOGLE</FormButton
+      ></GoogleLogin
+    >
+    <ExtraInfoModal
+      v-if="showModal"
+      :profile="googleProfile"
+      @submit="submitToBackend"
+      @close="showModal = false"
+    />
+  </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
-import FormRadio from '@/components/Global/BaseFormRadio.vue';
-import InputField from '@/components/Global/BaseTextInput.vue';
-import FormButton from '@/components/Global/BaseFormButton.vue';
-import BaseDateInput from "@/components/Global/BaseDateInput.vue";
+import { ref } from 'vue'
+import FormRadio from '@/components/Global/BaseFormRadio.vue'
+import InputField from '@/components/Global/BaseTextInput.vue'
+import FormButton from '@/components/Global/BaseFormButton.vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import ExtraInfoModal from '@/components/SignUp/ExtraInfoModal.vue'
+import axios from 'axios'
+import { useRouter } from 'vue-router'
+
+const googleProfile = ref(null)
+const accessToken = ref(null)
+const showModal = ref(false)
+
+const router = useRouter()
+
+const googleSignUp = response => {
+  console.log('GOOGLE LOGIN RESPONSE', response)
+
+  accessToken.value = response.access_token
+
+  showModal.value = true
+}
+// const extraInfo = ref(null)
+const submitToBackend = async extraInfo => {
+  console.log(extraInfo)
+  try {
+    const response = await axios.post(
+      import.meta.env.VITE_API_BASE_URL + '/user/google/signup/',
+      {
+        access_token: accessToken.value, // Send the Google token
+        extra_info: extraInfo, // Include the extra user data
+      },
+    )
+
+    console.log('Signup successful:', response.data)
+    showModal.value = false // Close modal
+  } catch (error) {
+    console.error(
+      'Error submitting form:',
+      error.response?.data || error.message,
+    )
+  }
+}
 
 const userData = ref({
   email: '',
@@ -156,28 +238,27 @@ const submitForm = async () => {
   }
 };
 
+const selectedSex = ref('male')
 </script>
 
 <style lang="scss" scoped>
-
 .text-red-600 {
   color: $red;
   margin-bottom: -1rem;
   margin-top: -0.5rem;
   margin-right: 2rem;
 }
-
 .BaseDateInput {
   margin-left: 100rem;
 }
 
 .radio-group {
-    display: flex;
-    align-items: center;
-    gap: -0.5rem;
-    margin: -0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: -0.5rem;
+  margin: -0.5rem 0;
 }
-  
+
 .signup-container {
   max-width: 25rem;
   margin: auto;
@@ -194,11 +275,11 @@ const submitForm = async () => {
 }
 
 .form-wrapper {
-  max-height: 19.5rem; 
+  max-height: 19.5rem;
   overflow-y: auto;
   padding-right: 1rem;
   margin-bottom: -2rem;
-  margin-top: 2rem; 
+  margin-top: 2rem;
 }
 
 
@@ -239,13 +320,13 @@ const submitForm = async () => {
 
 .form-wrapper::-webkit-scrollbar-thumb {
   background: rgba($red, 0.5);
-  border-radius: 1rem; 
+  border-radius: 1rem;
 }
 
 .signup-form {
   display: flex;
   flex-direction: column;
-  gap:1.2rem;
+  gap: 1.2rem;
 }
 
 .label {
@@ -261,7 +342,7 @@ const submitForm = async () => {
   height: 0.1rem;
   background-color: $red;
   margin: 0.5rem 0;
-  opacity:80%;
+  opacity: 80%;
 }
 
 .name-fields {
@@ -293,9 +374,8 @@ const submitForm = async () => {
   padding-bottom: 0.5rem;
 }
 
-.subtitle{
-  font-weight:800;
-  color:#6f6f6f;
+.subtitle {
+  font-weight: 800;
+  color: #6f6f6f;
 }
-
 </style>
