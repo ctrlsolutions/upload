@@ -38,7 +38,6 @@
         </div>
         
         <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">{{ signupSuccess }}</p>
-        <!-- <p v-if="signupError" class="text-red-600 text-sm mt-2">{{ signupError }}</p>  -->
       
       </div>
     </div>
