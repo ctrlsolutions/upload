@@ -2,70 +2,50 @@
   <div class="button-container">
     <button
       :class="['form-button', variantClass]"
-      @click="handleClick"
       :style="buttonStyle"
+      v-bind="attrs"
+      @click="handleClick"
     >
       <slot></slot>
     </button>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, defineProps, useAttrs } from 'vue'
 import { useRouter } from 'vue-router'
 
-export default {
-  props: {
-    route: {
-      type: String,
-      required: true,
-    },
-    variant: {
-      type: String,
-      default: 'empty',
-    },
-    width: {
-      type: String,
-      default: 'null',
-    },
-    height: {
-      type: String,
-      default: 'auto',
-    },
-    type: {
-      type: String,
-      required: true,
-    },
-  },
-  setup(props, { emit }) {
-    const router = useRouter()
+const props = defineProps<{
+  route?: string
+  variant?: string
+  width?: string
+  height?: string
+  type?: string
+}>()
 
-    const handleClick = () => {
-      emit('click')
+const emit = defineEmits<{
+  (e: 'click'): void
+}>()
 
-      if (props.route) {
-        router.push(props.route)
-      }
-    }
+const router = useRouter()
+const attrs = useAttrs() // Handles v-bind="$attrs"
 
-    return { handleClick }
-  },
-  computed: {
-    variantClass() {
-      return this.variant ? `form-button--${this.variant}` : ''
-    },
-    buttonStyle() {
-      const styles = {
-        height: this.height,
-      }
+const handleClick = () => {
+  emit('click')
 
-      if (this.width) {
-        styles.width = this.width
-      }
-
-      return styles
-    },
-  },
+  if (props.route) {
+    router.push(props.route)
+  }
 }
+
+const variantClass = computed(() =>
+  props.variant ? `form-button--${props.variant}` : '',
+)
+
+const buttonStyle = computed(() => ({
+  width: props.width || 'auto',
+  height: props.height || 'auto',
+}))
 </script>
 
 <style lang="scss">
@@ -80,7 +60,7 @@ export default {
   text-align: center;
   font-size: 1rem;
   margin-bottom: -0.3rem;
-  margin-top:0.3rem;
+  margin-top: 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
