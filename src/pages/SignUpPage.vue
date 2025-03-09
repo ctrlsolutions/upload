@@ -1,107 +1,103 @@
 <template>
-  <form class="signup-container" v-on:submit.prevent="submitForm">
-    <h1 class="title">Sign up</h1>
-    <p class="subtitle">New here? Create a new account below.</p>
-
-    <div class="form-wrapper">
-      <div class="signup-form">
-        <InputField
-          id="email"
-          type="text"
-          placeholder="Email"
-          variant="red"
-          width="100%"
-        />
-        <p v-if="signupError" class="text-red-600 text-sm mt-1">
-          {{ signupError }}
-        </p>
-        <InputField
-          id="password"
-          type="password"
-          placeholder="Password"
-          variant="red"
-          width="100%"
-        />
-        <InputField
-          id="re-password"
-          type="password"
-          placeholder="Re-enter password"
-          variant="red"
-          width="100%"
-        />
-
-        <p v-if="passwordError" class="text-red-600 text-sm mt-1">
-          {{ passwordError }}
-        </p>
-
-        <div class="separator"></div>
-
-        <div class="name-fields">
+  <div class="container">
+    <form class="signup-container" @submit.prevent="submitForm">
+      <h1 class="title">Sign up</h1>
+      <p class="subtitle">New here? Create a new account below.</p>
+      <div class="form-wrapper">
+        <div class="signup-form">
           <InputField
-            id="first-name"
+            id="email"
             type="text"
-            placeholder="First name"
+            placeholder="Email"
             variant="red"
             width="100%"
+            autocomplete="email"
+            v-model="userData.email"
           />
           <InputField
-            id="middle-name"
-            type="text"
-            placeholder="Middle name"
+            id="password"
+            type="password"
+            placeholder="Password"
             variant="red"
             width="100%"
+            autocomplete="current-password"
+            v-model="userData.password"
           />
-        </div>
-        <InputField
-          id="last-name"
-          type="text"
-          placeholder="Last name"
-          variant="red"
-          width="100%"
-        />
-
-        <div class="radio-group">
-          <label class="label">Sex</label>
-          <FormRadio id="M" label="Male" v-model="userData.sex" value="M" />
-          <FormRadio id="F" label="Female" v-model="userData.sex" value="F" />
-        </div>
-
-        <div class="dob-group">
-          <label class="label">Date of Birth</label>
-          <BaseDateInput
-            v-model="selectedDate"
-            width="15rem"
-            :min="'2000-01-01'"
-            :max="'2020-12-31'"
+          <InputField
+            id="re-password"
+            type="password"
+            placeholder="Re-enter password"
+            variant="red"
+            width="100%"
+            v-model="userData.password2"
           />
+          <div class="separator"></div>
+          <div class="name-fields">
+            <InputField
+              id="first-name"
+              type="text"
+              placeholder="First name"
+              variant="red"
+              width="100%"
+              v-model="userData.first_name"
+            />
+            <InputField
+              id="middle-name"
+              type="text"
+              placeholder="Middle name"
+              variant="red"
+              width="100%"
+              v-model="userData.middle_name"
+            />
+          </div>
+          <InputField
+            id="last-name"
+            type="text"
+            placeholder="Last name"
+            variant="red"
+            width="100%"
+            v-model="userData.last_name"
+          />
+          <div class="radio-group">
+            <label class="label">Sex</label>
+            <FormRadio id="M" label="Male" v-model="userData.sex" value="M" />
+            <FormRadio id="F" label="Female" v-model="userData.sex" value="F" />
+          </div>
+          <div class="dob-group">
+            <label class="label">Date of Birth</label>
+            <BaseDateInput
+              v-model="userData.birthdate"
+              width="15rem"
+              :min="'2000-01-01'"
+              :max="'2020-12-31'"
+            />
+          </div>
+          <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
+            {{ signupSuccess }}
+          </p>
         </div>
-
-        <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
-          {{ signupSuccess }}
-        </p>
       </div>
-    </div>
-
-    <div class="button-group">
-      <FormButton variant="black" width="12rem">CANCEL</FormButton>
-      <FormButton variant="red" width="12rem" @click="submitForm"
-        >SUBMIT</FormButton
-      >
-    </div>
-
+      <div class="button-group">
+        <FormButton variant="black" width="12rem">CANCEL</FormButton>
+        <FormButton variant="red" width="12rem" type="submit"
+          >SUBMIT</FormButton
+        >
+      </div>
+    </form>
     <p class="or-text">OR</p>
-    <GoogleLogin :callback="googleSignUp" prompt popup-type="TOKEN"
+    <GoogleLogin :callback="googleSignUp" popup-type="TOKEN"
       ><FormButton variant="red" width="25rem" type="button"
         >CONTINUE WITH GOOGLE</FormButton
       ></GoogleLogin
     >
-    <ExtraInfoModal
-      v-if="showModal"
-      :profile="googleProfile"
-      @submit="submitToBackend"
-      @close="showModal = false"
-    />
-  </form>
+  </div>
+  <ExtraInfoModal
+    v-if="showModal"
+    :profile="googleProfile"
+    @submit="submitToBackend"
+    @close="showModal = false"
+  />
+  <Toast ref="toast" />
 </template>
 
 <script setup>
@@ -112,13 +108,11 @@ import FormButton from '@/components/Global/BaseFormButton.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import ExtraInfoModal from '@/components/SignUp/ExtraInfoModal.vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
+import Toast from '@/components/Global/Toast.vue'
 
 const googleProfile = ref(null)
 const accessToken = ref(null)
 const showModal = ref(false)
-
-const router = useRouter()
 
 const googleSignUp = response => {
   console.log('GOOGLE LOGIN RESPONSE', response)
@@ -127,25 +121,23 @@ const googleSignUp = response => {
 
   showModal.value = true
 }
-// const extraInfo = ref(null)
 const submitToBackend = async extraInfo => {
   console.log(extraInfo)
   try {
     const response = await axios.post(
       import.meta.env.VITE_API_BASE_URL + '/user/google/signup/',
       {
-        access_token: accessToken.value, // Send the Google token
-        extra_info: extraInfo, // Include the extra user data
+        access_token: accessToken.value,
+        extra_info: extraInfo,
       },
     )
 
-    console.log('Signup successful:', response.data)
-    showModal.value = false // Close modal
+    toast.value.showToast('Signup successful!', 'success')
+    showModal.value = false
   } catch (error) {
-    console.error(
-      'Error submitting form:',
-      error.response?.data || error.message,
-    )
+    const errorMessage =
+      error.response?.data?.error || 'An unexpected error occurred'
+    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
 
@@ -160,44 +152,10 @@ const userData = ref({
   birthdate: '',
 })
 
-const passwordError = ref('') // Define passwordError as a reactive reference
-const signupSuccess = ref('') // Success message
-const signupError = ref('') // General error message
-// Update functions for each input field
-const updateEmail = event => {
-  userData.value.email = event.target.value
-}
-const updatePassword = event => {
-  userData.value.password = event.target.value
-  validatePasswordMatch()
-}
-const updatePassword2 = event => {
-  userData.value.password2 = event.target.value
-  validatePasswordMatch()
-}
-const updateFirstName = event => {
-  userData.value.first_name = event.target.value
-}
-const updateMiddleName = event => {
-  userData.value.middle_name = event.target.value
-}
-const updateLastName = event => {
-  userData.value.last_name = event.target.value
-}
-const sex = event => {
-  userData.value.sex = event.target.value
-}
-const birthdate = event => {
-  userData.value.birthdate = event.target.value
-}
-
-// Validate password match
-const validatePasswordMatch = () => {
-  passwordError.value =
-    userData.value.password !== userData.value.password2
-      ? 'Passwords do not match.'
-      : ''
-}
+const passwordError = ref('')
+const signupSuccess = ref('')
+const signupError = ref('')
+const toast = ref(null)
 
 const submitForm = async () => {
   signupSuccess.value = ''
@@ -217,8 +175,7 @@ const submitForm = async () => {
       },
     )
 
-    signupSuccess.value = 'Sign-up successful! Redirecting...'
-    signupError.value = ''
+    toast.value.showToast('Signup successful!', 'success')
 
     // Clear input fields
     userData.value = {
@@ -236,25 +193,21 @@ const submitForm = async () => {
       window.location.href = 'http://localhost:5173/auth/login'
     }, 2000)
   } catch (error) {
-    if (error.response?.data) {
-      // Check if there are field-specific errors
-      const errors = error.response.data
-
-      if (errors.email) {
-        signupError.value = errors.email[0] // Show email error
-      } else {
-        signupError.value = 'Sign-up failed. Please try again.'
-      }
-    } else {
-      signupError.value = 'Sign-up failed. Please try again.'
-    }
+    const errorMessage =
+      error.response?.data?.error || 'An unexpected error occurred'
+    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
-
-const selectedSex = ref('male')
 </script>
 
 <style lang="scss" scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 25rem;
+  justify-content: center;
+  align-items: center;
+}
 .text-red-600 {
   color: $red;
   margin-bottom: -1rem;

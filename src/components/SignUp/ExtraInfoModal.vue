@@ -55,11 +55,7 @@
               @click="closeModal"
               >Cancel</BaseFormButton
             >
-            <BaseFormButton
-              type="submit"
-              variant="red"
-              route=""
-              @click="handleSubmit"
+            <BaseFormButton type="submit" variant="red" route=""
               >Proceed</BaseFormButton
             >
           </div>
