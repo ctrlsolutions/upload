@@ -77,6 +77,7 @@ const variantClass = computed(() => `form-radio--${props.variant}`);
         width: 0.56rem;
         height: 0.56rem;
         background-color: $red;
+        opacity: 50%;
         border-radius: 50%;
         transform: translate(-50%, -50%);
 
@@ -107,7 +108,6 @@ const variantClass = computed(() => `form-radio--${props.variant}`);
         font-weight: bold;
         color: #9e2323;
         font-family: 'Inter', sans-serif; 
-        // font-family: Times New Roman, serif 
     }
 }
 </style>

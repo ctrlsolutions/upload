@@ -1,10 +1,7 @@
 <template>
   <div class="static-page">
     <div class="scroll-container">
-      <section class="page"><Home></Home>
-      </section>
-      <section class="page"><Home></Home>
-      </section>
+      <section class="page"><Home></Home></section>
       <section class="page"><About></About></section>
       <section class="page"><Summary></Summary></section>
     </div>
@@ -25,16 +22,11 @@ export default {
     Home,
     About,
     Summary,
-  }
-};
+  },
+}
 </script>
 
-
 <style>
-body {
-  background-color: rgb(255, 255, 255);
-  background-color: rgb(255, 255, 255);
-}
 .static-page {
   height: 100vh;
   width: 100vw;
