@@ -4,7 +4,7 @@
       <h1>Log in</h1>
     </div>
     <p>Welcome! Log in to access your dashboard.</p>
-    <div class="input-group">
+    <form class="input-group" @submit.prevent="submitForm">
       <BaseTextInput
         id="email"
         type="email"
@@ -31,87 +31,115 @@
       <p v-if="hasAttemptedSubmit && errors.password" class="error-message">
         {{ errors.password }}
       </p>
-    </div>
 
-    <div class="forgot-password">
-      <a href="#" class="forgotp">Forgot Password?</a>
-    </div>
-    <div class="login-button">
-      <BaseFormButton variant="green" width="100%" @click="validateForm"
-        >LOG IN</BaseFormButton
-      >
-    </div>
+      <div class="forgot-password">
+        <a href="#" class="forgotp">Forgot Password?</a>
+      </div>
+      <div class="login-button">
+        <FormButton variant="green" width="100%" @click="validateForm">
+          LOG IN
+        </FormButton>
+      </div>
+    </form>
     <div class="or-text">
       <p>OR</p>
     </div>
     <form class="cont-google">
-      <BaseFormButton variant="red" width="100%"
-        ><v-icon name="fc-google" scale="1.2"></v-icon
-        ><span class="google">CONTINUE WITH GOOGLE</span></BaseFormButton
-      >
+      <FormButton variant="red" width="100%">
+        <v-icon name="fc-google" scale="1.2"></v-icon>
+        <span class="google">CONTINUE WITH GOOGLE</span>
+      </FormButton>
     </form>
   </div>
+  <Toast ref="toast" />
 </template>
 
-<script>
+<script setup lang="ts">
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import BaseFormButton from '@/components/Global/BaseFormButton.vue'
+import FormButton from '@/components/Global/BaseFormButton.vue'
+import Toast from '@/components/Global/Toast.vue'
+import axios from 'axios'
 
-export default {
-  components: {
-    BaseTextInput,
-    BaseFormButton,
-  },
+const toast = ref(null)
 
-  setup() {
-    const form = reactive({
-      email: '',
-      password: '',
-    })
+// Define types
+interface FormState {
+  email: string
+  password: string
+}
 
-    const errors = reactive({
-      email: '',
-      password: '',
-    })
+interface ErrorState {
+  email: string
+  password: string
+}
 
-    const hasAttemptedSubmit = ref(false)
+// Reactive state
+const form = reactive<FormState>({
+  email: '',
+  password: '',
+})
 
-    const validateForm = () => {
-      hasAttemptedSubmit.value = true
+const errors = reactive<ErrorState>({
+  email: '',
+  password: '',
+})
 
-      errors.email = ''
-      errors.password = ''
+const hasAttemptedSubmit = ref(false)
 
-      if (!form.email) {
-        errors.email = 'Email is required.'
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        errors.email = 'Invalid email format.'
-      }
+// Form validation
+const validateForm = () => {
+  hasAttemptedSubmit.value = true
 
-      if (!form.password) {
-        errors.password = 'Password is required.'
-      } else if (form.password.length < 6) {
-        errors.password = 'Password must be at least 6 characters.'
-      }
-      console.log('Errors object:', errors)
-      if (!errors.email && !errors.password) {
-        console.log('Form submitted successfully!', form)
-      }
-    }
+  errors.email = ''
+  errors.password = ''
 
-    const clearError = field => {
-      errors[field] = ''
-    }
+  if (!form.email) {
+    errors.email = 'Email is required.'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'Invalid email format.'
+  }
 
-    return {
+  if (!form.password) {
+    errors.password = 'Password is required.'
+  } else if (form.password.length < 6) {
+    errors.password = 'Password must be at least 6 characters.'
+  }
+
+  console.log('Errors object:', errors)
+  if (!errors.email && !errors.password) {
+    console.log('Form submitted successfully!', form)
+  }
+}
+
+// Clear error messages
+const clearError = (field: keyof ErrorState) => {
+  errors[field] = ''
+}
+
+const submitForm = async () => {
+  try {
+    const response = await axios.post(
+      'http://127.0.0.1:8000/api/user/login/',
       form,
-      errors,
-      hasAttemptedSubmit,
-      validateForm,
-      clearError,
-    }
-  },
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    localStorage.setItem('authToken', response.data.token)
+    axios.defaults.headers.common['Authorization'] =
+      `Token ${response.data.token}`
+    toast.value.showToast('Login successful!', 'success')
+
+    setTimeout(() => {
+      window.location.href = 'http://localhost:5173/authenticated/dashboard'
+    }, 2000)
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || 'An unexpected error occurred'
+    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
+  }
 }
 </script>
 
