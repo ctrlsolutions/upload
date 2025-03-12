@@ -127,10 +127,13 @@ const submitForm = async () => {
       },
     )
 
+    localStorage.setItem('authToken', response.data.token)
+    axios.defaults.headers.common['Authorization'] =
+      `Token ${response.data.token}`
     toast.value.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      window.location.href = 'http://localhost:5173/auth/login'
+      window.location.href = 'http://localhost:5173/authenticated/dashboard'
     }, 2000)
   } catch (error) {
     const errorMessage =
