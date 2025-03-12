@@ -3,6 +3,7 @@ import SignUpPage from '@/pages/SignUpPage.vue'
 import LogInPage from '@/pages/LogInPage.vue'
 import AuthPagesLayout from '@/layouts/AuthPagesLayout.vue'
 import LandingPage from '@/pages/LandingPage.vue'
+import DashboardPage from '@/pages/DashboardPage.vue'
 import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
 
 const router = createRouter({
@@ -28,7 +29,10 @@ const router = createRouter({
       path: '/authenticated',
       name: 'authenticated',
       component: AuthenticatedPagesLayout,
-      // children will be tabs as components.
+      children: [
+        { path: 'dashboard', component: DashboardPage },
+        { path: 'report', component: LogInPage },
+      ],
     },
   ],
 })
