@@ -4,25 +4,52 @@
       <h1>Log in</h1>
     </div>
     <p>Welcome! Log in to access your dashboard.</p>
-    <form class="input-group">
-      <BaseTextInput id="email" type="email" placeholder="Email" variant="green" width="100%" height="3.5rem"/>
-      <BaseTextInput id="password" type="password" placeholder="Password" variant="green" width="100%" height="3.5rem"/>
-    </form>
-    <form class="forgot-password">
-      <a href="#" class="forgotp">Forgot Password?</a>
-    </form>
-    <form class="login-button">
-      <BaseFormButton variant="green" width="100%">LOG IN</BaseFormButton>
+    <form class="input-group" @submit.prevent="submitForm">
+      <BaseTextInput
+        id="email"
+        type="email"
+        placeholder="Email"
+        variant="green"
+        width="100%"
+        height="3.5rem"
+        v-model="form.email"
+        @input="clearError('email')"
+      />
+      <p v-if="hasAttemptedSubmit && errors.email" class="error-message">
+        {{ errors.email }}
+      </p>
+      <BaseTextInput
+        id="password"
+        type="password"
+        placeholder="Password"
+        variant="green"
+        width="100%"
+        height="3.5rem"
+        v-model="form.password"
+        @input="clearError('password')"
+      />
+      <p v-if="hasAttemptedSubmit && errors.password" class="error-message">
+        {{ errors.password }}
+      </p>
+
+      <div class="forgot-password">
+        <a href="#" class="forgotp">Forgot Password?</a>
+      </div>
+      <div class="login-button">
+        <FormButton variant="green" width="100%" @click="validateForm">
+          LOG IN
+        </FormButton>
+      </div>
     </form>
     <div class="or-text">
       <p>OR</p>
     </div>
-    <div class="cont-google">
-      <BaseFormButton variant="red" width="100%" @click="openGoogleModal">
+    <form class="cont-google">
+      <FormButton variant="red" width="100%">
         <v-icon name="fc-google" scale="1.2"></v-icon>
         <span class="google">CONTINUE WITH GOOGLE</span>
-      </BaseFormButton>
-    </div>
+      </FormButton>
+    </form>
 
     <ModalLogin
       :isOpen="isGoogleModalOpen"
@@ -30,13 +57,16 @@
       @proceed="handleGoogleLogin"
     />
   </div>
+  <Toast ref="toast" />
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import BaseTextInput from "@/components/Global/BaseTextInput.vue";
-import BaseFormButton from "@/components/Global/BaseFormButton.vue";
+import { reactive, ref } from 'vue'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+import FormButton from '@/components/Global/BaseFormButton.vue'
+import Toast from '@/components/Global/Toast.vue'
 import ModalLogin from '@/components/Login/ModalLogin.vue';
+import axios from 'axios'
 
 const isGoogleModalOpen = ref(false);
 
@@ -51,9 +81,99 @@ const closeGoogleModal = () => {
 const handleGoogleLogin = (password: string) => {
   console.log('Proceeding with Google login, password:', password);
 };
+
+const toast = ref(null)
+
+// Define types
+interface FormState {
+  email: string
+  password: string
+}
+
+interface ErrorState {
+  email: string
+  password: string
+}
+
+// Reactive state
+const form = reactive<FormState>({
+  email: '',
+  password: '',
+})
+
+const errors = reactive<ErrorState>({
+  email: '',
+  password: '',
+})
+
+const hasAttemptedSubmit = ref(false)
+
+// Form validation
+const validateForm = () => {
+  hasAttemptedSubmit.value = true
+
+  errors.email = ''
+  errors.password = ''
+
+  if (!form.email) {
+    errors.email = 'Email is required.'
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+    errors.email = 'Invalid email format.'
+  }
+
+  if (!form.password) {
+    errors.password = 'Password is required.'
+  } else if (form.password.length < 6) {
+    errors.password = 'Password must be at least 6 characters.'
+  }
+
+  console.log('Errors object:', errors)
+  if (!errors.email && !errors.password) {
+    console.log('Form submitted successfully!', form)
+  }
+}
+
+// Clear error messages
+const clearError = (field: keyof ErrorState) => {
+  errors[field] = ''
+}
+
+const submitForm = async () => {
+  try {
+    const response = await axios.post(
+      'http://127.0.0.1:8000/api/user/login/',
+      form,
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+
+    localStorage.setItem('authToken', response.data.token)
+    axios.defaults.headers.common['Authorization'] =
+      `Token ${response.data.token}`
+    toast.value.showToast('Login successful!', 'success')
+
+    setTimeout(() => {
+      window.location.href = 'http://localhost:5173/authenticated/dashboard'
+    }, 2000)
+  } catch (error) {
+    const errorMessage =
+      error.response?.data?.error || 'An unexpected error occurred'
+    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
+  }
+}
 </script>
 
 <style lang="scss" scoped>
+.error-message {
+  color: red;
+  font-size: 0.7rem;
+  margin-top: -1rem;
+  margin-bottom: 0rem;
+  padding: 0;
+  line-height: 0;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
@@ -72,7 +192,6 @@ const handleGoogleLogin = (password: string) => {
   @include md {
     width: 15rem;
     padding: 1.5rem;
-
   }
 
   @include lg {
@@ -155,9 +274,9 @@ const handleGoogleLogin = (password: string) => {
 }
 
 .forgot-password {
-  width: 100%;     
-  text-align: right;   
-  margin-top: -0.5rem; 
+  width: 100%;
+  text-align: right;
+  margin-top: -0.5rem;
   padding-right: 1rem;
   margin-bottom: 1.5rem;
 
@@ -178,9 +297,9 @@ const handleGoogleLogin = (password: string) => {
 }
 
 .forgotp {
-    color: $green;
-    text-decoration: none;
-    font-size: 0.9rem;
+  color: $green;
+  text-decoration: none;
+  font-size: 0.9rem;
 
   &:hover {
     text-decoration: underline;
