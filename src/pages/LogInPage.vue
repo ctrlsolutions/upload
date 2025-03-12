@@ -50,6 +50,12 @@
         <span class="google">CONTINUE WITH GOOGLE</span>
       </FormButton>
     </form>
+
+    <ModalLogin
+      :isOpen="isGoogleModalOpen"
+      @close="closeGoogleModal"
+      @proceed="handleGoogleLogin"
+    />
   </div>
   <Toast ref="toast" />
 </template>
@@ -59,7 +65,22 @@ import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import Toast from '@/components/Global/Toast.vue'
+import ModalLogin from '@/components/Login/ModalLogin.vue';
 import axios from 'axios'
+
+const isGoogleModalOpen = ref(false);
+
+const openGoogleModal = () => {
+  isGoogleModalOpen.value = true;
+};
+
+const closeGoogleModal = () => {
+  isGoogleModalOpen.value = false;
+};
+
+const handleGoogleLogin = (password: string) => {
+  console.log('Proceeding with Google login, password:', password);
+};
 
 const toast = ref(null)
 
@@ -233,6 +254,7 @@ const submitForm = async () => {
 }
 
 .or-text {
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
 
   @include sm {
