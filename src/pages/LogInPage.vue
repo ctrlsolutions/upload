@@ -31,7 +31,7 @@
       <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
 
       <a href="#" class="forgot-password">Forgot Password?</a>
-      
+
       <FormButton variant="green" width="100%" @click="validateForm">
         LOG IN
       </FormButton>
@@ -55,11 +55,11 @@
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
-import { FormState, ErrorState } from '@/types/LoginInterface'
+import { FormState, ErrorState } from '@/types/AuthInterface'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
-} from '@/validators/LogInValidator'
+} from '@/validators/AuthValidators'
 import { login, googleLogin } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
@@ -129,7 +129,7 @@ const handleGoogleLogin = async (googleResponse: any) => {
 .error-message {
   color: $red;
   font-size: 0.75rem;
-  margin: 0;
+  margin: -0.9rem;
 }
 
 .login-container {
@@ -184,9 +184,9 @@ const handleGoogleLogin = async (googleResponse: any) => {
 }
 
 .forgot-password {
-  width: 100%;     
-  text-align: right;   
-  margin-top: -0.5rem; 
+  width: 100%;
+  text-align: right;
+  margin-top: -0.5rem;
   padding-right: 1rem;
   margin-bottom: 1.5rem;
   color: $green;
@@ -198,8 +198,8 @@ const handleGoogleLogin = async (googleResponse: any) => {
   }
 
   &:focus {
-    outline: none; 
-    background-color: transparent; 
+    outline: none;
+    background-color: transparent;
   }
 }
 
