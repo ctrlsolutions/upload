@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .about-container {
   position: relative;
   z-index: 2;
@@ -40,7 +40,7 @@ export default {
 
   @include md { 
     min-width: 36rem; 
-    padding-left: 3rem; 
+    padding-left: 2.5rem; 
     padding-right: 20rem; 
     padding-top: 2rem;
     padding-bottom: 22rem;
@@ -48,7 +48,7 @@ export default {
 
   @include lg { 
       min-width: 48.063rem;
-      padding-left: 5rem;
+      padding-left: 3rem;
       padding-right: 25rem;
       padding-top: 4rem;
       padding-bottom: 22rem;
@@ -56,7 +56,7 @@ export default {
 
   @include xl {
       min-width: 70rem;
-      padding-left: 7rem;
+      padding-left: 3.5rem;
       padding-right: 17rem;
       padding-top: 8rem;
       padding-bottom: 22rem;
@@ -80,6 +80,7 @@ export default {
 
   @include xl {
     font-size: 1rem;
+    padding-right: 30rem;
   }
 }
 
@@ -90,18 +91,22 @@ export default {
 
   @include sm {
     font-size: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   @include md {
     font-size: 2rem;
+    margin-bottom: 1rem;
   }
 
   @include lg {
     font-size: 3.25rem;
+    margin-bottom: 1.25rem;
   }
 
   @include xl {
     font-size: 4rem;
+    margin-bottom: 1.5rem;
   }
 }
 </style>
