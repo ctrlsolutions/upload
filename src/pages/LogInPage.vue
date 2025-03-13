@@ -227,25 +227,23 @@ const submitForm = async () => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
 
   @include sm {
     gap: 1rem;
     margin-top: 1.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   @include md {
     gap: 1.5rem;
     margin-top: 2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
   }
 
   @include lg {
     gap: 2rem;
     margin-top: 3rem;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -254,8 +252,8 @@ const submitForm = async () => {
 }
 
 .or-text {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 
   @include sm {
     margin-bottom: 0.5rem;
@@ -278,21 +276,20 @@ const submitForm = async () => {
   text-align: right;
   margin-top: -0.5rem;
   padding-right: 1rem;
-  margin-bottom: 1.5rem;
 
   @include sm {
     padding-right: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.1rem;
   }
 
   @include md {
     padding-right: 0.75rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.2rem;
   }
 
   @include lg {
     padding-right: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.3rem;
   }
 }
 
