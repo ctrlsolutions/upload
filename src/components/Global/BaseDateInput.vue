@@ -59,7 +59,7 @@ defineEmits(['update:modelValue'])
   border: 0.15px solid $red;
   background: transparent;
   cursor: text;
-  border-radius: 0.625rem;
+  border-radius: 0.6rem;
   //padding: 0.75rem;
   padding-left: 2.7rem;
   color: rgba(117, 17, 19, 0.7);
