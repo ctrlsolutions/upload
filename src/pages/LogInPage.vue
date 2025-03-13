@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
     <div class="login-header">
-      <h1>Log in</h1>
+      <h1 id="title">Log in</h1>
+      <p id="subtitle">Welcome! Log in to access your dashboard.</p>
     </div>
-    <p>Welcome! Log in to access your dashboard.</p>
 
     <form class="input-group" @submit.prevent="submitForm">
       <BaseTextInput
@@ -158,19 +158,17 @@ const handleGoogleLogin = async (googleResponse: any) => {
 .login-header {
   text-align: center;
   font-size: 2rem;
-  font-weight: 800;
-  @include sm {
-    font-size: 1.5rem;
-  }
-  @include md {
-    font-size: 1.75rem;
-  }
-  @include lg {
-    font-size: 2rem;
-  }
-  h1 {
-    font-weight: 800;
-  }
+  font-weight: 900;
+  margin-bottom: 3rem;
+}
+
+#title {
+  font-size: 4rem;
+  font-weight: 900;
+}
+
+#subtitle {
+  font-size: 1rem;
 }
 
 .input-group {
@@ -178,40 +176,11 @@ const handleGoogleLogin = async (googleResponse: any) => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
-  @include sm {
-    gap: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  @include md {
-    gap: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
-  }
-  @include lg {
-    gap: 2rem;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
-  }
 }
 
 .or-text {
-  margin-bottom: 0.5rem;
   text-align: center;
-  @include sm {
-    margin-bottom: 0.5rem;
-    font-size: 0.9em;
-  }
-  @include md {
-    margin-bottom: 0.75rem;
-    font-size: 1em;
-  }
-  @include lg {
-    margin-bottom: 1rem;
-    font-size: 1em;
-  }
+  margin: 1.5rem;
 }
 
 .forgot-password {
@@ -237,6 +206,6 @@ const handleGoogleLogin = async (googleResponse: any) => {
 #google-login {
   display: flex;
   flex-direction: column;
-  margin-top: 0.5rem;
+  margin-top: -0.75rem;
 }
 </style>
