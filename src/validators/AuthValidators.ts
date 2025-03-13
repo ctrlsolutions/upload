@@ -1,5 +1,4 @@
-// src/validators/loginValidator.ts
-import { FormState, ErrorState } from '@/types/LoginInterface'
+import { FormState, ErrorState } from '@/types/AuthInterface'
 
 export const validateField = (
   form: FormState,

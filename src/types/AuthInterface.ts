@@ -1,4 +1,3 @@
-// src/types/login.ts
 export interface FormState {
   email: string
   password: string
