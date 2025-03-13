@@ -1,7 +1,9 @@
 <template>
   <div class="report-summary">
-    <h1 class="title">QUARTERLY REPORT SUMMARY</h1>
-    <p class="date">01/25/25 - 06/25/25</p>
+    <div class="header">
+      <h1 class="title">QUARTERLY REPORT SUMMARY</h1>
+      <p class="date">01/25/25 - 06/25/25</p>
+    </div>
 
     <div class="report-content">
       <div class="pie-chart-section">
@@ -9,7 +11,7 @@
           <p class="report-number">69,420</p>
           <p class="report-label">REPORTS</p>
         </div>
-        <img src="#" alt="Pie Chart" class="pie-chart" />
+        <img src="@/assets/pie-chart.png" alt="Pie Chart" class="pie-chart" />
       </div>
 
       <div class="legend">
@@ -45,17 +47,17 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .report-summary {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 30px;
+  padding: 3rem;
 
   .title {
-    font-size: 3rem;
-    font-weight: 900;
+    font-size: 3.5rem;
+    font-weight: 800;
     color: maroon;
     margin-bottom: 5px;
   }
@@ -65,6 +67,7 @@ export default {
     font-weight: bold;
     color: black;
     margin-top: -10px;
+    margin-bottom: 3rem;
   }
 
   .report-content {
@@ -72,8 +75,9 @@ export default {
     flex-direction: row;
     align-items: center;
     gap: 50px;
-    margin-top: 20px;
+    margin-top: 1.5rem;
   }
+
   .pie-chart-section {
     display: flex;
     flex-direction: column;
@@ -81,24 +85,25 @@ export default {
 
     .total-reports {
       text-align: center;
-      font-size: 2rem;
       font-weight: bold;
       color: black;
     }
 
     .pie-chart {
-      width: 300px;
+      width: 25rem;
       height: auto;
     }
   }
 
-    .report-number {
-    font-weight: 600; 
-    margin-bottom: 0;
+  .report-number {
+    font-size: 3rem;
+    font-weight: 800; 
+    margin-bottom: -1rem;
   }
 
   .report-label {
-    font-weight: 800;
+    font-size: 2rem;
+    font-weight: 600;
     margin-top: 0;
   }
 
@@ -106,11 +111,13 @@ export default {
     ul {
       list-style: none;
       padding: 0;
-
+      padding-top: 6.5rem;
+      
       li {
         display: flex;
         align-items: center;
-        font-size: 1.2rem;
+        font-size: 1rem;
+        font-weight: 600;
         margin-bottom: 8px;
 
         .color-box {
