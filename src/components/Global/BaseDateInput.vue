@@ -31,9 +31,9 @@ const props = defineProps({
 
 defineEmits(['update:modelValue'])
 
-const openDatePicker = () => {
-  inputRef.value?.showPicker?.() || inputRef.value?.focus()
-}
+// const openDatePicker = () => {
+//   inputRef.value?.showPicker?.() || inputRef.value?.focus()
+// }
 </script>
 
 <style lang="scss" scoped>
@@ -47,6 +47,8 @@ const openDatePicker = () => {
   display: flex;
   align-items: center;
   overflow: visible;
+  justify-content: right;
+  margin-top: 0.5rem;
 }
 
 .date-input {
@@ -54,11 +56,11 @@ const openDatePicker = () => {
   font-weight: 900;
   height: 2.4rem;
   // text-align: left;
-  border: 0.1111rem solid $red;
+  border: 0.15px solid $red;
   background: transparent;
   cursor: text;
   border-radius: 0.625rem;
-  padding: 0.75rem;
+  //padding: 0.75rem;
   padding-left: 2.7rem;
   color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
@@ -76,10 +78,14 @@ const openDatePicker = () => {
   display: none;
 }
 
+.date-input::-moz-calendar-picker-indicator {
+  display: none;
+}
+
 .dropdown-toggle {
   position: absolute;
   top: 50%;
-  right: 0.5rem;
+  right: 0.45rem;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
@@ -93,5 +99,27 @@ const openDatePicker = () => {
 
 .dropdown-toggle:hover {
   opacity: 1;
+}
+
+@supports (-moz-appearance: none) {
+  .dropdown-toggle {
+    display: none;
+  }
+}
+@supports (-moz-appearance: none) {
+  .date-input {
+    position: relative;
+    padding-right: 1rem;
+  }
+
+  .date-input::-moz-calendar-picker-indicator {
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1.5rem;
+    width: 2rem;
+    pointer-events: auto;
+    cursor: pointer;
+  }
 }
 </style>
