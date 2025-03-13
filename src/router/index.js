@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SignUpPage from '@/pages/SignupPage.vue'
+import SignUpPage from '@/pages/SignUpPage.vue'
 import LogInPage from '@/pages/LogInPage.vue'
 import AuthPagesLayout from '@/layouts/AuthPagesLayout.vue'
-import EmptyPagesLayout from '@/layouts/EmptyPagesLayout.vue'
 import LandingPage from '@/pages/LandingPage.vue'
-import Test from '@/pages/Test.vue';
+import DashboardPage from '@/pages/DashboardPage.vue'
+import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,7 +23,15 @@ const router = createRouter({
       children: [
         { path: 'signup', component: SignUpPage },
         { path: 'login', component: LogInPage },
-        { path: 'test', component: Test},
+      ],
+    },
+    {
+      path: '/authenticated',
+      name: 'authenticated',
+      component: AuthenticatedPagesLayout,
+      children: [
+        { path: 'dashboard', component: DashboardPage },
+        { path: 'report', component: LogInPage },
       ],
     },
   ],
