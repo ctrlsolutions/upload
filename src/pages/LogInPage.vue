@@ -1,9 +1,9 @@
 <template>
   <div class="login-container">
     <div class="login-header">
-      <h1 class="login-title">Log in</h1>
-      <p class="login-subtitle">Welcome! Log in to access your dashboard.</p>
+      <h1>Log in</h1>
     </div>
+    <p>Welcome! Log in to access your dashboard.</p>
 
     <form class="input-group" @submit.prevent="submitForm">
       <BaseTextInput
@@ -31,7 +31,7 @@
       <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
 
       <a href="#" class="forgot-password">Forgot Password?</a>
-
+      
       <FormButton variant="green" width="100%" @click="validateForm">
         LOG IN
       </FormButton>
@@ -39,11 +39,13 @@
 
     <p class="or-text">OR</p>
 
-    <GoogleLogin :callback="handleGoogleLogin">
-      <FormButton variant="red" width="25rem" type="button">
-        CONTINUE WITH GOOGLE
-      </FormButton>
-    </GoogleLogin>
+    <div class="input-group" id="google-login">
+      <GoogleLogin :callback="handleGoogleLogin">
+        <FormButton variant="red" width="100%" type="button">
+          CONTINUE WITH GOOGLE
+        </FormButton>
+      </GoogleLogin>
+    </div>
   </div>
 
   <Toast ref="toast" />
@@ -138,34 +140,103 @@ const handleGoogleLogin = async (googleResponse: any) => {
   max-width: 25rem;
   margin: auto;
   padding: 2rem;
+  background-color: transparent;
+  @include sm {
+    width: 12rem;
+    padding: 1rem;
+  }
+  @include md {
+    width: 15rem;
+    padding: 1.5rem;
+  }
+  @include lg {
+    width: 25rem;
+    padding: 2rem;
+  }
 }
 
 .login-header {
   text-align: center;
   font-size: 2rem;
   font-weight: 800;
+  @include sm {
+    font-size: 1.5rem;
+  }
+  @include md {
+    font-size: 1.75rem;
+  }
+  @include lg {
+    font-size: 2rem;
+  }
+  h1 {
+    font-weight: 800;
+  }
 }
 
 .input-group {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin: 2rem 0;
+  gap: 2rem;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  @include sm {
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  @include md {
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  @include lg {
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
 }
 
 .or-text {
-  margin: 1rem 0;
-  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  @include sm {
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+  }
+  @include md {
+    margin-bottom: 0.75rem;
+    font-size: 1em;
+  }
+  @include lg {
+    margin-bottom: 1rem;
+    font-size: 1em;
+  }
 }
 
 .forgot-password {
+  width: 100%;     
+  text-align: right;   
+  margin-top: -0.5rem; 
+  padding-right: 1rem;
+  margin-bottom: 1.5rem;
   color: $green;
   text-decoration: none;
-  font-size: 0.9rem;
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
+
+  &:focus {
+    outline: none; 
+    background-color: transparent; 
+  }
+}
+
+#google-login {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;
 }
 </style>
