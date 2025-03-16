@@ -1,0 +1,69 @@
+<template>
+  <div class="greeting-card">
+    <div class="date-time">
+      <span>📅 {{ currentDate }} &nbsp; {{ currentTime }}</span>
+    </div>
+    <div class="greeting-text">
+      <h2>Good Day, Prof. Tuazon</h2>
+      <p>Have a great day!</p>
+    </div>
+    <img src="@/assets/UPSystemLogo.png" alt="UP Logo" class="up-logo" />
+  </div>
+</template>
+
+<script>
+export default {
+  name: "GreetingCard",
+  data() {
+    return {
+      currentDate: "Dec 01, 2024", // Placeholder date (replace with dynamic logic)
+      currentTime: "2:16 pm", // Placeholder time (replace with dynamic logic)
+    };
+  },
+};
+</script>
+
+<style scoped>
+.greeting-card {
+  width: 658px;
+  height: 206px;
+  background: linear-gradient(to right, #1a3d21, #2f6035);
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  color: white;
+  overflow: hidden; 
+}
+
+.date-time {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 12px;
+  width: fit-content;
+  font-size: 14px;
+}
+
+.greeting-text h2 {
+  margin: 10px 0 5px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.greeting-text p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.up-logo {
+  position: absolute;
+  right: 9rem;
+  left: 28rem;
+  top: -1.5rem;
+  bottom: 0rem;
+  width: 16rem;
+  opacity: 0.3;
+}
+</style>

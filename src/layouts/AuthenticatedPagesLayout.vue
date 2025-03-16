@@ -109,11 +109,10 @@ export default {}
   position: relative;
 }
 .icon-label {
-  display: none;
   width: 0px;
   height: 30px;
   position: relative;
-  z-index: 2;
+  z-index: -1;
   padding-left: 5px;
 }
 .nav-link:hover {
@@ -125,8 +124,8 @@ export default {}
   transition: none; /* Removes animation on unhover */
 }
 .nav-link:hover > .icon-label {
-  display: inline;
   width: 130px;
+  z-index: 2;
 }
 .profile-link:hover,
 .settings-link:hover {
