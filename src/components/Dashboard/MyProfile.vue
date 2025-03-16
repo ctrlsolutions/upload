@@ -1,13 +1,14 @@
 <template>
   <div class="my-profile">
     <div class="profile-header">MY PROFILE</div>
-    <div class="profile-content">
-      <img :src="user.profilePicture" alt="Profile Picture" class="profile-pic" />
+    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-else-if="error" class="error-message">{{ error }}</div>
+    <div v-else class="profile-content">
+      <img :src="user.profilePicture || defaultProfilePicture" alt="Profile Picture" class="profile-pic" />
       <div class="user-info">
-        <p class="name">{{ user.name }}</p>
-        <p class="role">{{ user.role }}</p>
+        <p class="name"> Prof. {{ user.fullName }}</p>
+        <p class="role">{{ formattedRole }}</p>
         <p class="email">{{ user.email }}</p>
-        <p class="contact">{{ user.contact }}</p>
       </div>
       <div class="reports">
         <p class="ReportsSubmitted">Reports Submitted</p>
@@ -17,25 +18,71 @@
   </div>
 </template>
 
-
 <script>
+import DashboardServices from "@/services/DashboardService"; // Ensure correct import
+
 export default {
   name: "MyProfile",
   data() {
     return {
       user: {
-      profilePicture: new URL('@/assets/DefaultProfile.png', import.meta.url).href,// Default profile picture
-        name: "Prof. Chraine Paul Tuazon",
-        role: "College Dean",
-        email: "chretuara@up.edu.ph",
-        contact: "09334455667",
-        reportsSubmitted: 69,
+        profilePicture: "",
+        fullName: "",
+        role: "",
+        email: "",
+        reportsSubmitted: 0,
       },
+      isLoading: true,
+      error: null,
+      defaultProfilePicture: new URL('@/assets/DefaultProfile.png', import.meta.url).href
     };
   },
-  // Fetching functionality will be added once the backend is ready
+  computed: {
+    formattedRole() {
+      if (!this.user.role) return ""; // Handle empty or undefined role
+      const role = this.user.role.toLowerCase(); // Normalize casing
+      if (role === "cd") return "College Dean";
+      if (role === "f") return "Faculty";
+      return this.user.role; // Default fallback
+  }
+  },
+  async created() {
+    await this.fetchUserProfile();
+  },
+  methods: {
+    async fetchUserProfile() {
+      try {
+        const dashboardData = await DashboardServices.getDashboardData();
+        if (dashboardData && dashboardData.user) {
+          this.user = {
+            profilePicture: dashboardData.user.profile_picture, // Ensure backend returns this
+            fullName: this.formatFullName(
+              dashboardData.user.first_name,
+              dashboardData.user.middle_name,
+              dashboardData.user.last_name
+            ),
+            role: dashboardData.user.role,
+            email: dashboardData.user.email,
+            reportsSubmitted: dashboardData.user.reports_submitted || 0, // Ensure backend has this field
+          };
+        } else {
+          throw new Error("Failed to load user data.");
+        }
+      } catch (error) {
+        this.error = "Error fetching profile. Please try again.";
+        console.error(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    formatFullName(firstName, middleName, lastName) {
+      // If middle name exists, include it; otherwise, skip it.
+      return `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim();
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 .my-profile {

@@ -99,26 +99,33 @@ const validateForm = async () => {
 
 const submitForm = async () => {
   try {
-    const response = await login(form) // ✅ Now correctly receives the full object
-    console.log("Full response:", response) // Debugging step
+    const response = await login(form);
+    console.log("Full response:", response); // Debugging
 
-    if (response.token && response.user_id) {
-      localStorage.setItem('authToken', response.token)
-      console.log("Token:", response.token)
-      console.log("User ID:", response.user_id)
+    // Remove ".data" since response itself is the data
+    if (response?.token && response?.user_id) {
+      localStorage.setItem("token", response.token);
+      console.log("Token stored:", response.token);
 
-      axios.defaults.headers.common['Authorization'] = `Token ${response.token}`
-      toast.value?.showToast('Login successful!', 'success')
+      axios.defaults.headers.common["Authorization"] = `Token ${response.token}`;
+      toast.value?.showToast("Login successful!", "success");
+
+      console.log("Token stored:", response.token);
+      
+      setTimeout(() => {
+        window.location.href = "/authenticated/dashboard";
+      }, 2000);
+      
+    } else {
+      console.error("No token received");
+      toast.value?.showToast("Login failed: No token received", "error");
     }
-    // setTimeout(() => {
-    //   window.location.href = '/authenticated/dashboard'
-    // }, 2000)
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
-    toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
+      error.response?.data?.error || "An unexpected error occurred";
+    toast.value?.showToast(`Error submitting form: ${errorMessage}`, "error");
   }
-}
+};
 
 const handleGoogleLogin = async (googleResponse: any) => {
   try {
