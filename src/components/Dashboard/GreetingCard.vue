@@ -4,7 +4,7 @@
       <span>📅 {{ currentDate }} &nbsp; {{ currentTime }}</span>
     </div>
     <div class="greeting-text">
-      <h2>Good Day, Prof. Tuazon</h2>
+      <h2 v-if="lastName">Good Day, Prof. {{ lastName }}</h2>
       <p>Have a great day!</p>
     </div>
     <img src="@/assets/UPSystemLogo.png" alt="UP Logo" class="up-logo" />
@@ -12,14 +12,40 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: "GreetingCard",
   data() {
     return {
-      currentDate: "Dec 01, 2024", // Placeholder date (replace with dynamic logic)
-      currentTime: "2:16 pm", // Placeholder time (replace with dynamic logic)
+      currentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
+      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+      lastName: "", 
     };
   },
+  methods: {
+    async fetchUserData() {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+          console.error("No auth token found");
+          return;
+        }
+
+        // Set token in Axios headers
+        axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+
+        // Fetch user data from the API
+        const response = await axios.get('https://your-api.com/user/profile');
+        this.lastName = response.data.lastName; // Adjust according to API response
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      }
+    }
+  },
+  mounted() {
+    this.fetchUserData(); // Fetch data when the component loads
+  }
 };
 </script>
 
