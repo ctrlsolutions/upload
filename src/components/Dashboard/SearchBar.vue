@@ -1,11 +1,14 @@
 <template>
-  <div class="search-bar-container">
-    <input 
-      type="text" 
-      placeholder="Search for reports" 
-      class="search-input"
-    />
-    <img src="@/assets/searchLogo.png" alt="Search" class="search-icon" />
+  <div class="search-bar-wrapper">
+    <div class="search-bar-container">
+      <input 
+        type="text" 
+        placeholder="Search for reports" 
+        class="search-input"
+      />
+      <img src="@/assets/searchLogo.png" alt="Search" class="search-icon" />
+    </div>
+    <img src="@/assets/NotificationBell.png" alt="Notifications" class="notification-icon" />
   </div>
 </template>
 
@@ -14,6 +17,12 @@ export default {};
 </script>
 
 <style scoped>
+.search-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between search bar and notification bell */
+}
+
 .search-bar-container {
   display: flex;
   align-items: center;
@@ -25,7 +34,7 @@ export default {};
   padding: 10px 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   border: 1px solid #ccc;
-  flex-grow: 1; /* Makes it responsive */
+  flex-grow: 1;
 }
 
 .search-input {
@@ -43,10 +52,16 @@ export default {};
   margin-left: 10px;
 }
 
+.notification-icon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .search-bar-container {
-    width: 90%; /* Adjust width for smaller screens */
+  .search-bar-wrapper {
+    width: 90%;
   }
 }
 </style>
