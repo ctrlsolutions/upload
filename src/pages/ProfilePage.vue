@@ -69,8 +69,8 @@
 <style lang="scss" scoped>
 .container {
   width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 0;
+  padding: 2rem 2rem 2rem 1rem;
   display: grid;
   gap: 1.5rem;
 }
@@ -91,15 +91,15 @@
 .upper-part {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  width:100%;
+  gap: 1rem;  
+  width: 100%;
 }
 
 .profile-card {
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  width: 45rem;
+  width: 46.5rem;
 
   .content {
     display: flex;
@@ -153,7 +153,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 45rem;
+    width: 46.5rem;
     height: 100%;
 
     .num-reports {
