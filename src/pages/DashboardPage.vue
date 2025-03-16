@@ -52,52 +52,67 @@ export default {
 
 <style scoped>
 .dashboard-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  min-height: 100vh;
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
+  gap: 9px 16px; 
+  grid-template-areas: 
+    ". ."
+    "GreetingCard SearchBar"
+    "GreetingCard MyProfile"
+    "GreetingCard MyProfile"
+    "GreetingCard MyProfile"
+    "ReportStatistics MyProfile"
+    "ReportStatistics MyProfile"
+    "ReportStatistics MyCalendar"
+    "ReportStatistics MyCalendar"
+    "ReportStatistics MyCalendar"
+    "ReportStatistics MyCalendar"
+    "ReportStatistics MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    "LastReport MyCalendar"
+    ". ."; 
+
   width: 100vw;
+  height: 100vh;
   background: url("@/assets/backgroundImages/HomepageBG.png") no-repeat center center fixed;
   background-size: cover;
-  padding: 1rem;
+  padding: 2rem 0rem 0rem 0rem;
 }
 
-.left-section {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  gap: 1rem;
-  width: 100%;
-  padding-top: 1.5rem;
+/* Assigning grid areas */
+.GreetingCard { grid-area: GreetingCard; }
+.SearchBar { grid-area: SearchBar; }
+
+.MyProfile {
+  grid-area: MyProfile;
+  padding-top: 0rem; /* Increased padding on top */
 }
 
-.left-header {
-  grid-row: 1 / 2;
-}
-
-.left-content {
-  grid-row: auto;
-}
-
-.right-section {
-  display: grid;
-  grid-template-rows: auto auto auto;
-  gap: 1rem;
-  width: 100%;
-  padding-top: 0.5rem;
-}
-
-.right-header {
-  grid-row: 1 / 2;
-}
-
-.right-content {
-  grid-row: auto;
-}
+.ReportStatistics { grid-area: ReportStatistics; }
+.LastReport { grid-area: LastReport; }
+.MyCalendar { grid-area: MyCalendar; }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .dashboard-page {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "GreetingCard"
+      "SearchBar"
+      "MyProfile"
+      "ReportStatistics"
+      "MyCalendar"
+      "LastReport";
+  }
+
+  .MyProfile {
+    padding-top: 1rem; /* Adjusted for smaller screens */
   }
 }
 </style>
