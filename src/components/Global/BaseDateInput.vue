@@ -30,10 +30,6 @@ const props = defineProps({
 })
 
 defineEmits(['update:modelValue'])
-
-// const openDatePicker = () => {
-//   inputRef.value?.showPicker?.() || inputRef.value?.focus()
-// }
 </script>
 
 <style lang="scss" scoped>
@@ -55,16 +51,14 @@ defineEmits(['update:modelValue'])
   width: 100%;
   font-weight: 900;
   height: 2.4rem;
-  // text-align: left;
   border: 0.15px solid $red;
   background: transparent;
   cursor: text;
   border-radius: 0.6rem;
-  //padding: 0.75rem;
   padding-left: 2.7rem;
   color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
-  -moz-appearance: none;
+  -moz-appearance: none;  
   appearance: none;
   font-family: 'Inter', sans-serif;
 }
