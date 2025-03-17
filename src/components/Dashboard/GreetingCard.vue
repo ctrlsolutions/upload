@@ -64,11 +64,10 @@ export default {
 }
 
 .greeting-text h2 {
-<<<<<<< HEAD
   padding: 0rem 0rem 2rem .25rem;
-=======
+
   padding: 0rem 0rem 1.25rem .250rem;
->>>>>>> 2d9eb8f ([feat][lanie] added a formatted role)
+  margin: 10px 0 5px;
   font-size: 24px;
   font-weight: bold;
 }
