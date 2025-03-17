@@ -43,8 +43,8 @@ const variantClass = computed(() => `form-radio--${props.variant}`);
         width: 1rem; 
         height: 1rem;
         cursor: pointer;
-        border: 0.1rem solid $red;
-        border-radius: 50%;
+        border: 0.15px solid $red;
+        border-radius: 0.6rem;
         position: relative;
         transition: all 0.3s ease;
 
@@ -105,7 +105,7 @@ const variantClass = computed(() => `form-radio--${props.variant}`);
     label {
         margin-top: 0.1rem;
         margin-left: 0.5rem;
-        font-weight: bold;
+        font-weight: 900;
         color: #9e2323;
         font-family: 'Inter', sans-serif; 
     }

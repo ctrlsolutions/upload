@@ -1,9 +1,10 @@
 <template>
   <div class="login-container">
     <div class="login-header">
-      <h1>Log in</h1>
+      <h1 id="title">Log in</h1>
+      <p id="subtitle">Welcome! Log in to access your dashboard.</p>
     </div>
-    <p>Welcome! Log in to access your dashboard.</p>
+
     <form class="input-group" @submit.prevent="submitForm">
       <BaseTextInput
         id="email"
@@ -11,52 +12,42 @@
         placeholder="Email"
         variant="green"
         width="100%"
-        height="3.5rem"
         v-model="form.email"
+        @blur="onBlur('email')"
         @input="clearError('email')"
       />
-      <p v-if="hasAttemptedSubmit && errors.email" class="error-message">
-        {{ errors.email }}
-      </p>
+      <p v-if="errors.email" class="error-message">{{ errors.email }}</p>
+
       <BaseTextInput
         id="password"
         type="password"
         placeholder="Password"
         variant="green"
         width="100%"
-        height="3.5rem"
         v-model="form.password"
+        @blur="onBlur('password')"
         @input="clearError('password')"
       />
-      <p v-if="hasAttemptedSubmit && errors.password" class="error-message">
-        {{ errors.password }}
-      </p>
+      <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
 
-      <div class="forgot-password">
-        <a href="#" class="forgotp">Forgot Password?</a>
-      </div>
-      <div class="login-button">
-        <FormButton variant="green" width="100%" @click="validateForm">
-          LOG IN
-        </FormButton>
-      </div>
-    </form>
-    <div class="or-text">
-      <p>OR</p>
-    </div>
-    <form class="cont-google">
-      <FormButton variant="red" width="100%">
-        <v-icon name="fc-google" scale="1.2"></v-icon>
-        <span class="google">CONTINUE WITH GOOGLE</span>
+      <a href="#" class="forgot-password">Forgot Password?</a>
+
+      <FormButton variant="green" width="100%" @click="validateForm">
+        LOG IN
       </FormButton>
     </form>
 
-    <ModalLogin
-      :isOpen="isGoogleModalOpen"
-      @close="closeGoogleModal"
-      @proceed="handleGoogleLogin"
-    />
+    <p class="or-text">OR</p>
+
+    <div class="input-group" id="google-login">
+      <GoogleLogin :callback="handleGoogleLogin">
+        <FormButton variant="red" width="100%" type="button">
+          CONTINUE WITH GOOGLE
+        </FormButton>
+      </GoogleLogin>
+    </div>
   </div>
+
   <Toast ref="toast" />
 </template>
 
@@ -64,38 +55,18 @@
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
+import { FormState, ErrorState } from '@/types/AuthInterface'
+import {
+  validateField as validateFieldFn,
+  validateForm as validateFormFn,
+} from '@/validators/AuthValidators'
+import { login, googleLogin } from '@/services/AuthService'
+
 import Toast from '@/components/Global/Toast.vue'
-import ModalLogin from '@/components/Login/ModalLogin.vue';
 import axios from 'axios'
 
-const isGoogleModalOpen = ref(false);
+const toast = ref<InstanceType<typeof Toast> | null>(null)
 
-const openGoogleModal = () => {
-  isGoogleModalOpen.value = true;
-};
-
-const closeGoogleModal = () => {
-  isGoogleModalOpen.value = false;
-};
-
-const handleGoogleLogin = (password: string) => {
-  console.log('Proceeding with Google login, password:', password);
-};
-
-const toast = ref(null)
-
-// Define types
-interface FormState {
-  email: string
-  password: string
-}
-
-interface ErrorState {
-  email: string
-  password: string
-}
-
-// Reactive state
 const form = reactive<FormState>({
   email: '',
   password: '',
@@ -106,72 +77,59 @@ const errors = reactive<ErrorState>({
   password: '',
 })
 
-const hasAttemptedSubmit = ref(false)
-
-// Form validation
-const validateForm = () => {
-  hasAttemptedSubmit.value = true
-
-  errors.email = ''
-  errors.password = ''
-
-  if (!form.email) {
-    errors.email = 'Email is required.'
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-    errors.email = 'Invalid email format.'
-  }
-
-  if (!form.password) {
-    errors.password = 'Password is required.'
-  } else if (form.password.length < 6) {
-    errors.password = 'Password must be at least 6 characters.'
-  }
-
-  console.log('Errors object:', errors)
-  if (!errors.email && !errors.password) {
-    console.log('Form submitted successfully!', form)
-  }
+const onBlur = (field: keyof FormState) => {
+  clearError(field)
+  errors[field] = validateFieldFn(form, field) || ''
 }
 
-// Clear error messages
 const clearError = (field: keyof ErrorState) => {
   errors[field] = ''
 }
 
+const validateForm = async () => {
+  const validationErrors = validateFormFn(form)
+
+  errors.email = validationErrors.email || ''
+  errors.password = validationErrors.password || ''
+
+  if (!errors.email && !errors.password) {
+    await submitForm()
+  }
+}
+
 const submitForm = async () => {
   try {
-    const response = await axios.post(
-      'http://127.0.0.1:8000/api/user/login/',
-      form,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    )
-
-    localStorage.setItem('authToken', response.data.token)
-    axios.defaults.headers.common['Authorization'] =
-      `Token ${response.data.token}`
-    toast.value.showToast('Login successful!', 'success')
+    const token = await login(form)
+    localStorage.setItem('authToken', token)
+    axios.defaults.headers.common['Authorization'] = `Token ${token}`
+    toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      window.location.href = 'http://localhost:5173/authenticated/dashboard'
+      window.location.href = '/authenticated/dashboard'
     }, 2000)
-  } catch (error) {
+  } catch (error: any) {
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occurred'
-    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
+    toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
+  }
+}
+
+const handleGoogleLogin = async (googleResponse: any) => {
+  try {
+    const token = googleResponse.credential
+    await googleLogin(token)
+    toast.value?.showToast('Login successful!', 'success')
+  } catch (error: any) {
+    toast.value?.showToast('Google login failed', 'error')
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .error-message {
-  color: red;
-  font-size: 0.7rem;
-  margin-top: -1rem;
-  margin-bottom: 0rem;
-  padding: 0;
-  line-height: 0;
+  color: $red;
+  font-size: 0.75rem;
+  margin: -0.9rem;
 }
 
 .login-container {
@@ -183,17 +141,14 @@ const submitForm = async () => {
   margin: auto;
   padding: 2rem;
   background-color: transparent;
-
   @include sm {
     width: 12rem;
     padding: 1rem;
   }
-
   @include md {
     width: 15rem;
     padding: 1.5rem;
   }
-
   @include lg {
     width: 25rem;
     padding: 2rem;
@@ -203,23 +158,17 @@ const submitForm = async () => {
 .login-header {
   text-align: center;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 900;
+  margin-bottom: 3rem;
+}
 
-  @include sm {
-    font-size: 1.5rem;
-  }
+#title {
+  font-size: 4rem;
+  font-weight: 900;
+}
 
-  @include md {
-    font-size: 1.75rem;
-  }
-
-  @include lg {
-    font-size: 2rem;
-  }
-
-  h1 {
-    font-weight: 800;
-  }
+#subtitle {
+  font-size: 1rem;
 }
 
 .input-group {
@@ -296,49 +245,21 @@ const submitForm = async () => {
 .forgotp {
   color: $green;
   text-decoration: none;
-  font-size: 0.9rem;
 
   &:hover {
     text-decoration: underline;
+    background-color: transparent;
   }
 
-  @include sm {
-    font-size: 0.8rem;
-  }
-
-  @include md {
-    font-size: 0.85rem;
-  }
-
-  @include lg {
-    font-size: 0.9rem;
+  &:focus {
+    outline: none;
+    background-color: transparent;
   }
 }
 
-.cont-google {
-  width: 100%;
-}
-
-.google {
-  padding-left: 1.3rem;
-  font-size: inherit;
-  font-family: inherit;
-  font-weight: inherit;
-  align-items: flex-end;
-
-  @include sm {
-    padding-left: 0.8rem;
-    font-size: 0.8em;
-  }
-
-  @include md {
-    padding-left: 1rem;
-    font-size: 0.9em;
-  }
-
-  @include lg {
-    padding-left: 1.3rem;
-    font-size: 1em;
-  }
+#google-login {
+  display: flex;
+  flex-direction: column;
+  margin-top: -0.75rem;
 }
 </style>

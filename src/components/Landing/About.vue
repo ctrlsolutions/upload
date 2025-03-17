@@ -95,17 +95,17 @@ export default {
   }
 
   @include md {
-    font-size: 2rem;
+    font-size: 1.5rem;
     margin-bottom: 1rem;
   }
 
   @include lg {
-    font-size: 3.25rem;
+    font-size: 2rem;
     margin-bottom: 1.25rem;
   }
 
   @include xl {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: 1.5rem;
   }
 }
