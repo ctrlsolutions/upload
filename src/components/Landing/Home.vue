@@ -38,6 +38,8 @@ export default {
 
 .header-logos {
   display: flex;
+  padding-top: 1rem;
+  gap: 0.8rem;
 }
 .container {
   background-color: white;
@@ -54,12 +56,13 @@ export default {
 .title {
   font-weight: 800;
   color: $red;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   max-width: 21.25rem;
-  line-height: 2.8rem;
+  line-height: 3rem;
+  letter-spacing: 0.05rem;
 }
 .subtitle {
-  font-size: 1rem;
+  font-size: 1.2rem;
 }
 .header-logos {
   align-self: center;
@@ -67,7 +70,8 @@ export default {
   width: 31.1875rem;
   max-width: 100%;
   align-items: start;
-  margin-bottom: 3.125rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 .UPlogo {
   object-fit: contain;
@@ -81,7 +85,7 @@ export default {
 .buttons {
   display: flex;
   flex-direction: row;
-  gap: 0.625rem;
+  gap: 1rem;
   margin-top: 1.875rem;
 }
 </style>
