@@ -87,7 +87,7 @@ export default {
 
   &--red {
     font-size: 0.9rem;
-    border: 0.08rem $red;
+    border: 0.15px $red;
     border-style: solid;
     outline: none;
     font-weight: 850;
@@ -99,7 +99,7 @@ export default {
   }
 
   &--green {
-    border: 0.15rem $green;
+    border: 0.15px $green;
     border-style: solid;
     outline: none;
     font-weight: bold;
