@@ -30,7 +30,7 @@ export default {
     SearchBar,
     StatisticReport,
     LastReport,
-    MyProfile,
+    MyProfile, 
     MyCalendar,
   },
   setup() {
