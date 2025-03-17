@@ -85,11 +85,11 @@
       </div>
     </form>
     <p class="or-text">OR</p>
-    <GoogleLogin :callback="googleSignUp" popup-type="TOKEN"
-      ><FormButton variant="red" width="25rem" type="button"
-        >CONTINUE WITH GOOGLE</FormButton
-      ></GoogleLogin
-    >
+    <GoogleLogin :callback="googleSignUp" popup-type="TOKEN">
+      <FormButton variant="red" width="25rem" type="button">
+        <v-icon name="fc-google" scale="1.2"></v-icon>
+        &emsp; CONTINUE WITH GOOGLE</FormButton>
+    </GoogleLogin>
   </div>
   <ExtraInfoModal
     v-if="showModal"
@@ -207,6 +207,7 @@ const submitForm = async () => {
   max-width: 25rem;
   justify-content: center;
   align-items: center;
+  margin: auto;
 }
 .text-red-600 {
   color: $red;

@@ -176,11 +176,48 @@ const handleGoogleLogin = async (googleResponse: any) => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @include sm {
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  @include md {
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  @include lg {
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.login-button {
+  width: 100%;
 }
 
 .or-text {
-  text-align: center;
-  margin: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+
+  @include sm {
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+  }
+
+  @include md {
+    margin-bottom: 0.75rem;
+    font-size: 1em;
+  }
+
+  @include lg {
+    margin-bottom: 1rem;
+    font-size: 1em;
+  }
 }
 
 .forgot-password {
@@ -188,7 +225,24 @@ const handleGoogleLogin = async (googleResponse: any) => {
   text-align: right;
   margin-top: -0.5rem;
   padding-right: 1rem;
-  margin-bottom: 1.5rem;
+
+  @include sm {
+    padding-right: 0.5rem;
+    margin-bottom: 0.1rem;
+  }
+
+  @include md {
+    padding-right: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+
+  @include lg {
+    padding-right: 1rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
+.forgotp {
   color: $green;
   text-decoration: none;
 
