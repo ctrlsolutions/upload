@@ -99,20 +99,22 @@ const validateForm = async () => {
 
 const submitForm = async () => {
   try {
-    const response = await login(form) // ✅ Now correctly receives the full object
-     console.log("Full response:", response) // Debugging step
+    const response = await login(form) 
+    console.log("Full response:", response) 
 
     if (response.token && response.user_id) {
-      localStorage.setItem('authToken', response.token)
+      localStorage.setItem('token', response.token)
       console.log("Token:", response.token)
       console.log("User ID:", response.user_id)
 
       axios.defaults.headers.common['Authorization'] = `Token ${response.token}`
       toast.value?.showToast('Login successful!', 'success')
     }
-     // setTimeout(() => {
-     //   window.location.href = '/authenticated/dashboard'
-     // }, 2000)
+
+    setTimeout(() => {
+      window.location.href = '/authenticated/dashboard'
+    }, 2000)
+
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occurred'
