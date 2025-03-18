@@ -47,7 +47,7 @@ export const signupUser = async (
     return { success: true, data: response.data }
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
+      error.response?.data?.error || 'An unexpecxted error occurred'
     return { success: false, error: errorMessage }
   }
 }
