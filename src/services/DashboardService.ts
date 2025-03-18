@@ -23,7 +23,11 @@ const DashboardServices = {
             return null;
         }
 
+<<<<<<< HEAD
         console.log("Using token:", token); // Log the token to verify if it changes for different users
+=======
+        console.log("Using Token:", token); // Log the token to verify if it changes for different users
+>>>>>>> d379585 ([feat][lanie] create dashboard service and modify auth service.)
 
         try {
             const response = await axios.get<DashboardData>(`${API_URL}dashboard_data/`, {
