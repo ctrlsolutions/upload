@@ -23,16 +23,25 @@ const DashboardServices = {
             return null;
         }
 
+        console.log("Using Token:", token); // Log the token to verify if it changes for different users
+
         try {
             const response = await axios.get<DashboardData>(`${API_URL}dashboard_data/`, {
                 headers: { Authorization: `Token ${token}` }
             });
+
+            console.log("Dashboard Data Response:", response.data); // Log the response to ensure it's correct
             return response.data;
         } catch (error: any) {
             console.error("Error fetching dashboard data:", error.response?.data || error.message);
             return null;
         }
     },
+
+    logout(): void {
+        localStorage.removeItem("token");
+        console.log("User logged out. Token cleared.");
+    }
 };
 
 export default DashboardServices;
