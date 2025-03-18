@@ -12,39 +12,30 @@
 </template>
 
 <script>
-import axios from 'axios';
-
 export default {
   name: "GreetingCard",
+  props: {
+    lastName: String, 
+  },
   data() {
     return {
       currentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-      lastName: "", 
+      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      timer: null,
     };
   },
   methods: {
-    async fetchUserData() {
-      try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          console.error("No auth token found");
-          return;
-        }
-
-        // Set token in Axios headers
-        axios.defaults.headers.common['Authorization'] = `Token ${token}`;
-
-        // Fetch user data from the API
-        const response = await axios.get('https://your-api.com/user/profile');
-        this.lastName = response.data.lastName; // Adjust according to API response
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      }
+    updateTime() {
+      this.currentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+      this.currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
   },
   mounted() {
-    this.fetchUserData(); // Fetch data when the component loads
+    this.updateTime();
+    this.timer = setInterval(this.updateTime, 1000); // Update time every second
+  },
+  beforeUnmount() {
+    clearInterval(this.timer); // Cleanup interval on component destroy
   }
 };
 </script>
