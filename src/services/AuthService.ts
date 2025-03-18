@@ -9,8 +9,9 @@ export const login = async (form: FormState): Promise<{ token: string; user_id: 
     form,
     { headers: { 'Content-Type': 'application/json' } },
   )
-  return response.data
+  return response.data 
 }
+
 
 export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {
