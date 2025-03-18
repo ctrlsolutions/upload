@@ -1,15 +1,21 @@
 <template>
   <div class="dashboard-page">
-    <GreetingCard class="GreetingCard" />
-    <SearchBar class="SearchBar" />
-    <MyProfile class="MyProfile" />
-    <StatisticReport class="ReportStatistics" />
-    <LastReport class="LastReport" />
-    <MyCalendar class="MyCalendar" />
+    <div class="left-section">
+      <GreetingCard class="left-header" :lastName="user?.last_name" />
+      <StatisticReport class="left-content" />
+      <LastReport class="left-content" />
+    </div>
+    <div class="right-section">
+      <SearchBar class="right-header" />
+      <MyProfile class="right-content" :user="user" />
+      <MyCalendar class="right-content" />
+    </div>
   </div>
 </template>
 
 <script>
+import { ref, onMounted } from "vue"; // For Vue 3
+import DashboardServices from "@/services/DashboardService";
 import GreetingCard from "@/components/Dashboard/GreetingCard.vue";
 import SearchBar from "@/components/Dashboard/SearchBar.vue";
 import StatisticReport from "@/components/Dashboard/StatisticReport.vue";
@@ -26,6 +32,20 @@ export default {
     LastReport,
     MyProfile,
     MyCalendar,
+  },
+  setup() {
+    const user = ref(null); // Reactive user data
+
+    onMounted(async () => {
+      try {
+        const data = await DashboardServices.getDashboardData();
+        if (data) user.value = data.user; // Store fetched user data
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    });
+
+    return { user };
   },
 };
 </script>
