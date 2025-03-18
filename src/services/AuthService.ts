@@ -30,6 +30,7 @@ export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {
     access_token: accessToken,
   })
+<<<<<<< HEAD
 }
 
 export const signupUser = async (
@@ -67,3 +68,6 @@ export const googleSignup = async (
     return { success: false, error: errorMessage }
   }
 }
+=======
+}
+>>>>>>> d379585 ([feat][lanie] create dashboard service and modify auth service.)
