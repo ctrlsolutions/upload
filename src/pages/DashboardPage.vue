@@ -34,12 +34,20 @@ export default {
     MyCalendar,
   },
   setup() {
+<<<<<<< HEAD
     const user = ref(null);
+=======
+    const user = ref(null); // Reactive user data
+>>>>>>> f86263c ([feat][lanie] dashboardpage api)
 
     onMounted(async () => {
       try {
         const data = await DashboardServices.getDashboardData();
+<<<<<<< HEAD
         if (data) user.value = data.user;
+=======
+        if (data) user.value = data.user; // Store fetched user data
+>>>>>>> f86263c ([feat][lanie] dashboardpage api)
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
