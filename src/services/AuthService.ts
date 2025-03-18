@@ -25,6 +25,7 @@ export const login = async (form: LoginData): Promise<string | null> => {
   }
 }
 
+
 export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {
     access_token: accessToken,
