@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue"; // For Vue 3
+import { ref, onMounted } from "vue";
 import DashboardServices from "@/services/DashboardService";
 import GreetingCard from "@/components/Dashboard/GreetingCard.vue";
 import SearchBar from "@/components/Dashboard/SearchBar.vue";
@@ -34,12 +34,12 @@ export default {
     MyCalendar,
   },
   setup() {
-    const user = ref(null); // Reactive user data
+    const user = ref(null);
 
     onMounted(async () => {
       try {
         const data = await DashboardServices.getDashboardData();
-        if (data) user.value = data.user; // Store fetched user data
+        if (data) user.value = data.user;
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -49,70 +49,63 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .dashboard-page {
-  display: grid; 
-  grid-template-columns: 1fr 1fr; 
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr; 
-  gap: 9px 16px; 
-  grid-template-areas: 
-    ". ."
-    "GreetingCard SearchBar"
-    "GreetingCard MyProfile"
-    "GreetingCard MyProfile"
-    "GreetingCard MyProfile"
-    "ReportStatistics MyProfile"
-    "ReportStatistics MyProfile"
-    "ReportStatistics MyCalendar"
-    "ReportStatistics MyCalendar"
-    "ReportStatistics MyCalendar"
-    "ReportStatistics MyCalendar"
-    "ReportStatistics MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    "LastReport MyCalendar"
-    ". ."; 
-
+  display: grid;
+  grid-template-columns: 1fr 2fr;  /* Left section (1/3) and right section (2/3) */
+  gap: 1rem;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: url("@/assets/backgroundImages/HomepageBG.png") no-repeat center center fixed;
   background-size: cover;
-  padding: 2rem 0rem 0rem 0rem;
+  padding: 2rem 0rem 3rem 0rem;
+  box-sizing: border-box;
 }
 
-/* Assigning grid areas */
-.GreetingCard { grid-area: GreetingCard; }
-.SearchBar { grid-area: SearchBar; }
-
-.MyProfile {
-  grid-area: MyProfile;
-  padding-top: 0rem; /* Increased padding on top */
+/* Sections fill remaining space */
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 1; /* Occupy remaining space */
 }
 
-.ReportStatistics { grid-area: ReportStatistics; }
-.LastReport { grid-area: LastReport; }
-.MyCalendar { grid-area: MyCalendar; }
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1; /* Occupy remaining space */
+}
+
+/* Component Styling */
+.GreetingCard,
+.SearchBar,
+.StatisticReport,
+.LastReport,
+.MyProfile,
+.MyCalendar {
+  flex: 1; /* Make components expand evenly */
+  min-height: 300px; /* Ensures they have a visible height */
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: transform 0.3s;
+}
+
+.GreetingCard:hover,
+.SearchBar:hover,
+.StatisticReport:hover,
+.LastReport:hover,
+.MyProfile:hover,
+.MyCalendar:hover {
+  transform: translateY(-5px);
+}
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .dashboard-page {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "GreetingCard"
-      "SearchBar"
-      "MyProfile"
-      "ReportStatistics"
-      "MyCalendar"
-      "LastReport";
-  }
-
-  .MyProfile {
-    padding-top: 1rem; /* Adjusted for smaller screens */
+    grid-template-columns: 1fr; /* Single column for smaller screens */
   }
 }
 </style>
