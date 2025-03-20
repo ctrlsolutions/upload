@@ -55,7 +55,7 @@
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
-import { FormState, ErrorState } from '@/types/AuthInterface'
+import { LoginData, ErrorState } from '@/types/AuthInterface'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
@@ -67,7 +67,7 @@ import axios from 'axios'
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
-const form = reactive<FormState>({
+const form = reactive<LoginData>({
   email: '',
   password: '',
 })
@@ -77,7 +77,7 @@ const errors = reactive<ErrorState>({
   password: '',
 })
 
-const onBlur = (field: keyof FormState) => {
+const onBlur = (field: keyof LoginData) => {
   clearError(field)
   errors[field] = validateFieldFn(form, field) || ''
 }

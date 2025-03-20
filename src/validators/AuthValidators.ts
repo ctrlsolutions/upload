@@ -27,3 +27,10 @@ export const validateForm = (form: FormState): ErrorState => {
     password: validateField(form, 'password'),
   }
 }
+
+export const validatePasswordMatch = (
+  password: string,
+  password2: string,
+): string | null => {
+  return password !== password2 ? 'Passwords do not match.' : null
+}
