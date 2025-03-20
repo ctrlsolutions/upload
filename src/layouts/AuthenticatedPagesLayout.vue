@@ -69,6 +69,8 @@ export default {}
 .container {
   display: flex;
   height: 100vh;
+  background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
+  background-size: cover;
 }
 
 .sidebar {
