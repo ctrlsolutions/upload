@@ -2,7 +2,7 @@
   <input
     :id="id"
     :type="type"
-    :class="['input-box', variantClass]"
+    class="input-box"
     :style="boxStyle"
     :placeholder="placeholder"
     :value="modelValue"
@@ -10,6 +10,7 @@
     v-bind="$attrs"
   />
 </template>
+
 
 <script>
 export default {
@@ -26,44 +27,48 @@ export default {
       type: String,
       default: 'Placeholder',
     },
-    variant: {
-      type: String,
-      default: 'red',
-    },
     width: {
       type: String,
-      default: 'null',
+      default: null,
     },
     height: {
       type: String,
-      default: 'null',
+      default: null,
     },
     modelValue: {
       type: String,
       default: '',
     },
+    textColor: {
+      type: String,
+      default: 'inherit',
+    },
+    borderColor: {
+      type: String,
+      default: 'inherit',
+    },
   },
   computed: {
-    variantClass() {
-      return `input-box--${this.variant}`
-    },
     boxStyle() {
-      const styles = { height: this.height }
-      if (this.width) {
-        styles.width = this.width
-      }
-      return styles
+      return {
+        width: this.width || 'auto',
+        height: this.height || 'auto',
+        color: this.textColor,
+        borderColor: this.borderColor,
+        borderStyle: 'solid',
+        '--placeholder-color': this.textColor,
+      };
     },
-  },
+  }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .input-box {
   font-family: 'Inter', serif;
   height: fit-content;
   border-radius: 0.6rem;
+
   @include sm {
     width: 15rem;
     padding: 0.6rem 0.6rem;
@@ -81,33 +86,8 @@ export default {
   }
 
   &::placeholder {
-    color: #999;
+    color: var(--placeholder-color, #999); // Use the variable for dynamic color
     opacity: 0.7;
-  }
-
-  &--red {
-    font-size: 0.9rem;
-    border: 0.08rem $red;
-    border-style: solid;
-    outline: none;
-    font-weight: 850;
-    color: $red;
-
-    &::placeholder {
-      color: $red;
-    }
-  }
-
-  &--green {
-    border: 0.15rem $green;
-    border-style: solid;
-    outline: none;
-    font-weight: bold;
-    color: $green;
-
-    &::placeholder {
-      color: $green;
-    }
   }
 }
 </style>

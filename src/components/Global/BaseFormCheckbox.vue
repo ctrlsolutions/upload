@@ -20,7 +20,7 @@ const props = defineProps({
     variant: { type: String, default: 'square' },
 });
 
-const model = defineModel(); 
+const model = defineModel();
 
 const variantClass = computed(() => `form-checkbox--${props.variant}`);
 </script>
@@ -34,7 +34,6 @@ const variantClass = computed(() => `form-checkbox--${props.variant}`);
     display: flex;
     align-items: center;
     cursor: pointer;
-    margin-left: 20px;
     display: flex;
     align-items: flex-start;
     gap:0.5rem;
@@ -45,11 +44,11 @@ const variantClass = computed(() => `form-checkbox--${props.variant}`);
         width: 1rem;
         height: 1rem;
         border: 0.125rem solid $red;
-        border-radius: 0.25rem; 
+        border-radius: 0.25rem;
         position: relative;
         transition: all 0.3s ease;
         vertical-align: top;
-        margin-top: 2.2rem; 
+        margin-top: 0.4rem;
 
         @include sm {
             width: 0.9rem;
@@ -87,7 +86,7 @@ const variantClass = computed(() => `form-checkbox--${props.variant}`);
         border-width: 0 0.125rem 0.125rem 0;
         transform: translate(-50%, -50%) rotate(45deg);
 
-        
+
         @include sm {
             width: 0.23rem;
             height: 0.45rem;
@@ -114,8 +113,8 @@ const variantClass = computed(() => `form-checkbox--${props.variant}`);
         margin-top: 2rem;
         font-weight: bold;
         color: #9e2323;
-        line-height: 1.5; 
-        font-family: 'Inter', sans-serif; 
+        line-height: 1.5;
+        font-family: 'Inter', sans-serif;
 
         @include sm {
             font-size: 0.7 rem;
