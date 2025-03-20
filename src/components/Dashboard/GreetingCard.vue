@@ -20,11 +20,7 @@ export default {
   data() {
     return {
       currentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-<<<<<<< HEAD
       currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}),
-=======
-      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
->>>>>>> bb754b2 ([feat][lanie] connected greeting card component to backend)
       timer: null,
     };
   },
