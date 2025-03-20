@@ -13,7 +13,7 @@ export default {
 <style scoped>
 .last-report {
   width: 41rem;
-  height: 20rem;
+  height: 17rem;
   display: flex;
   align-items: center;
   justify-content: center;
