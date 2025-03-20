@@ -13,7 +13,7 @@ export default {
 <style scoped>
 .my-calendar {
   width: 37rem;
-  height: 37rem;
+  height: 34.125rem;
   display: flex;
   align-items: center;
   justify-content: center;
