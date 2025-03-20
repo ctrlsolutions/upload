@@ -42,8 +42,8 @@ export default {
 
 <style scoped>
 .greeting-card {
-  width: 658px;
-  height: 206px;
+  width: 48rem;
+  height: 12.875rem;
   background: linear-gradient(to right, #1a3d21, #2f6035);
   border-radius: 15px;
   padding: 20px;
@@ -70,14 +70,20 @@ export default {
 }
 
 .greeting-text p {
-  font-size: 16px;
+  font-size: 1.125rem;
   margin: 0;
+  position: absolute;
+  right: 0rem;
+  left: 1.5rem;
+  top: 10rem;
+  bottom: 0rem;
+
 }
 
 .up-logo {
   position: absolute;
   right: 9rem;
-  left: 28rem;
+  left: 34rem;
   top: -1.5rem;
   bottom: 0rem;
   width: 16rem;

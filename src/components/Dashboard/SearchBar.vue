@@ -20,20 +20,20 @@ export default {};
 .search-bar-wrapper {
   display: flex;
   align-items: center;
-  gap: 15px; /* Space between search bar and notification bell */
+  gap: 1rem; /* Space between search bar and notification bell */
 }
 
 .search-bar-container {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 540px;
-  height: 51px;
+  max-width: 44.5rem;
+  height: 3.188rem;
   background: white;
-  border-radius: 25px;
-  padding: 10px 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ccc;
+  border-radius: 1.5rem;
+  padding: .625rem .938rem;
+  box-shadow: 0 .125rem .313rem rgba(0, 0, 0, 0.1);
+  border: .063rem solid #ccc;
   flex-grow: 1;
 }
 
@@ -41,20 +41,20 @@ export default {};
   flex: 1;
   border: none;
   outline: none;
-  font-size: 16px;
-  padding: 5px;
+  font-size: 1rem;
+  padding: .5rem;
 }
 
 .search-icon {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   cursor: pointer;
-  margin-left: 10px;
+  margin-left: .625;
 }
 
 .notification-icon {
-  width: 25px;
-  height: 25px;
+  width: 1.5rem;
+  height: 1.5rem;
   cursor: pointer;
 }
 
