@@ -12,8 +12,8 @@ export default {
 
 <style scoped>
 .statistic-report {
-  width: 656px;
-  height: 360px;
+  width: 48rem;
+  height: 22.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
