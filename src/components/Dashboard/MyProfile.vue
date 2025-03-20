@@ -95,7 +95,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem 0rem 0rem 0rem;
+  padding: 0rem 0rem 0rem 0rem;
 }
 
 .profile-header {
@@ -105,6 +105,7 @@ export default {
   text-align: left;
   padding: 1rem 1rem 1rem 1.5rem;
   font-weight: bold;
+  border-radius: 0%;
 }
 
 .profile-content {
@@ -113,7 +114,7 @@ export default {
   align-items: center;
   width: 100%;
  
-  padding: 2rem 2rem 0rem 2rem;
+  padding: 0rem 2rem 0rem 2rem;
 }
 
 .profile-pic {

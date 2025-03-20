@@ -52,7 +52,7 @@ export default {
 <style scoped>
 .dashboard-page {
   display: grid;
-  grid-template-columns: 1fr 2fr;  /* Left section (1/3) and right section (2/3) */
+  grid-template-columns: 1fr 2fr; 
   gap: 1rem;
   width: 100vw;
   min-height: 100vh;
@@ -62,30 +62,28 @@ export default {
   box-sizing: border-box;
 }
 
-/* Sections fill remaining space */
 .left-section {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  flex-grow: 1; /* Occupy remaining space */
+  flex-grow: 1; 
 }
 
 .right-section {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  flex-grow: 1; /* Occupy remaining space */
+  flex-grow: 1; 
 }
 
-/* Component Styling */
 .GreetingCard,
 .SearchBar,
 .StatisticReport,
 .LastReport,
 .MyProfile,
 .MyCalendar {
-  flex: 1; /* Make components expand evenly */
-  min-height: 300px; /* Ensures they have a visible height */
+  flex: 1; 
+  min-height: 300px; 
   background: white;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
@@ -102,10 +100,4 @@ export default {
   transform: translateY(-5px);
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .dashboard-page {
-    grid-template-columns: 1fr; /* Single column for smaller screens */
-  }
-}
 </style>
