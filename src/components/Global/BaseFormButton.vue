@@ -103,6 +103,11 @@ const buttonStyle = computed(() => ({
   background-color: $black;
 }
 
+.form-button--gray {
+  background-color: #D4D4D4;
+  color: $black;
+}
+
 .form-button:hover {
   opacity: 0.9;
 }
