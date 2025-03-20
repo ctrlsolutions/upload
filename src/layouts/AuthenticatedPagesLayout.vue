@@ -69,6 +69,9 @@ export default {}
 .container {
   display: flex;
   height: 100vh;
+  width: 100vw;
+  background: url('@/assets/dashboard_bg.png');
+  background-attachment: fixed;
 }
 
 .sidebar {
@@ -81,7 +84,6 @@ export default {}
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
 }
 
 .nav-link,
