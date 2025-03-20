@@ -252,9 +252,9 @@ export default {
   gap: 1rem;
   width: 100vw;
   min-height: 100vh;
-  background: url("@/assets/backgroundImages/HomepageBG.png") no-repeat center center fixed;
+  background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
-  padding: 2rem 0rem 3rem 0rem;
+  padding: 2rem 0 3rem 0;
   box-sizing: border-box;
 }
 
@@ -268,7 +268,7 @@ export default {
 .right-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   flex-grow: 1; 
 }
 
@@ -279,10 +279,10 @@ export default {
 .MyProfile,
 .MyCalendar {
   flex: 1; 
-  min-height: 300px; 
+  min-height: 18.75rem; /* 300px -> 18.75rem */
   background: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px -> 0.25rem, 8px -> 0.5rem */
+  border-radius: 0.5rem; /* 8px -> 0.5rem */
   padding: 1rem;
   transition: transform 0.3s;
 }
@@ -293,7 +293,6 @@ export default {
 .LastReport:hover,
 .MyProfile:hover,
 .MyCalendar:hover {
-  transform: translateY(-5px);
+  transform: translateY(-0.3125rem); /* 5px -> 0.3125rem */
 }
-
 </style>
