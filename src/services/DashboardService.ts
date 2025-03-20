@@ -23,7 +23,7 @@ const DashboardServices = {
             return null;
         }
 
-        console.log("Using Token:", token); // Log the token to verify if it changes for different users
+        console.log("Using token:", token); // Log the token to verify if it changes for different users
 
         try {
             const response = await axios.get<DashboardData>(`${API_URL}dashboard_data/`, {

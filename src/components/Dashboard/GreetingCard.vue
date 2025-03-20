@@ -20,14 +20,14 @@ export default {
   data() {
     return {
       currentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}),
       timer: null,
     };
   },
   methods: {
     updateTime() {
       this.currentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-      this.currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      this.currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     }
   },
   mounted() {
