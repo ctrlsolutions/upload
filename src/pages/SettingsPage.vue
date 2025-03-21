@@ -2,7 +2,7 @@
   <!-- USE CARD WITH HEADER: WHOLE CONTAINER -->
   <div class="container">
     <div class="header">
-      <h1>Account Settings</h1>
+      <h1 class="title">Account Settings</h1>
     </div>
     
     <div class="card">
@@ -32,46 +32,45 @@
       <div class="folder">
         <div class="folder-header">
           <h2>Personal Information</h2>
-          <BaseFormButton variant="black">
-            <span>✎</span> Edit
-          </BaseFormButton>
         </div>
-        
+
         <div class="folder-content">
-          <div class="first-row">
-            <BaseTextInput 
-              label="First Name"
-              v-model="firstName"
-              placeholder="Enter first name"
-            />
-            <BaseTextInput 
-              label="Middle Name"
-              v-model="middleName"
-              placeholder="Enter middle name"
-            />
-            <BaseTextInput 
-              label="Last Name"
-              v-model="lastName"
-              placeholder="Enter last name"
-            />
+          <div class="edit-container">
+            <BaseFormButton variant="black" width="6rem" height="1rem">
+              Edit
+            </BaseFormButton>
           </div>
-          <div class="second-row">
-            <BaseTextInput 
-              label="Email"
-              v-model="email"
-              type="email"
-              placeholder="Enter email"
-            />
-            <BaseTextInput 
-              label="Bio"
-              v-model="bio"
-              placeholder="Enter bio"
-            />
-            <BaseTextInput 
-              label="Contact"
-              v-model="contact"
-              placeholder="Enter contact number"
-            />
+
+          <div class="grid-container">
+            <div class="input-group">
+              <label for="firstName">First Name</label>
+              <BaseTextInput id="firstName" v-model="firstName" class="input-box" disabled/>
+            </div>
+
+            <div class="input-group">
+              <label for="middleName">Middle Name</label>
+              <BaseTextInput id="middleName" v-model="middleName" class="input-box" disabled/>
+            </div>
+
+            <div class="input-group">
+              <label for="lastName">Last Name</label>
+              <BaseTextInput id="lastName" v-model="lastName" class="input-box" disabled/>
+            </div>
+
+            <div class="input-group">
+              <label for="email">Email</label>
+              <BaseTextInput id="email" v-model="email" type="email" class="input-box" disabled/>
+            </div>
+
+            <div class="input-group">
+              <label for="bio">Bio</label>
+              <BaseTextInput id="bio" v-model="bio" class="input-box" disabled/>
+            </div>
+
+            <div class="input-group">
+              <label for="contact">Contact</label>
+              <BaseTextInput id="contact" v-model="contact" class="input-box" disabled/>
+            </div>
           </div>
         </div>
       </div>
@@ -99,8 +98,16 @@ const contact = ref('+09 987 645 32')
   margin: 0 auto;
   padding: 2rem;
   margin-top: 2.2rem;
-  max-height: 46.7rem;
+  height: 52.7rem;
   border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-left: 20px;
 }
 
 .header {
@@ -112,15 +119,19 @@ const contact = ref('+09 987 645 32')
   background: #F7F6F6;
   border-radius: 8px;
   overflow: hidden;
-  height: 40.5rem;
-  margin-top: 3rem;
-  margin-right: 5rem;
+  height: 45rem;
+  margin-left: 1.5rem;
+  margin-top: 1rem;
+  border-radius: 25px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
 }
 
 .card-header {
   background: #004225;
   color: white;
   padding: 1.5rem;
+  border-radius: 25px;
 
   h2 {
     font-size: 1.2rem;
@@ -130,58 +141,92 @@ const contact = ref('+09 987 645 32')
 
 .user-card {
   background: white;
-  padding: 2rem;
-  display: flex;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   margin: 1rem;
-  border-radius: 8px;
+  border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .user-image {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     object-fit: cover;
   }
 
   .user-info {
-    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .name {
       font-size: 1.2rem;
-      font-weight: 600;
+      font-weight: bold;
       margin: 0;
     }
 
     .role, .college {
+      font-size: 0.9rem;
       color: #666;
-      margin: 0.2rem 0;
+      margin: 2px 0;
     }
   }
 
   .button-container {
     display: flex;
-    gap: 1rem;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    .delete-button {
+      background: #800000;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #a00000;
+      }
+    }
+
+    .logout-button {
+      background: #004225;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #006837;
+      }
+    }
   }
 }
 
 .folder {
   margin: 1rem;
   background: white;
-  border-radius: 8px;
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 23rem;
+  padding-bottom: 1.5rem;
 
   .folder-header {
     background: #004225;
     color: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
+    padding: 1.2rem 1.5rem;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    
     h2 {
       font-size: 1.2rem;
       margin: 0;
@@ -190,13 +235,53 @@ const contact = ref('+09 987 645 32')
 
   .folder-content {
     padding: 2rem;
+    height: 22.3rem;
 
-    .first-row,
-    .second-row {
+    .edit-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.3rem;
+
+      .edit-button {
+        background: black;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 0.5rem 1.5rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+
+        &:hover {
+          background: #333;
+        }
+      }
+    }
+
+    .grid-container {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 2rem;
-      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      
+      label {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 0.2rem;
+      }
+
+      .input-box {
+      border: 1.5px solid #8b0000;
+      padding: 0.8rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      }
     }
   }
 }
