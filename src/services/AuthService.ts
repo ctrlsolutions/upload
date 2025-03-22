@@ -22,6 +22,7 @@ export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {
     access_token: accessToken,
   })
+<<<<<<< HEAD
 }
 
 export const signupUser = async (
@@ -59,3 +60,6 @@ export const googleSignup = async (
     return { success: false, error: errorMessage }
   }
 }
+=======
+}
+>>>>>>> 47148ae535c4e52e3c20d7f497154602e8c0531d
