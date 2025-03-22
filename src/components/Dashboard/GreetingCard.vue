@@ -4,7 +4,7 @@
       <span>📅 {{ currentDate }} &nbsp; {{ currentTime }}</span>
     </div>
     <div class="greeting-text">
-      <h2 v-if="lastName">Good Day, Prof. {{ lastName }}</h2>
+      <h2 v-if="lastName"> Good Day, Prof. {{ lastName }}</h2>
       <p>Have a great day!</p>
     </div>
     <img src="@/assets/UPSystemLogo.png" alt="UP Logo" class="up-logo" />
@@ -64,7 +64,7 @@ export default {
 }
 
 .greeting-text h2 {
-  margin: 10px 0 5px;
+  padding: 0rem 0rem 1.25rem .250rem;
   font-size: 24px;
   font-weight: bold;
 }

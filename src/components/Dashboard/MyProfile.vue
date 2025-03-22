@@ -43,6 +43,8 @@ export default {
       const role = this.user.role.toLowerCase(); // Normalize casing
       if (role === "cd") return "College Dean";
       if (role === "f") return "Faculty";
+      if (role === "c") return "Chancellor";
+      if (role == "dc") return "Department Chair"
       return this.user.role; // Default fallback
   }
   },
