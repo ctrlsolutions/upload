@@ -42,11 +42,11 @@ export default {
 
 <style scoped>
 .greeting-card {
-  width: 48rem;
-  height: 12.875rem;
+  width: 100vw;
+  height: 22vh;
   background: linear-gradient(to right, #1a3d21, #2f6035);
   border-radius: 15px;
-  padding: 20px;
+  padding: 1rem 0rem 0rem 1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -64,7 +64,7 @@ export default {
 }
 
 .greeting-text h2 {
-  margin: 10px 0 5px;
+  padding: 0rem 0rem 1.25rem .25rem;
   font-size: 24px;
   font-weight: bold;
 }
