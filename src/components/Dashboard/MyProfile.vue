@@ -88,13 +88,8 @@ export default {
 
 <style scoped>
 .my-profile {
-<<<<<<< HEAD
   width: 100vw;
   height: 32vh;
-=======
-  width: 47rem;
-  height: 15rem;
->>>>>>> ee36940 ([chore][Nico] Fixes the dimensions and adds the background)
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
