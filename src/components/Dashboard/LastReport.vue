@@ -13,12 +13,11 @@ export default {
 <style scoped>
 .last-report {
   width: 48rem;
-  height: 17.625rem;
+  height: 15rem;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(to right, #1a3d21, #2f6035);
-  border: .1rem solid #ccc;
   border-radius: .5rem;
   color: #fff;
   font-size: 1.2rem;

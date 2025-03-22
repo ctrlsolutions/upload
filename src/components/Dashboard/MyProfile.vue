@@ -86,8 +86,8 @@ export default {
 
 <style scoped>
 .my-profile {
-  width: 47rem;
-  height: 15rem;
+  width: 100vw;
+  height: 32vh;
   background: white;
   border-radius: 1rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
