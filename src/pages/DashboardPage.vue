@@ -30,7 +30,7 @@ export default {
     SearchBar,
     StatisticReport,
     LastReport,
-    MyProfile, 
+    MyProfile,
     MyCalendar,
   },
   setup() {
@@ -50,13 +50,9 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
 <style lang="scss" scoped>
 @use "@/styles/mixins" as mixins;
 
-=======
-<style scoped>
->>>>>>> f0bd3fb ([chore][Nico] Fixes the dimensions and adds the background)
 .dashboard-page {
   display: grid;
   gap: 2vh;
@@ -65,10 +61,6 @@ export default {
   min-height: 100vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
-<<<<<<< HEAD
-=======
-  padding: 2rem 0 3rem 0;
->>>>>>> f0bd3fb ([chore][Nico] Fixes the dimensions and adds the background)
   box-sizing: border-box;
 
   @include mixins.sm {
@@ -102,7 +94,6 @@ export default {
 .right-section {
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
   gap: 2vh;
   width: 25vw;
 }
@@ -253,33 +244,4 @@ export default {
   transition: transform 0.3s;
 }
 
-=======
-  gap: 1rem;
-  flex-grow: 1; 
-}
-
-.GreetingCard,
-.SearchBar,
-.StatisticReport,
-.LastReport,
-.MyProfile,
-.MyCalendar {
-  flex: 1; 
-  min-height: 18.75rem; /* 300px -> 18.75rem */
-  background: white;
-  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1); /* 4px -> 0.25rem, 8px -> 0.5rem */
-  border-radius: 0.5rem; /* 8px -> 0.5rem */
-  padding: 1rem;
-  transition: transform 0.3s;
-}
-
-.GreetingCard:hover,
-.SearchBar:hover,
-.StatisticReport:hover,
-.LastReport:hover,
-.MyProfile:hover,
-.MyCalendar:hover {
-  transform: translateY(-0.3125rem); /* 5px -> 0.3125rem */
-}
->>>>>>> f0bd3fb ([chore][Nico] Fixes the dimensions and adds the background)
 </style>
