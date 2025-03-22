@@ -13,7 +13,7 @@ export default {
 <style scoped>
 .statistic-report {
   width: 48rem;
-  height: 22.5rem;
+  height: 15rem;
   display: flex;
   align-items: center;
   justify-content: center;
