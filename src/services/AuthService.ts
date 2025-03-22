@@ -59,5 +59,3 @@ export const googleSignup = async (
     return { success: false, error: errorMessage }
   }
 }
-
-}
