@@ -2,37 +2,43 @@
     <div class="container">
         <div class="folder-container">
             <div class="folder-tab">
-                <select name="Submit report" id="">
-                    <option value="submit">Submit Report</option>
-                </select>
+                <div class="dropdown-container">
+                    <select class="dropdown">
+                        <option value="submit">Submit Report</option>
+                        <option value="submit">dev: placeholder</option> <!-- plavce holder onley -->
+                    </select>
+                </div>
             </div>
             
-            <div class="form-group">
-                <label>Title</label>
-                <input type="text" placeholder="Title">
-            </div>
+            <div class="form">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" placeholder="Title">
+                </div>
 
-            <div class="form-group">
-                <label>Number of Months in Original Timeframe</label>
-                <input type="text" placeholder="Months">
-            </div>
+                <div class="form-group">
+                    <label>Number of Months in Original Timeframe</label>
+                    <input type="text" placeholder="Months">
+                </div>
 
-            <div class="form-group">
-                <label>Start Date</label>
-                <input type="text" placeholder="mm/dd/yy">
-            </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <BaseDateInput width="100%"/>
+                </div>
 
-            <div class="form-group">
-                <label>End Date</label>
-                <input type="text" placeholder="mm/dd/yy">
-            </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <BaseDateInput width="100%"/>
+                </div>
 
-            <div class="form-group">
-                <label>Names of Researcher/s</label>
-                <input type="text" placeholder="Names">
-            </div>
+                <div class="form-group">
+                    <label>Names of Researcher/s</label>
+                    <input type="text" placeholder="Names">
+                </div>
 
-            <button class="submit-btn">SUBMIT</button>
+                <button class="submit-btn">SUBMIT</button>
+            </div>
+            
         </div>
         <div class="file-drop-area-container">
             <div class="drop-area-head">Supporting Evidence/s</div>
@@ -52,16 +58,8 @@
 
 <script setup>
 import { ref } from "vue";
-import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import BaseDateInput from "@/components/Global/BaseDateInput.vue";
 
-const selected = ref("");
-
-const options = [
-    { value: 'Award', label: 'Award' },
-    { value: 'Certification', label: 'Certification' },
-    { valeu: 'Publication', label: 'Publication'},
-    { valeu: 'Project', label: 'Project'}
-];
 
 </script>
 
@@ -84,6 +82,9 @@ const options = [
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
     padding: 2rem;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .folder-tab {
@@ -100,9 +101,16 @@ const options = [
     padding-top: 4%;
 }
 
+.form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    color: $red;
+}
 
 .form-group {
-    margin-top: 50px;
+    margin-top: 30px;
     display: flex;
     flex-direction: column;
 }
@@ -112,22 +120,33 @@ const options = [
     margin-bottom: 5px;
 }
 
+input {
+    height: 2.4rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+}
+
+input::placeholder {
+    color: $red;
+    padding-left: 2.7rem;
+}
 .form-group input {
     padding: 8px;
-    border: 2px solid brown;
-    border-radius: 5px;
+    border: 0.15px solid $red;
+    border-radius: 10px;
     outline: none;
+    color: $red;
 }
 
 .submit-btn {
     width: 100%;
-    background: brown;
+    background: $red;
     color: white;
     padding: 10px;
     font-weight: bold;
     border: none;
     border-radius: 5px;
-    margin-top: 20px;
+    margin-top: auto;
     cursor: pointer;
 }
 
@@ -200,5 +219,34 @@ const options = [
     
 }
 
+
+.dropdown-container {
+    display: inline-block;
+    position: relative;
+    font-family: Arial, sans-serif;
+}
+
+.dropdown {
+    appearance: none;
+    background: none;
+    border: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: $green; /* Dark green */
+    text-transform: uppercase;
+    cursor: pointer;
+    padding-right: 20px;
+}
+
+.dropdown-container::after {
+    content: "▼";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: $green; /* Dark green */
+    pointer-events: none;
+}
 
 </style>
