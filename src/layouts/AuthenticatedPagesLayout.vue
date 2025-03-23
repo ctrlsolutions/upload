@@ -134,4 +134,8 @@ export default {}
 .settings-link:hover {
   background-color: #a04747;
 }
+
+.content {
+  flex-grow: 1;
+}
 </style>
