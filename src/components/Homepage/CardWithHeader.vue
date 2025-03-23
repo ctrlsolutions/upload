@@ -13,7 +13,7 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import CardComponent from "@/components/Global/CardComponent.vue";
 import { defineComponent } from "vue";
 
