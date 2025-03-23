@@ -57,30 +57,31 @@ export default {
   display: grid;
   gap: 2vh;
   padding: 4vh 0 0 0;
-  width: 100vw;
-  min-height: 100vh;
+  width: 88vw;
+  min-height: 88vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
   box-sizing: border-box;
+  justify-content: flex-start;
 
   @include mixins.sm {
-    grid-template-columns: 1fr;
-    padding: 3vh 8vw 2vh 0;
+    grid-template-columns: 97%;
+    padding: 2vh 2vw 0vh 0;
   }
 
   @include mixins.md {
-    grid-template-columns: 1fr 1fr;
-    padding: 3vh 8vw 2vh 0;
+    grid-template-columns: 51% 58%;
+    padding: 2vh 0vw 0vh 0;
   }
 
   @include mixins.lg {
-    grid-template-columns: 1fr 1fr;
-    padding: 3vh 10vw 20vh 0;
+    grid-template-columns: 47% 47%;
+    padding: 2vh 0vw 0vh 0;
   }
 
   @include mixins.xl {
-    grid-template-columns: 1fr 1fr;
-    padding: 3vh 12vw 20vh 1vh;
+    grid-template-columns: 48% 50%;
+    padding: 3vh 0vw 0vh 0vh;
   }
 }
 
@@ -102,7 +103,7 @@ export default {
 .greeting-card {
   @include mixins.sm {
     min-height: 24vh;
-    width: 95vw;
+    width: 85vw;
   }
 
   @include mixins.md {
@@ -111,8 +112,8 @@ export default {
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 50vw;
+    min-height: 24vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
@@ -124,7 +125,7 @@ export default {
 .statistic-report {
   @include mixins.sm {
     min-height: 30vh;
-    width: 95vw;
+    width: 85vw;
   }
 
   @include mixins.md {
@@ -133,8 +134,8 @@ export default {
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 85vw;
+    min-height: 34vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
@@ -146,17 +147,17 @@ export default {
 .last-report {
   @include mixins.sm {
     min-height: 30vh;
-    width: 95vw;
+    width: 85vw;
   }
 
   @include mixins.md {
     min-height: 34vh;
-    width: 95vw;
+    width: 45vw;
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 85vw;
+    min-height: 34vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
@@ -169,7 +170,7 @@ export default {
 
   @include mixins.sm {
     min-height: 6vh;
-    width: 90vw;
+    width: 85vw;
   }
 
   @include mixins.md {
@@ -178,13 +179,13 @@ export default {
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 85vw;
+    min-height: 6vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
     min-height: 6vh;
-    width: 42vw;
+    width: 46vw;
   }
 }
 
@@ -192,56 +193,45 @@ export default {
 
   @include mixins.sm {
     min-height: 24vh;
-    width: 95vw;
+    width: 85vw;
   }
 
   @include mixins.md {
     min-height: 24vh;
-    width: 50vw;
+    width: 44vw;
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 100vw;
+    min-height: 24vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
     min-height: 32vh;
-    width: 42vw;
+    width: 46vw;
   }
 }
 
 .my-calendar {
   @include mixins.sm {
     min-height: 38vh;
-    width: 95vw;
+    width: 85vw;
   }
 
   @include mixins.md {
     min-height: 32vh;
-    width: 50vw
+    width: 44vw
   }
 
   @include mixins.lg {
-    min-height: 50vh;
-    width: 35vw;
+    min-height: 54vh;
+    width: 42vw;
   }
 
   @include mixins.xl {
     min-height: 42vh;
-    width: 42vw;
+    width: 46vw;
   }
-}
-
-/* Hover Effects */
-.greeting-card:hover,
-.search-bar:hover,
-.statistic-report:hover,
-.last-report:hover,
-.my-profile:hover,
-.my-calendar:hover {
-  transform: translateY(-1vh);
-  transition: transform 0.3s;
 }
 
 </style>

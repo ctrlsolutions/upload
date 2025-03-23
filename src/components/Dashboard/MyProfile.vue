@@ -114,8 +114,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
- 
+  width: 100%; 
   padding: 0rem 2rem 0rem 2rem;
 }
 
