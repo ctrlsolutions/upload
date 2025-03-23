@@ -15,7 +15,7 @@
           />
           <span class="icon-label">Dashboard</span>
         </router-link>
-        <router-link to="/" class="nav-link">
+        <router-link to="/authenticated/submit-report" class="nav-link">
           <img
             src="@/assets/navbar/submit_report.png"
             alt="submit-report"
@@ -84,6 +84,7 @@ export default {}
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  z-index: 30;
 }
 
 .nav-link,
@@ -115,7 +116,6 @@ export default {}
   width: 0px;
   height: 30px;
   position: relative;
-  z-index: 2;
   padding-left: 5px;
 }
 .nav-link:hover {
