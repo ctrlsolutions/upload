@@ -1,26 +1,22 @@
-<script setup lang="ts">
-interface Props {
-  width?: string;
-  height?: string;
-  class?: string;
-  backgroundColor?: string;
-}
-
-defineProps<Props>();
-</script>
-
 <template>
   <div 
-    class="card-container" 
+    v-bind="$attrs" 
     :style="{ 
       width: width || '100%', 
       height: height || 'auto',
       backgroundColor: backgroundColor
     }"
+    class="card-container"
   >
     <slot></slot>
   </div>
 </template>
+
+<script setup lang="ts">
+import { CardComponent } from '@/types/ComponentInterface';
+
+defineProps<CardComponent>();
+</script>
 
 <style lang="scss" scoped>
 .card-container {
