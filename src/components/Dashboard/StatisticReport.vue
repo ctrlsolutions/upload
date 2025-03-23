@@ -18,7 +18,6 @@ export default {
   align-items: center;
   justify-content: center;
   background: linear-gradient(to right, #1a3d21, #2f6035);
-  border: 1px solid #ccc;
   border-radius: 12px;
   color: #fff;
   font-size: 18px;
