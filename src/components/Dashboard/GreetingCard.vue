@@ -32,10 +32,10 @@ export default {
   },
   mounted() {
     this.updateTime();
-    this.timer = setInterval(this.updateTime, 1000); // Update time every second
+    this.timer = setInterval(this.updateTime, 1000); 
   },
   beforeUnmount() {
-    clearInterval(this.timer); // Cleanup interval on component destroy
+    clearInterval(this.timer); 
   }
 };
 </script>
