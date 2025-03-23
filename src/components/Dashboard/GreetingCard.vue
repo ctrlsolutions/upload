@@ -64,7 +64,7 @@ export default {
 }
 
 .greeting-text h2 {
-  padding: 0rem 0rem 2rem .25rem;
+  padding: 0rem 0rem 2.5rem .525rem;
   font-size: 24px;
   font-weight: bold;
 }
