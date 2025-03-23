@@ -1,18 +1,7 @@
 import axios from "axios";
-
+import { DashboardData } from "@/types/DashboardInterface";
 const API_URL = import.meta.env.VITE_API_BASE_URL + "/dashboard/";
 
-interface UserProfile {
-    first_name: string;
-    email: string;
-    middle_name: string;
-    last_name: string;
-    role: string;
-}
-
-interface DashboardData {
-    user: UserProfile;
-}
 
 const DashboardServices = {
     async getDashboardData(): Promise<DashboardData | null> {

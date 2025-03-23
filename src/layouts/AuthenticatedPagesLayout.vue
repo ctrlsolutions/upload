@@ -71,6 +71,7 @@ export default {}
   height: 100vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
+  background-color: white;
 }
 
 .sidebar {

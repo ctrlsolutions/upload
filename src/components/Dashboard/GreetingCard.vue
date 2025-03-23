@@ -11,33 +11,35 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "GreetingCard",
-  props: {
-    lastName: String, 
-  },
-  data() {
-    return {
-      currentDate: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
-      currentTime: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit'}),
-      timer: null,
-    };
-  },
-  methods: {
-    updateTime() {
-      this.currentDate = new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
-      this.currentTime = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    }
-  },
-  mounted() {
-    this.updateTime();
-    this.timer = setInterval(this.updateTime, 1000); 
-  },
-  beforeUnmount() {
-    clearInterval(this.timer); 
-  }
+<script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";
+
+const props = defineProps<{ lastName: string }>();
+const currentDate = ref("");
+const currentTime = ref("");
+let timer: number | null = null;
+
+const updateTime = () => {
+  const now = new Date();
+  currentDate.value = now.toLocaleDateString("en-US", {
+    month: "short",
+    day: "2-digit",
+    year: "numeric",
+  });
+  currentTime.value = now.toLocaleTimeString("en-US", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
+
+onMounted(() => {
+  updateTime();
+  timer = setInterval(updateTime, 1000);
+});
+
+onBeforeUnmount(() => {
+  if (timer) clearInterval(timer);
+});
 </script>
 
 <style scoped>

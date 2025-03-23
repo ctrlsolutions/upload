@@ -13,7 +13,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
 import DashboardServices from "@/services/DashboardService";
 import GreetingCard from "@/components/Dashboard/GreetingCard.vue";
@@ -23,35 +23,24 @@ import LastReport from "@/components/Dashboard/LastReport.vue";
 import MyProfile from "@/components/Dashboard/MyProfile.vue";
 import MyCalendar from "@/components/Dashboard/MyCalendar.vue";
 
-export default {
-  name: "DashboardPage",
-  components: {
-    GreetingCard,
-    SearchBar,
-    StatisticReport,
-    LastReport,
-    MyProfile,
-    MyCalendar,
-  },
-  setup() {
-    const user = ref(null);
+interface User {
+  last_name?: string;
+}
 
-    onMounted(async () => {
-      try {
-        const data = await DashboardServices.getDashboardData();
-        if (data) user.value = data.user;
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    });
+const user = ref<User | null>(null);
 
-    return { user };
-  },
-};
+onMounted(async () => {
+  try {
+    const data = await DashboardServices.getDashboardData();
+    if (data) user.value = data.user;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+  }
+});
 </script>
 
-<style lang="scss" scoped>
-@use "@/styles/mixins" as mixins;
+<style lang="scss" scoped> 
+// Removed @use "@/styles/mixins" as mixins;
 
 .dashboard-page {
   display: grid;
@@ -61,38 +50,32 @@ export default {
   min-height: 88vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
+  background-color: white !important;
   box-sizing: border-box;
   justify-content: space-between;
 
-  @include mixins.sm {
+  @media (max-width: 600px) { // Equivalent to mixins.sm
     grid-template-columns: 97%;
     padding: 2vh 2vw 0vh 0;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) { // Equivalent to mixins.md
     grid-template-columns: 51% 58%;
     padding: 2vh 0vw 0vh 0;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) { // Equivalent to mixins.lg
     grid-template-columns: 47% 47%;
     padding: 2vh 0vw 0vh 0;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) { // Equivalent to mixins.xl
     grid-template-columns: 48% 50%;
-    padding: 3vh 0vw 0vh 0vh;
+    padding: 3vh 0vw 0vh 0;
   }
 }
 
-.left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  width: 25vw;
-}
-
-.right-section {
+.left-section, .right-section {
   display: flex;
   flex-direction: column;
   gap: 2vh;
@@ -101,138 +84,140 @@ export default {
 }
 
 /* Component Breakpoints with vw/vh units */
-.greeting-card {
-  @include mixins.sm {
+.greeting-card,
+.statistic-report,
+.last-report,
+.search-bar,
+.my-profile,
+.my-calendar {
+  @media (max-width: 600px) { // Equivalent to mixins.sm
     min-height: 24vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) { // Equivalent to mixins.md
     min-height: 24vh;
     width: 45vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) { // Equivalent to mixins.lg
     min-height: 24vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) { // Equivalent to mixins.xl
     min-height: 25vh;
     width: 42vw;
   }
 }
 
 .statistic-report {
-  @include mixins.sm {
+  @media (max-width: 600px) {
     min-height: 30vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) {
     min-height: 33vh;
     width: 45vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) {
     min-height: 34vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) {
     min-height: 32vh;
     width: 42vw;
   }
 }
 
 .last-report {
-  @include mixins.sm {
+  @media (max-width: 600px) {
     min-height: 30vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) {
     min-height: 34vh;
     width: 45vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) {
     min-height: 34vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) {
     min-height: 32vh;
     width: 42vw;
   }
 }
 
 .search-bar {
-
-  @include mixins.sm {
+  @media (max-width: 600px) {
     min-height: 6vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) {
     min-height: 6vh;
     width: 50vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) {
     min-height: 6vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) {
     min-height: 6vh;
     width: 46vw;
   }
 }
 
 .my-profile {
-
-  @include mixins.sm {
+  @media (max-width: 600px) {
     min-height: 24vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) {
     min-height: 24vh;
     width: 44vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) {
     min-height: 24vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) {
     min-height: 32vh;
     width: 46vw;
   }
 }
 
 .my-calendar {
-  @include mixins.sm {
+  @media (max-width: 600px) {
     min-height: 38vh;
     width: 85vw;
   }
 
-  @include mixins.md {
+  @media (max-width: 900px) {
     min-height: 32vh;
-    width: 44vw
+    width: 44vw;
   }
 
-  @include mixins.lg {
+  @media (max-width: 1200px) {
     min-height: 54vh;
     width: 42vw;
   }
 
-  @include mixins.xl {
+  @media (min-width: 1201px) {
     min-height: 42vh;
     width: 46vw;
   }
 }
-
 </style>

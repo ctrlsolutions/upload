@@ -56,6 +56,7 @@ import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
+import { useRouter } from 'vue-router'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
@@ -64,6 +65,8 @@ import { login, googleLogin } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
 import axios from 'axios'
+
+const router = useRouter()
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
@@ -107,13 +110,13 @@ const submitForm = async () => {
       console.log("Token:", response.token)
       console.log("User ID:", response.user_id)
 
-      axios.defaults.headers.common['Authorization'] = `Token ${response.token}`
       toast.value?.showToast('Login successful!', 'success')
+
     }
 
     setTimeout(() => {
-      window.location.href = '/authenticated/dashboard'
-    }, 2000)
+        router.push('/authenticated/dashboard')
+      }, 2000)
 
   } catch (error: any) {
     const errorMessage =
