@@ -1,6 +1,6 @@
 import axios from 'axios'
 import {
-  FormState,
+  LoginData,
   SignupData,
   ApiResponse,
   GoogleSignupData,
@@ -8,13 +8,21 @@ import {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export const login = async (form: FormState): Promise<string> => {
-  const response = await axios.post<{ token: string }>(
-    `${API_BASE_URL}/user/login/`,
-    form,
-    { headers: { 'Content-Type': 'application/json' } },
-  )
-  return response.data.token
+export const login = async (form: LoginData): Promise<string | null> => {
+  try {
+    const response = await axios.post<{ token: string }>(
+      `${API_BASE_URL}/user/login/`,
+      form,
+      {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
+      },
+    )
+    return response.data.token
+  } catch (error) {
+    console.error('Login failed:', error)
+    return null
+  }
 }
 
 export const googleLogin = async (accessToken: string): Promise<void> => {
