@@ -18,7 +18,7 @@ defineProps<Props>();
       backgroundColor: backgroundColor
     }"
   >
-    <slot></slot> <!-- diri ang content -->
+    <slot></slot>
   </div>
 </template>
 
