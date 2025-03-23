@@ -4,7 +4,6 @@
     :style="{ 
       width: width || '100%', 
       height: height || 'auto',
-      backgroundColor: backgroundColor
     }"
     class="card-container"
   >
