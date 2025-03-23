@@ -35,7 +35,7 @@ defineEmits(['update:modelValue'])
 <style lang="scss" scoped>
 .date-picker {
   margin: 0 auto;
-  padding: 0.9375rem;
+
 }
 
 .input-wrapper {
@@ -56,7 +56,7 @@ defineEmits(['update:modelValue'])
   cursor: text;
   border-radius: 0.6rem;
   padding-left: 2.7rem;
-  color: rgba(117, 17, 19, 0.7);
+  color: $red;
   -webkit-appearance: none;
   -moz-appearance: none;  
   appearance: none;
