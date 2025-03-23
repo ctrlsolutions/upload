@@ -1,37 +1,25 @@
 <template>
-  <section
-    class="profile-section"
-    :style="dynamicStyles"
-  >
-    <main class="profile-container" role="main">
-      <header
-        class="profile-header"
-        :style="{ height: headerHeight }"
-        role="banner"
-      >
-        <!-- Header content -->
+  <section class="profile-section" :style="dynamicStyles">
+    <CardComponent :width="width" :height="height">
+      <header class="profile-header" :style="{ height: headerHeight, width: width }" role="banner">
+        <h2 class="profile-title">{{ title }}</h2>
       </header>
       <div class="content-wrapper">
-        <div class="flex-row">
-          <div></div>
-          <div class="flex-column"></div>
-        </div>
         <section class="profile-content">
-          <div class="profile-info">
-            <!-- Profile information content -->
-          </div>
-          <div class="reports-section" role="complementary">
-            <!-- Reports section content -->
-          </div>
+          <slot></slot>
         </section>
       </div>
-    </main>
+    </CardComponent>
   </section>
 </template>
 
 <script>
-export default {
+import CardComponent from "@/components/Global/CardComponent.vue";
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "CardWithHeader",
+  components: { CardComponent },
   props: {
     width: {
       type: String,
@@ -40,6 +28,10 @@ export default {
     height: {
       type: String,
       default: "239px",
+    },
+    title: {
+      type: String,
+      default: "",
     },
   },
   computed: {
@@ -55,12 +47,13 @@ export default {
       };
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
 .profile-section {
   display: flex;
+  border-radius: 20px;
   justify-content: center;
   align-items: center;
   width: var(--profile-width, 593px);
@@ -68,26 +61,33 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.profile-container {
-  width: 100%;
-  height: 100%;
-  border-radius: 25px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  position: relative;
-  background-color: #fff;
-}
-
 .profile-header {
   width: 100%;
-  border-radius: 25px 25px 0 0;
+  padding: 0 25px;
+  border-radius: 20px;
   display: flex;
+  justify-content: start;
   align-items: center;
-  padding-left: 34px;
   background-color: #014421;
+}
+
+.profile-title {
+  color: $white;
+  font-family: "Segoe UI",
+  Roboto,
+  Oxygen,
+  Ubuntu,
+  Cantarell,
+  "Open Sans",
+  "Helvetica Neue",
+  sans-serif;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 @include sm {
   .profile-section {
+    border-radius: 20px;
     max-width: 200px;
     max-height: 150px;
   }
@@ -95,6 +95,7 @@ export default {
 
 @include md {
   .profile-section {
+    border-radius: 20px;
     max-width: 300px;
     max-height: 200px;
   }
@@ -102,6 +103,7 @@ export default {
 
 @include lg {
   .profile-section {
+    border-radius: 20px;
     max-width: 400px;
     max-height: 250px;
   }
@@ -109,6 +111,7 @@ export default {
 
 @include xl {
   .profile-section {
+    border-radius: 20px;
     max-width: 500px;
     max-height: 300px;
   }
