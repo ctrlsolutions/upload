@@ -62,7 +62,7 @@ export default {
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
   box-sizing: border-box;
-  justify-content: flex-start;
+  justify-content: space-between;
 
   @include mixins.sm {
     grid-template-columns: 97%;
@@ -97,6 +97,7 @@ export default {
   flex-direction: column;
   gap: 2vh;
   width: 25vw;
+  justify-content: space-between;
 }
 
 /* Component Breakpoints with vw/vh units */
