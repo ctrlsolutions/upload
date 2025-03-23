@@ -1,46 +1,23 @@
-<<<<<<< HEAD
 <template>
   <div 
     v-bind="$attrs" 
-=======
-<script setup lang="ts">
-interface Props {
-  width?: string;
-  height?: string;
-  class?: string;
-  backgroundColor?: string;
-}
-
-defineProps<Props>();
-</script>
-
-<template>
-  <div 
-    class="card-container" 
->>>>>>> 5b140d65ec3ed18249c685876ed529c3e651c999
     :style="{ 
       width: width || '100%', 
       height: height || 'auto',
       backgroundColor: backgroundColor
     }"
-<<<<<<< HEAD
     class="card-container"
-=======
->>>>>>> 5b140d65ec3ed18249c685876ed529c3e651c999
   >
     <slot></slot>
   </div>
 </template>
 
-<<<<<<< HEAD
 <script setup lang="ts">
 import { CardComponent } from '@/types/ComponentInterface';
 
 defineProps<CardComponent>();
 </script>
 
-=======
->>>>>>> 5b140d65ec3ed18249c685876ed529c3e651c999
 <style lang="scss" scoped>
 .card-container {
   border-radius: 8px;
