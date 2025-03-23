@@ -82,9 +82,9 @@ export default {
 
 .up-logo {
   position: absolute;
-  right: 9rem;
-  left: 34rem;
-  top: -1.5rem;
+  right: 14rem;
+  left: 28rem;
+  top: -2.0rem;
   bottom: 0rem;
   width: 16rem;
   opacity: 0.3;
