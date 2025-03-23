@@ -69,6 +69,23 @@ const dropdownStyle = computed(() => ({
   }
 }
 
+.dropdown {
+  display: flex;
+  background-color: transparent;
+  text-overflow: ellipsis;
+  font-family: 'Inter', serif;
+  font-weight: bold;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.5rem 0rem 0.5rem 0.8rem;
+  border: 0.15px solid $red;
+  border-radius: 0.6rem 0 0 0.6rem;
+  cursor: pointer;
+  color: $red;
+  flex-grow: 1;
+}
+
 .dropdown:focus {
   outline: none;
 }
@@ -86,12 +103,18 @@ const dropdownStyle = computed(() => ({
 }
 
 .dropdown-icon {
-  position: absolute;
   right: 0.5rem;
   top: 72%;
   transform: translateY(-50%);
   font-size: 1.25rem;
   fill: $red;
   pointer-events: none;
+  border: 0.15px solid $red;
+  border-left: none;
+  border-radius: 0 0.6rem 0.6rem 0;
+  height: 100%;
+  padding: 2%;
+  width: auto;
+
 }
 </style>
