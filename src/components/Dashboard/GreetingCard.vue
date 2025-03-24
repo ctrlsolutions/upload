@@ -17,7 +17,7 @@ import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";
 const props = defineProps<{ lastName: string }>();
 const currentDate = ref("");
 const currentTime = ref("");
-let timer: number | null = null;
+let timer: ReturnType<typeof setInterval> | null = null;
 
 const updateTime = () => {
   const now = new Date();

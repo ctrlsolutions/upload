@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-page">
     <div class="left-section">
-      <GreetingCard class="greeting-card" :lastName="user?.last_name" />
+      <GreetingCard class="greeting-card" :lastName="user?.last_name ?? ''" />
       <StatisticReport class="statistic-report" />
       <LastReport class="last-report" />
     </div>
@@ -87,8 +87,8 @@ onMounted(async () => {
 
 .right-section {
     padding: 3vh 0vw 0vh 0;
-  }
 }
+
 
 .left-section, .right-section {
   display: flex;

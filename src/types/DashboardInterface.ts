@@ -1,4 +1,5 @@
 export interface UserProfile {
+    profile_picture?: string; 
     first_name: string;
     email: string;
     middle_name: string;
@@ -7,5 +8,5 @@ export interface UserProfile {
 }
 
 export interface DashboardData {
-user: UserProfile;
+    user: UserProfile;
 }
