@@ -15,7 +15,6 @@ export const login = async (form: LoginData): Promise<string | null> => {
       form,
       {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
       },
     )
     return response.data.token

@@ -100,30 +100,28 @@ const validateForm = async () => {
   }
 }
 
-const submitForm = async () => {
+const submitForm = async () => { 
   try {
     const response = await login(form) 
     console.log("Full response:", response) 
 
-    if (response.token && response.user_id) {
-      localStorage.setItem('token', response.token)
-      console.log("Token:", response.token)
+    if (response?.user_id) {
       console.log("User ID:", response.user_id)
-
       toast.value?.showToast('Login successful!', 'success')
 
-    }
-
-    setTimeout(() => {
+      setTimeout(() => {
         router.push('/authenticated/dashboard')
       }, 2000)
-
+    } else {
+      throw new Error("Invalid login response")
+    }
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occurred'
     toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
+
 
 const handleGoogleLogin = async (googleResponse: any) => {
   try {
