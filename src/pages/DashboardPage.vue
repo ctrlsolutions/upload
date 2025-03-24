@@ -41,13 +41,14 @@ onMounted(async () => {
 });
 </script>
 
+
 <style lang="scss" scoped> 
 // Removed @use "@/styles/mixins" as mixins;
 
 .dashboard-page {
   display: grid;
   gap: 2vh;
-  padding: 4vh 0 0 1vw;
+  padding: 4vh 0 0 0;
   width: 88vw;
   min-height: 88vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
@@ -63,29 +64,16 @@ onMounted(async () => {
 
   @media (max-width: 900px) { // Equivalent to mixins.md
     grid-template-columns: 51% 58%;
-    padding: 0vh;
+    padding: 2vh 0vw 0vh 0;
   }
 
   @media (max-width: 1200px) { // Equivalent to mixins.lg
     grid-template-columns: 47% 47%;
-    padding: 0vh 0vw 0vh 2vh;
+    padding: 2vh 0vw 0vh 0;
   }
 
   @media (min-width: 1201px) { // Equivalent to mixins.xl
     grid-template-columns: 48% 50%;
-    padding: 0vh 0vw 0vh 2vh;
-  }
-}
-
-.left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  width: 25vw;
-  justify-content: space-between;
-}
-
-.right-section {
     padding: 3vh 0vw 0vh 0;
   }
 }

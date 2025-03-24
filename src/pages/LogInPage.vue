@@ -103,11 +103,17 @@ const validateForm = async () => {
 const submitForm = async () => { 
   try {
     const token = await login(form)
+
+    if (!token) {
+      throw new Error("Invalid login response") // ✅ Ensure token exists
+    }
+
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      // window.location.href = '/authenticated/dashboard'
+      window.location.href = '/authenticated/dashboard'
     }, 2000)
+
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occurred'

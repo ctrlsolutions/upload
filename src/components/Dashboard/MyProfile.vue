@@ -21,7 +21,6 @@
 <script>
 import { getDashboardData } from "@/services/DashboardService";
 
-
 export default {
   name: "MyProfile",
   data() {

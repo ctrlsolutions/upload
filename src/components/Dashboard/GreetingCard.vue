@@ -66,7 +66,9 @@ onBeforeUnmount(() => {
 }
 
 .greeting-text h2 {
-  padding: 0rem 0rem 1.75rem .25rem;
+  padding: 0rem 0rem 2rem .25rem;
+
+  padding: 0rem 0rem 1.25rem .250rem;
   margin: 10px 0 5px;
   font-size: 24px;
   font-weight: bold;
@@ -77,7 +79,7 @@ onBeforeUnmount(() => {
   margin: 0;
   position: absolute;
   right: 0rem;
-  left: 1.3rem;
+  left: 1.5rem;
   top: 9rem;
   bottom: 0rem;
 
