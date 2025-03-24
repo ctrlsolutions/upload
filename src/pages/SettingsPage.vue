@@ -1,80 +1,98 @@
 <template>
   <!-- USE CARD WITH HEADER: WHOLE CONTAINER -->
   <div class="container">
-    <div class="header">
-      <h1 class="title">Account Settings</h1>
-    </div>
-    
-    <div class="card">
-      <div class="card-header">
-        <h2>My Profile</h2>
-      </div>
-      
-      <!-- USE NORMAL CARD: USER INFO -->
-      <div class="user-card">
-        <img 
-          src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg" 
-          alt="User profile" 
-          class="user-image" 
-        />
-        <div class="user-info">
-          <p class="name">Chraine Paul T. Tuazon</p>
-          <p class="role">College Dean</p>
-          <p class="college">College of Science</p>
-        </div>
-        <div class="button-container">
-          <BaseFormButton variant="red">Delete Account</BaseFormButton>
-          <BaseFormButton variant="green">Log out</BaseFormButton>
-        </div>
-      </div>
-
-      <!-- USE FOLDER COMPONENT -->
-      <div class="folder">
-        <div class="folder-header">
-          <h2>Personal Information</h2>
-        </div>
-
-        <div class="folder-content">
-          <div class="edit-container">
-            <BaseFormButton variant="black" width="6rem" height="1rem">
-              Edit
-            </BaseFormButton>
+    <h1 class="title">Account Settings</h1>
+    <CardWithHeader title="My Profile" height="fit-content" width="full">
+      <div class="card">
+        <!-- USE NORMAL CARD: USER INFO -->
+        <div class="user-card">
+          <img
+            src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
+            alt="User profile"
+            class="user-image"
+          />
+          <div class="user-info">
+            <p class="name">Chraine Paul T. Tuazon</p>
+            <p class="role">College Dean</p>
+            <p class="college">College of Science</p>
           </div>
-
-          <div class="grid-container">
-            <div class="input-group">
-              <label for="firstName">First Name</label>
-              <BaseTextInput id="firstName" v-model="firstName" class="input-box" disabled/>
-            </div>
-
-            <div class="input-group">
-              <label for="middleName">Middle Name</label>
-              <BaseTextInput id="middleName" v-model="middleName" class="input-box" disabled/>
-            </div>
-
-            <div class="input-group">
-              <label for="lastName">Last Name</label>
-              <BaseTextInput id="lastName" v-model="lastName" class="input-box" disabled/>
-            </div>
-
-            <div class="input-group">
-              <label for="email">Email</label>
-              <BaseTextInput id="email" v-model="email" type="email" class="input-box" disabled/>
-            </div>
-
-            <div class="input-group">
-              <label for="bio">Bio</label>
-              <BaseTextInput id="bio" v-model="bio" class="input-box" disabled/>
-            </div>
-
-            <div class="input-group">
-              <label for="contact">Contact</label>
-              <BaseTextInput id="contact" v-model="contact" class="input-box" disabled/>
-            </div>
+          <div class="button-container">
+            <BaseFormButton variant="red">Delete Account</BaseFormButton>
+            <BaseFormButton variant="green">Log out</BaseFormButton>
           </div>
         </div>
+        <!-- USE FOLDER COMPONENT -->
+        <div class="folder">
+          <div class="folder-header">
+            <h2>Personal Information</h2>
+          </div>
+          <div class="folder-content">
+            <div class="edit-container">
+              <BaseFormButton variant="black" width="6rem" height="1rem">
+                Edit
+              </BaseFormButton>
+            </div>
+            <div class="grid-container">
+              <div class="input-group">
+                <label for="firstName">First Name</label>
+                <BaseTextInput
+                  id="firstName"
+                  v-model="firstName"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+              <div class="input-group">
+                <label for="middleName">Middle Name</label>
+                <BaseTextInput
+                  id="middleName"
+                  v-model="middleName"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+              <div class="input-group">
+                <label for="lastName">Last Name</label>
+                <BaseTextInput
+                  id="lastName"
+                  v-model="lastName"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+              <div class="input-group">
+                <label for="email">Email</label>
+                <BaseTextInput
+                  id="email"
+                  v-model="email"
+                  type="email"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+              <div class="input-group">
+                <label for="bio">Bio</label>
+                <BaseTextInput
+                  id="bio"
+                  v-model="bio"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+              <div class="input-group">
+                <label for="contact">Contact</label>
+                <BaseTextInput
+                  id="contact"
+                  v-model="contact"
+                  class="input-box"
+                  disabled
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </CardWithHeader>
   </div>
 </template>
 
@@ -82,6 +100,7 @@
 import { ref } from 'vue'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+import CardWithHeader from '@/components/Homepage/CardWithHeader.vue'
 
 const firstName = ref('Chraine Paul')
 const middleName = ref('Tiger')
@@ -94,11 +113,11 @@ const contact = ref('+09 987 645 32')
 <style lang="scss" scoped>
 .container {
   background: white;
-  width: 100%;
+  width: 30rem;
   margin: 0 auto;
   padding: 2rem;
-  margin-top: 2.2rem;
-  height: 52.7rem;
+  // margin-top: 2.2rem;
+  // height: 52.7rem;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
@@ -116,7 +135,7 @@ const contact = ref('+09 987 645 32')
 }
 
 .card {
-  background: #F7F6F6;
+  background: #f7f6f6;
   border-radius: 8px;
   overflow: hidden;
   height: 45rem;
@@ -124,7 +143,6 @@ const contact = ref('+09 987 645 32')
   margin-top: 1rem;
   border-radius: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
 }
 
 .card-header {
@@ -168,7 +186,8 @@ const contact = ref('+09 987 645 32')
       margin: 0;
     }
 
-    .role, .college {
+    .role,
+    .college {
       font-size: 0.9rem;
       color: #666;
       margin: 2px 0;
@@ -226,7 +245,7 @@ const contact = ref('+09 987 645 32')
     padding: 1.2rem 1.5rem;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    
+
     h2 {
       font-size: 1.2rem;
       margin: 0;
@@ -267,7 +286,7 @@ const contact = ref('+09 987 645 32')
     .input-group {
       display: flex;
       flex-direction: column;
-      
+
       label {
         font-size: 0.9rem;
         font-weight: 500;
@@ -276,11 +295,11 @@ const contact = ref('+09 987 645 32')
       }
 
       .input-box {
-      border: 1.5px solid #8b0000;
-      padding: 0.8rem;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: bold;
+        border: 1.5px solid #8b0000;
+        padding: 0.8rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: bold;
       }
     }
   }

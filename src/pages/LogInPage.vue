@@ -100,12 +100,10 @@ const validateForm = async () => {
 const submitForm = async () => {
   try {
     const token = await login(form)
-    localStorage.setItem('authToken', token)
-    axios.defaults.headers.common['Authorization'] = `Token ${token}`
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      window.location.href = '/authenticated/dashboard'
+      // window.location.href = '/authenticated/dashboard'
     }, 2000)
   } catch (error: any) {
     const errorMessage =

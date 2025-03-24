@@ -65,23 +65,29 @@
 export default {}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
-  display: flex;
+  display: grid;
+  grid-template-columns: 0.5fr 4.5fr;
+  grid-template-rows: 1fr;
+  padding: 2em;
+  grid-template-areas: 'sidebar main';
+  width: 100vw;
   height: 100vh;
+  box-sizing: border-box;
 }
 
 .sidebar {
-  width: 75px;
-  background-color: #7b1113;
-  padding: 20px;
-  margin: 2vw;
+  grid-area: sidebar;
+  width: 5em;
+  background-color: $red;
+  padding: 2em;
+  // margin: 2em 0em 2em 2em;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
 }
 
 .nav-link,
@@ -121,8 +127,8 @@ export default {}
   transform: translateX(50px);
 }
 .nav-link:not(:hover) {
-  transform: none; /* Instantly resets position */
-  transition: none; /* Removes animation on unhover */
+  transform: none;
+  transition: none;
 }
 .nav-link:hover > .icon-label {
   display: inline;
@@ -131,5 +137,11 @@ export default {}
 .profile-link:hover,
 .settings-link:hover {
   background-color: #a04747;
+}
+.content {
+  grid-area: main;
+  width: calc((100vw - 2em - 1%) * (4 / 4.5));
+  background-color: red;
+  // margin: 2em 2em 2em 0em;
 }
 </style>
