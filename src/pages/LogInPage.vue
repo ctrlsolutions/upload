@@ -56,6 +56,7 @@ import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
+import { useRouter } from 'vue-router'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
@@ -64,6 +65,8 @@ import { login, googleLogin } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
 import axios from 'axios'
+
+const router = useRouter()
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
@@ -97,7 +100,7 @@ const validateForm = async () => {
   }
 }
 
-const submitForm = async () => {
+const submitForm = async () => { 
   try {
     const token = await login(form)
     toast.value?.showToast('Login successful!', 'success')
@@ -111,6 +114,7 @@ const submitForm = async () => {
     toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
+
 
 const handleGoogleLogin = async (googleResponse: any) => {
   try {

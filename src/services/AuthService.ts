@@ -26,6 +26,7 @@ export const login = async (form: LoginData): Promise<string | null> => {
   }
 }
 
+
 export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {
     access_token: accessToken,
@@ -47,7 +48,7 @@ export const signupUser = async (
     return { success: true, data: response.data }
   } catch (error: any) {
     const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
+      error.response?.data?.error || 'An unexpecxted error occurred'
     return { success: false, error: errorMessage }
   }
 }

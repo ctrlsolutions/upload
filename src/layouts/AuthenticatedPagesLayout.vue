@@ -74,6 +74,9 @@ export default {}
   grid-template-areas: 'sidebar main';
   width: 100vw;
   height: 100vh;
+  background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
+  background-size: cover;
+  background-color: white;
   box-sizing: border-box;
 }
 
