@@ -2,97 +2,81 @@
   <!-- USE CARD WITH HEADER: WHOLE CONTAINER -->
   <div class="container">
     <h1 class="title">Account Settings</h1>
-    <CardWithHeader title="My Profile" height="fit-content" width="full">
-      <div class="card">
-        <!-- USE NORMAL CARD: USER INFO -->
-        <div class="user-card">
-          <img
-            src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
-            alt="User profile"
-            class="user-image"
-          />
-          <div class="user-info">
-            <p class="name">Chraine Paul T. Tuazon</p>
-            <p class="role">College Dean</p>
-            <p class="college">College of Science</p>
+    <CardComponent title="My Profile" height="100%" width="100%" :header="true">
+      <!-- USE NORMAL CARD: USER INFO -->
+      <CardComponent width="90%" height="20%" class="user-card">
+        <img
+          src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
+          alt="User profile"
+          class="user-image"
+        />
+        <div class="user-info">
+          <p class="name">Chraine Paul T. Tuazon</p>
+          <p class="role">College Dean</p>
+          <p class="college">College of Science</p>
+        </div>
+        <div class="button-container">
+          <BaseFormButton variant="red">Delete Account</BaseFormButton>
+          <BaseFormButton variant="green">Log out</BaseFormButton>
+        </div>
+      </CardComponent>
+      <!-- USE FOLDER COMPONENT -->
+      <CardComponent
+        width="100%"
+        height="100%"
+        title="Personal Information"
+        :header="true"
+      >
+        <div class="edit-container">
+          <BaseFormButton variant="black" width="6rem" height="1rem">
+            Edit
+          </BaseFormButton>
+        </div>
+        <div class="grid-container">
+          <div class="input-group">
+            <label for="firstName">First Name</label>
+            <BaseTextInput
+              id="firstName"
+              v-model="firstName"
+              class="input-box"
+              disabled
+            />
           </div>
-          <div class="button-container">
-            <BaseFormButton variant="red">Delete Account</BaseFormButton>
-            <BaseFormButton variant="green">Log out</BaseFormButton>
+          <div class="input-group">
+            <label for="middleName">Middle Name</label>
+            <BaseTextInput
+              id="middleName"
+              v-model="middleName"
+              class="input-box"
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="lastName">Last Name</label>
+            <BaseTextInput
+              id="lastName"
+              v-model="lastName"
+              class="input-box"
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="email">Email</label>
+            <BaseTextInput
+              id="email"
+              v-model="email"
+              type="email"
+              class="input-box"
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label for="bio">Bio</label>
+            <BaseTextInput id="bio" v-model="bio" class="input-box" disabled />
           </div>
         </div>
-        <!-- USE FOLDER COMPONENT -->
-        <div class="folder">
-          <div class="folder-header">
-            <h2>Personal Information</h2>
-          </div>
-          <div class="folder-content">
-            <div class="edit-container">
-              <BaseFormButton variant="black" width="6rem" height="1rem">
-                Edit
-              </BaseFormButton>
-            </div>
-            <div class="grid-container">
-              <div class="input-group">
-                <label for="firstName">First Name</label>
-                <BaseTextInput
-                  id="firstName"
-                  v-model="firstName"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-              <div class="input-group">
-                <label for="middleName">Middle Name</label>
-                <BaseTextInput
-                  id="middleName"
-                  v-model="middleName"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-              <div class="input-group">
-                <label for="lastName">Last Name</label>
-                <BaseTextInput
-                  id="lastName"
-                  v-model="lastName"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-              <div class="input-group">
-                <label for="email">Email</label>
-                <BaseTextInput
-                  id="email"
-                  v-model="email"
-                  type="email"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-              <div class="input-group">
-                <label for="bio">Bio</label>
-                <BaseTextInput
-                  id="bio"
-                  v-model="bio"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-              <div class="input-group">
-                <label for="contact">Contact</label>
-                <BaseTextInput
-                  id="contact"
-                  v-model="contact"
-                  class="input-box"
-                  disabled
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </CardWithHeader>
+      </CardComponent>
+    </CardComponent>
   </div>
 </template>
 
@@ -100,7 +84,7 @@
 import { ref } from 'vue'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import CardWithHeader from '@/components/Homepage/CardWithHeader.vue'
+import CardComponent from '@/components/Global/CardComponent.vue'
 
 const firstName = ref('Chraine Paul')
 const middleName = ref('Tiger')
@@ -112,12 +96,11 @@ const contact = ref('+09 987 645 32')
 
 <style lang="scss" scoped>
 .container {
-  background: white;
-  width: 30rem;
+  box-sizing: border-box;
+  background: rgb(172, 158, 158);
+  width: 100%;
+  height: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  // margin-top: 2.2rem;
-  // height: 52.7rem;
   border-radius: 25px;
   display: flex;
   flex-direction: column;
@@ -132,17 +115,6 @@ const contact = ref('+09 987 645 32')
 .header {
   font-size: 0.8rem;
   width: 100%;
-}
-
-.card {
-  background: #f7f6f6;
-  border-radius: 8px;
-  overflow: hidden;
-  height: 45rem;
-  margin-left: 1.5rem;
-  margin-top: 1rem;
-  border-radius: 25px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
