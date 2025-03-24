@@ -27,27 +27,26 @@
         title="Personal Information"
         :header="true"
       >
-        <div class="edit-container">
-          <BaseFormButton variant="black" width="6rem" height="1rem">
-            Edit
-          </BaseFormButton>
+      <BaseFormButton variant="black" width="6rem" height="2rem">
+        Edit
+      </BaseFormButton>
         </div>
-        <div class="grid-container">
+        <div class="info-grid">
           <div class="input-group">
-            <label for="firstName">First Name</label>
+            <label>First Name</label>
             <BaseTextInput
               id="firstName"
               v-model="firstName"
-              class="input-box"
+              variant="red"
               disabled
             />
           </div>
           <div class="input-group">
-            <label for="middleName">Middle Name</label>
+            <label>Middle Name</label>
             <BaseTextInput
               id="middleName"
               v-model="middleName"
-              class="input-box"
+              variant="red"
               disabled
             />
           </div>
@@ -66,7 +65,16 @@
               id="email"
               v-model="email"
               type="email"
-              class="input-box"
+              variant="red"
+              disabled
+            />
+          </div>
+          <div class="input-group">
+            <label>Bio</label>
+            <BaseTextInput
+              id="bio"
+              v-model="bio"
+              variant="red"
               disabled
             />
           </div>

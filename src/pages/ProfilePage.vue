@@ -49,10 +49,6 @@
               <p class="info-type">Email</p>
               <p class="info">cttuazon@up.edu.ph</p>
             </div>
-            <div class="info-group">
-              <p class="info-type">Contact</p>
-              <p class="info">+09 987 645 32</p>
-            </div>
           </div>
         </div>
       </div>
@@ -70,8 +66,9 @@ import CardComponent from '@/components/Global/CardComponent.vue';
   margin: 0;
   padding: 0rem 0rem 4rem 2rem;
   display: grid;
-  grid-template-columns: 2fr 2fr;
-  grid-template-rows: auto auto; 
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1rem;
 }
 
 * {
@@ -106,7 +103,7 @@ import CardComponent from '@/components/Global/CardComponent.vue';
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  width: 46.5rem;
+  width: 100%;
 
   .content {
     display: flex;
@@ -159,7 +156,7 @@ import CardComponent from '@/components/Global/CardComponent.vue';
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 46.5rem;
+    width: 100%;
     height: 100%;
 
     .num-reports {
