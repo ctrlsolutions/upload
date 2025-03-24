@@ -15,6 +15,7 @@ export const login = async (form: LoginData): Promise<string | null> => {
       form,
       {
         headers: { 'Content-Type': 'application/json' },
+        withCredentials: true,
       },
     )
     console.log('✅ Login Response:', response) // Logs full response
@@ -25,7 +26,6 @@ export const login = async (form: LoginData): Promise<string | null> => {
     return null
   }
 }
-
 
 export const googleLogin = async (accessToken: string): Promise<void> => {
   await axios.post(`${API_BASE_URL}/user/google/signup/`, {

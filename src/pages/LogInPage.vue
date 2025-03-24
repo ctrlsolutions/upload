@@ -100,7 +100,7 @@ const validateForm = async () => {
   }
 }
 
-const submitForm = async () => { 
+const submitForm = async () => {
   try {
     const token = await login(form)
     toast.value?.showToast('Login successful!', 'success')
@@ -114,7 +114,6 @@ const submitForm = async () => {
     toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
-
 
 const handleGoogleLogin = async (googleResponse: any) => {
   try {
