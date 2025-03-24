@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title">Account Settings</h1>
     <CardComponent title="My Profile" height="100%" width="100%" :header="true">
-      <CardComponent width="100%" height="100%" class="user-card">
+      <CardComponent width="99.36%" height="100%" class="user-card">
         <img
           src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
           alt="User profile"
@@ -135,11 +135,10 @@ const contact = ref('+09 987 645 32')
   background: #F7F6F6;
   padding: 1.5rem;
   display: flex;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr 1fr;
   align-items: flex-end;
   gap: 1.5rem;
   margin: 1rem;
-  border-radius: 15px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   .user-image {
