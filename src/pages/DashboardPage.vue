@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import DashboardServices from "@/services/DashboardService";
+import { getDashboardData } from "@/services/DashboardService";
 import GreetingCard from "@/components/Dashboard/GreetingCard.vue";
 import SearchBar from "@/components/Dashboard/SearchBar.vue";
 import StatisticReport from "@/components/Dashboard/StatisticReport.vue";
@@ -31,13 +31,16 @@ const user = ref<User | null>(null);
 
 onMounted(async () => {
   try {
-    const data = await DashboardServices.getDashboardData();
-    if (data) user.value = data.user;
+    const data = await getDashboardData();
+    if (data && data.user) {
+      user.value = data.user;
+    }
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 });
 </script>
+
 
 <style lang="scss" scoped> 
 // Removed @use "@/styles/mixins" as mixins;
@@ -45,7 +48,7 @@ onMounted(async () => {
 .dashboard-page {
   display: grid;
   gap: 2vh;
-  padding: 4vh 0 0 0;
+  padding: 4vh 0 0 1vw;
   width: 88vw;
   min-height: 88vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
@@ -61,27 +64,37 @@ onMounted(async () => {
 
   @media (max-width: 900px) { // Equivalent to mixins.md
     grid-template-columns: 51% 58%;
-    padding: 2vh 0vw 0vh 0;
+    padding: 0vh;
   }
 
   @media (max-width: 1200px) { // Equivalent to mixins.lg
     grid-template-columns: 47% 47%;
-    padding: 2vh 0vw 0vh 0;
+    padding: 0vh 0vw 0vh 2vh;
   }
 
   @media (min-width: 1201px) { // Equivalent to mixins.xl
     grid-template-columns: 48% 50%;
-    padding: 3vh 0vw 0vh 0;
+    padding: 0vh 0vw 0vh 2vh;
   }
 }
 
-.left-section, .right-section {
+.left-section {
   display: flex;
   flex-direction: column;
   gap: 2vh;
   width: 25vw;
   justify-content: space-between;
 }
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  width: 25vw;
+  justify-content: space-between;
+}
+
+
 
 /* Component Breakpoints with vw/vh units */
 .greeting-card,

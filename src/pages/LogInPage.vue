@@ -115,6 +115,9 @@ const submitForm = async () => {
     } else {
       throw new Error("Invalid login response")
     }
+    setTimeout(() => {
+      window.location.href = '/authenticated/dashboard'
+    }, 2000)
   } catch (error: any) {
     const errorMessage =
       error.response?.data?.error || 'An unexpected error occurred'
