@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="title">Account Settings</h1>
     <CardComponent title="My Profile" height="100%" width="100%" :header="true">
-      <CardComponent width="104.3rem" height="100%" class="user-card">
+      <CardComponent width="100%" height="100%" class="user-card">
         <img
           src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
           alt="User profile"
