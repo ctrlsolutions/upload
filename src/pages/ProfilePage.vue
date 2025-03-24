@@ -10,14 +10,16 @@
             class="profile-image"
           />
           <div class="profile-container">
-            <h4 class="name">Chraine Paul T. Tuazon</h4>
-            <h6 class="role">College Dean</h6>
+            <h4 class="name">
+              {{ dashboardData?.user.first_name }} {{ dashboardData?.user.middle_name }} {{ dashboardData?.user.last_name }}
+            </h4>
+            <h6  class="role">{{ formattedRole }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
       </div>
       <div class="green-container">
-        <div class="num-reports">1269</div>
+        <div class="num-reports">{{ 0 }}</div>
         <div class="desc-container">
           <p class="desc">Record of Report Submissions</p>
           <p class="year">2024 - 2025</p>
@@ -63,7 +65,25 @@
 </template>
 
 <script lang="ts" setup>
-// Component logic can be added here
+import { ref, computed, onMounted } from "vue";
+import { getDashboardData } from "@/services/DashboardService";
+import { DashboardData } from "@/types/DashboardInterface";
+
+const dashboardData = ref<DashboardData | null>(null);
+
+onMounted(async () => {
+  dashboardData.value = await getDashboardData();
+});
+
+const formattedRole = computed(() => {
+  if (!dashboardData.value?.user.role) return ""; // Handle empty or undefined role
+  const role = dashboardData.value.user.role.toLowerCase(); // Normalize casing
+  if (role === "cd") return "College Dean";
+  if (role === "f") return "Faculty";
+  if (role === "c") return "Chancellor";
+  if (role === "dc") return "Department Chair";
+  return dashboardData.value.user.role; // Default fallback
+});
 </script>
 
 <style lang="scss" scoped>
