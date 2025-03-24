@@ -102,21 +102,11 @@ const validateForm = async () => {
 
 const submitForm = async () => { 
   try {
-    const response = await login(form) 
-    console.log("Full response:", response) 
+    const token = await login(form)
+    toast.value?.showToast('Login successful!', 'success')
 
-    if (response?.user_id) {
-      console.log("User ID:", response.user_id)
-      toast.value?.showToast('Login successful!', 'success')
-
-      setTimeout(() => {
-        router.push('/authenticated/dashboard')
-      }, 2000)
-    } else {
-      throw new Error("Invalid login response")
-    }
     setTimeout(() => {
-      window.location.href = '/authenticated/dashboard'
+      // window.location.href = '/authenticated/dashboard'
     }, 2000)
   } catch (error: any) {
     const errorMessage =
