@@ -4,17 +4,22 @@
       <CardComponent class="profile-card" width="46.5rem" height="23rem" :header="true" title="My Profile">
         <div class="content">
           <img 
-            src="https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg" 
+            :src="dashboardData?.user.profile_picture || 'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'"
             alt="Profile Picture" 
             class="profile-image"
           />
           <div class="profile-container">
-            <h4 class="name">Chraine Paul T. Tuazon</h4>
-            <h6 class="role">College Dean</h6>
+            <h4 class="name">
+              {{ dashboardData?.user.first_name }} 
+              {{ dashboardData?.user.middle_name || '' }} 
+              {{ dashboardData?.user.last_name }}
+            </h4>
+            <h6 class="role">{{ formattedRole }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
       </CardComponent>
+
       <CardComponent class="green-container" width="46.5rem" height="23rem">
         <div class="num-reports">1269</div>
         <div class="desc-container">
@@ -23,31 +28,32 @@
         </div>
       </CardComponent>
     </div>
+
     <CardComponent class="lower-part" width="94rem" height="28rem" :header="true" title="Personal Information">
       <div class="content">
         <div class="info-grid">
           <div class="info-container" id="left-info">
             <div class="info-group">
               <p class="info-type">First Name</p>
-              <p class="info">Chraine</p>
+              <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Last Name</p>
-              <p class="info">Tuazon</p>
+              <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Bio</p>
-              <p class="info">College Dean</p>
+              <p class="info">{{ formattedRole }}</p>
             </div>
           </div>
           <div class="info-container" id="right-info">
             <div class="info-group">
               <p class="info-type">Middle Name</p>
-              <p class="info">Tiger</p>
+              <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Email</p>
-              <p class="info">cttuazon@up.edu.ph</p>
+              <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
             </div>
           </div>
         </div>
@@ -56,8 +62,29 @@
   </div>
 </template>
 
+
 <script lang="ts" setup>
 import CardComponent from '@/components/Global/CardComponent.vue';
+import { ref, computed, onMounted } from "vue";
+import { getDashboardData } from "@/services/DashboardService";
+import { DashboardData } from "@/types/DashboardInterface";
+
+const dashboardData = ref<DashboardData | null>(null);
+
+onMounted(async () => {
+  dashboardData.value = await getDashboardData();
+});
+
+const formattedRole = computed(() => {
+  if (!dashboardData.value?.user.role) return "";
+  const role = dashboardData.value.user.role.toLowerCase(); 
+  if (role === "cd") return "College Dean";
+  if (role === "f") return "Faculty";
+  if (role === "c") return "Chancellor";
+  if (role === "dc") return "Department Chair";
+  return dashboardData.value.user.role;
+});
+
 </script>
 
 <style lang="scss" scoped>
