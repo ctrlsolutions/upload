@@ -40,8 +40,8 @@ defineProps({
   font-size: .8rem;
   font-weight: 900;
   border-radius: 15px 15px 0px 0px;
-  width: 100%;  /* Ensures header width matches the card width */
-  box-sizing: border-box; /* Includes padding in the width calculation */
+  width: 100%;  
+  box-sizing: border-box;
 }
 
 .card-title {
