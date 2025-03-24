@@ -61,7 +61,6 @@ const isSignupRoute = computed(() => route.path === '/auth/signup')
 .content-container {
   position: relative;
   display: flex;
-  justify-content: space-around;
   align-items: center;
   width: 80%;
   height: 90%;

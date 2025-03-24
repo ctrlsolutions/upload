@@ -85,11 +85,11 @@
       </div>
     </form>
     <p class="or-text">OR</p>
-    <GoogleLogin :callback="googleSignUp" popup-type="TOKEN"
-      ><FormButton variant="red" width="25rem" type="button"
-        >CONTINUE WITH GOOGLE</FormButton
-      ></GoogleLogin
-    >
+    <GoogleLogin :callback="googleSignUp" popup-type="TOKEN">
+      <FormButton variant="red" width="25rem" type="button">
+        <v-icon name="fc-google" scale="1.2"></v-icon>
+        &emsp; CONTINUE WITH GOOGLE</FormButton>
+    </GoogleLogin>
   </div>
   <ExtraInfoModal
     v-if="showModal"
@@ -100,48 +100,18 @@
   <Toast ref="toast" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
+import { validatePasswordMatch } from '@/validators/AuthValidators'
+import { signupUser, googleSignup } from '@/services/AuthService'
+import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
+import FormButton from '@/components/Global/BaseFormButton.vue'
 import FormRadio from '@/components/Global/BaseFormRadio.vue'
 import InputField from '@/components/Global/BaseTextInput.vue'
-import FormButton from '@/components/Global/BaseFormButton.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
-import ExtraInfoModal from '@/components/SignUp/ExtraInfoModal.vue'
-import axios from 'axios'
 import Toast from '@/components/Global/Toast.vue'
 
-const googleProfile = ref(null)
-const accessToken = ref(null)
-const showModal = ref(false)
-
-const googleSignUp = response => {
-  console.log('GOOGLE LOGIN RESPONSE', response)
-
-  accessToken.value = response.access_token
-
-  showModal.value = true
-}
-const submitToBackend = async extraInfo => {
-  console.log(extraInfo)
-  try {
-    const response = await axios.post(
-      import.meta.env.VITE_API_BASE_URL + '/user/google/signup/',
-      {
-        access_token: accessToken.value,
-        extra_info: extraInfo,
-      },
-    )
-
-    toast.value.showToast('Signup successful!', 'success')
-    showModal.value = false
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
-    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
-  }
-}
-
-const userData = ref({
+const userData = ref<SignupData>({
   email: '',
   password: '',
   password2: '',
@@ -152,32 +122,27 @@ const userData = ref({
   birthdate: '',
 })
 
-const passwordError = ref('')
-const signupSuccess = ref('')
-const signupError = ref('')
-const toast = ref(null)
+const passwordError = ref<string | null>(null)
+const signupSuccess = ref<string>('')
+const signupError = ref<string>('')
+const toast = ref<InstanceType<typeof Toast> | null>(null)
+const accessToken = ref<string | null>(null)
+const showModal = ref<boolean>(false)
+const googleProfile = ref<Record<string, any> | null>(null)
 
 const submitForm = async () => {
   signupSuccess.value = ''
   signupError.value = ''
 
-  if (userData.value.password !== userData.value.password2) {
-    passwordError.value = 'Passwords do not match.'
-    return
-  }
+  passwordError.value = validatePasswordMatch(
+    userData.value.password,
+    userData.value.password2,
+  )
+  if (passwordError.value) return
 
-  try {
-    const response = await axios.post(
-      'http://127.0.0.1:8000/api/user/signup/',
-      userData.value,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-    )
-
-    toast.value.showToast('Signup successful!', 'success')
-
-    // Clear input fields
+  const response = await signupUser(userData.value)
+  if (response.success) {
+    toast.value?.showToast('Signup successful!', 'success')
     userData.value = {
       email: '',
       password: '',
@@ -189,13 +154,32 @@ const submitForm = async () => {
       birthdate: '',
     }
 
-    setTimeout(() => {
-      window.location.href = 'http://localhost:5173/auth/login'
-    }, 2000)
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
-    toast.value.showToast(`Error submitting form: ${errorMessage}`, 'error')
+    setTimeout(() => (window.location.href = '/auth/login'), 2000)
+  } else {
+    toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
+  }
+}
+
+const googleSignUp = (response: any) => {
+  console.log('GOOGLE LOGIN RESPONSE', response)
+  accessToken.value = response.access_token
+  showModal.value = true
+}
+
+const submitToBackend = async (extraInfo: Record<string, any>) => {
+  if (!accessToken.value) return
+
+  const googleData: GoogleSignupData = {
+    access_token: accessToken.value,
+    extra_info: extraInfo,
+  }
+
+  const response = await googleSignup(googleData)
+  if (response.success) {
+    toast.value?.showToast('Google Signup successful!', 'success')
+    showModal.value = false
+  } else {
+    toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
   }
 }
 </script>
@@ -207,6 +191,7 @@ const submitForm = async () => {
   max-width: 25rem;
   justify-content: center;
   align-items: center;
+  margin: auto;
 }
 .text-red-600 {
   color: $red;

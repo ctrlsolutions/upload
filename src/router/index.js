@@ -6,6 +6,7 @@ import LandingPage from '@/pages/LandingPage.vue'
 import DashboardPage from '@/pages/DashboardPage.vue'
 import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
+import SettingsPage from '@/pages/SettingsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,7 @@ const router = createRouter({
         { path: 'dashboard', component: DashboardPage },
         { path: 'report', component: LogInPage },
         { path: 'profile', component: ProfilePage },
+        { path: 'settings', component: SettingsPage },
       ],
     },
   ],
