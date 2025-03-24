@@ -21,4 +21,4 @@ export const getDashboardData = async (): Promise<DashboardData | null> => {
         );
         return null;
     }
-};
+

@@ -41,7 +41,6 @@ onMounted(async () => {
 });
 </script>
 
-
 <style lang="scss" scoped> 
 // Removed @use "@/styles/mixins" as mixins;
 
@@ -87,14 +86,17 @@ onMounted(async () => {
 }
 
 .right-section {
+    padding: 3vh 0vw 0vh 0;
+  }
+}
+
+.left-section, .right-section {
   display: flex;
   flex-direction: column;
   gap: 2vh;
   width: 25vw;
   justify-content: space-between;
 }
-
-
 
 /* Component Breakpoints with vw/vh units */
 .greeting-card,
