@@ -15,9 +15,10 @@ export const login = async (form: LoginData): Promise<string | null> => {
       form,
       {
         headers: { 'Content-Type': 'application/json' },
-        withCredentials: true,
       },
     )
+    console.log('✅ Login Response:', response) // Logs full response
+    console.log('🔹 Cookies should now be set in the browser.')
     return response.data.token
   } catch (error) {
     console.error('Login failed:', error)
