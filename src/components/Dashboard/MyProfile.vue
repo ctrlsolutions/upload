@@ -19,7 +19,8 @@
 </template>
 
 <script>
-import DashboardServices from "@/services/DashboardService"; // Ensure correct import
+import { getDashboardData } from "@/services/DashboardService";
+
 
 export default {
   name: "MyProfile",
@@ -54,7 +55,7 @@ export default {
   methods: {
     async fetchUserProfile() {
       try {
-        const dashboardData = await DashboardServices.getDashboardData();
+        const dashboardData = await getDashboardData();
         if (dashboardData && dashboardData.user) {
           this.user = {
             profilePicture: dashboardData.user.profile_picture, // Ensure backend returns this
