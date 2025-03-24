@@ -1,87 +1,118 @@
 <template>
   <div class="container">
     <div class="upper-part">
-      <div class="profile-card">
-        <div class="header">My Profile</div>
+      <CardComponent class="profile-card" width="46.5rem" height="23rem" :header="true" title="My Profile">
         <div class="content">
           <img 
-            src="https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg" 
+            :src="dashboardData?.user.profile_picture || 'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'"
             alt="Profile Picture" 
             class="profile-image"
           />
           <div class="profile-container">
-            <h4 class="name">Chraine Paul T. Tuazon</h4>
-            <h6 class="role">College Dean</h6>
+            <h4 class="name">
+              {{ dashboardData?.user.first_name }} 
+              {{ dashboardData?.user.middle_name || '' }} 
+              {{ dashboardData?.user.last_name }}
+            </h4>
+            <h6 class="role">{{ formattedRole }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
-      </div>
-      <div class="green-container">
+      </CardComponent>
+
+      <CardComponent class="green-container" width="46.5rem" height="23rem">
         <div class="num-reports">1269</div>
         <div class="desc-container">
           <p class="desc">Record of Report Submissions</p>
           <p class="year">2024 - 2025</p>
         </div>
-      </div>
+      </CardComponent>
     </div>
-    <div class="lower-part">
-      <div class="header">Personal Information</div>
+
+    <CardComponent class="lower-part" width="94rem" height="28rem" :header="true" title="Personal Information">
       <div class="content">
         <div class="info-grid">
           <div class="info-container" id="left-info">
             <div class="info-group">
               <p class="info-type">First Name</p>
-              <p class="info">Chraine</p>
+              <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Last Name</p>
-              <p class="info">Tuazon</p>
+              <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Bio</p>
-              <p class="info">College Dean</p>
+              <p class="info">{{ formattedRole }}</p>
             </div>
           </div>
           <div class="info-container" id="right-info">
             <div class="info-group">
               <p class="info-type">Middle Name</p>
-              <p class="info">Tiger</p>
+              <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Email</p>
-              <p class="info">cttuazon@up.edu.ph</p>
-            </div>
-            <div class="info-group">
-              <p class="info-type">Contact</p>
-              <p class="info">+09 987 645 32</p>
+              <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </CardComponent>
   </div>
 </template>
 
+
 <script lang="ts" setup>
-// Component logic can be added here
+import CardComponent from '@/components/Global/CardComponent.vue';
+import { ref, computed, onMounted } from "vue";
+import { getDashboardData } from "@/services/DashboardService";
+import { DashboardData } from "@/types/DashboardInterface";
+
+const dashboardData = ref<DashboardData | null>(null);
+
+onMounted(async () => {
+  dashboardData.value = await getDashboardData();
+});
+
+const formattedRole = computed(() => {
+  if (!dashboardData.value?.user.role) return "";
+  const role = dashboardData.value.user.role.toLowerCase(); 
+  if (role === "cd") return "College Dean";
+  if (role === "f") return "Faculty";
+  if (role === "c") return "Chancellor";
+  if (role === "dc") return "Department Chair";
+  return dashboardData.value.user.role;
+});
+
 </script>
 
 <style lang="scss" scoped>
 .container {
   width: 100%;
   margin: 0;
-  padding: 2rem 2rem 2rem 1rem;
+  padding: 0rem 0rem 4rem 2rem;
   display: grid;
-  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 1rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .header {
   background: #006837;
   color: white;
   padding: 1rem 2rem;
-  border-radius: 18px;
   font-weight: 500;
   font-size: 1.1rem;
+  width: 100%;
+  margin: -1rem -1rem 0;
+  width: calc(100% + 2rem);
 }
 
 .content {
@@ -99,13 +130,12 @@
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  width: 46.5rem;
+  width: 100%;
 
   .content {
     display: flex;
     align-items: flex-start;
     gap: 1.5rem;
-
   }
 
   .profile-image {
@@ -153,7 +183,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 46.5rem;
+    width: 100%;
     height: 100%;
 
     .num-reports {
@@ -189,17 +219,22 @@
   background: white;
   border-radius: 20px;
   overflow: hidden;
-  width: 100%;  
+  width: 100%;
+  grid-column: span 2;
 }
 
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  padding-left: 4rem;
+  padding-left: 4rem 4rem;
 }
 
 .info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 2rem;
   .info-group {
     margin-bottom: 1.5rem;
 
@@ -219,6 +254,7 @@
     font-size: 1.1rem;
     font-weight: 500;
     margin: 0;
+    padding-left: 1rem;
   }
 }
 </style>
