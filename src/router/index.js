@@ -5,6 +5,7 @@ import AuthPagesLayout from '@/layouts/AuthPagesLayout.vue'
 import LandingPage from '@/pages/LandingPage.vue'
 import DashboardPage from '@/pages/DashboardPage.vue'
 import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
+import SettingsPage from '@/pages/SettingsPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +33,7 @@ const router = createRouter({
       children: [
         { path: 'dashboard', component: DashboardPage },
         { path: 'report', component: LogInPage },
+        { path: 'settings', component: SettingsPage },
       ],
     },
   ],
