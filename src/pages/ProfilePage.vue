@@ -76,13 +76,13 @@ onMounted(async () => {
 });
 
 const formattedRole = computed(() => {
-  if (!dashboardData.value?.user.role) return ""; // Handle empty or undefined role
-  const role = dashboardData.value.user.role.toLowerCase(); // Normalize casing
+  if (!dashboardData.value?.user.role) return "";
+  const role = dashboardData.value.user.role.toLowerCase(); 
   if (role === "cd") return "College Dean";
   if (role === "f") return "Faculty";
   if (role === "c") return "Chancellor";
   if (role === "dc") return "Department Chair";
-  return dashboardData.value.user.role; // Default fallback
+  return dashboardData.value.user.role;
 });
 </script>
 
