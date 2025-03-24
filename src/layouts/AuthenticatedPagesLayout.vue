@@ -76,7 +76,7 @@ export default {}
   height: 100vh;
   background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
   background-size: cover;
-  background-color: white;
+  background: linear-gradient(to bottom right, #F6DDDE, #DDF6E9);
   box-sizing: border-box;
 }
 
