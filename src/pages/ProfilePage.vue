@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <div class="upper-part">
-      <CardComponent class="profile-card" width="46.5rem" height="23rem">
-        <div class="header">My Profile</div>
+      <CardComponent class="profile-card" width="46.5rem" height="23rem" :header="true" title="My Profile">
         <div class="content">
           <img 
             src="https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg" 
@@ -24,8 +23,7 @@
         </div>
       </CardComponent>
     </div>
-    <CardComponent class="lower-part" width="94rem" height="28rem">
-      <div class="header">Personal Information</div>
+    <CardComponent class="lower-part" width="94rem" height="28rem" :header="true" title="Personal Information">
       <div class="content">
         <div class="info-grid">
           <div class="info-container" id="left-info">
