@@ -4,7 +4,7 @@
     <div v-if="isLoading" class="loading">Loading...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else class="profile-content">
-      <img :src="user.profilePicture || defaultProfilePicture" alt="Profile Picture" class="profile-pic" />
+      <img :src="profileImage" alt="Profile Picture" />
       <div class="user-info">
         <p class="name"> Prof. {{ user.fullName }}</p>
         <p class="role">{{ formattedRole }}</p>
@@ -18,9 +18,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getDashboardData } from "@/services/DashboardService";
-
 
 export default {
   name: "MyProfile",
@@ -34,20 +33,23 @@ export default {
         reportsSubmitted: 0,
       },
       isLoading: true,
-      error: null,
+      error: null as string | null,
       defaultProfilePicture: new URL('@/assets/DefaultProfile.png', import.meta.url).href
     };
   },
   computed: {
-    formattedRole() {
+    profileImage() {
+      return this.user.profilePicture || this.defaultProfilePicture;
+    },
+    formattedRole(): string {
       if (!this.user.role) return ""; // Handle empty or undefined role
       const role = this.user.role.toLowerCase(); // Normalize casing
       if (role === "cd") return "College Dean";
       if (role === "f") return "Faculty";
       if (role === "c") return "Chancellor";
-      if (role == "dc") return "Department Chair"
+      if (role === "dc") return "Department Chair";
       return this.user.role; // Default fallback
-  }
+    }
   },
   async created() {
     await this.fetchUserProfile();
@@ -58,7 +60,7 @@ export default {
         const dashboardData = await getDashboardData();
         if (dashboardData && dashboardData.user) {
           this.user = {
-            profilePicture: dashboardData.user.profile_picture, // Ensure backend returns this
+            profilePicture: dashboardData.user.profile_picture || this.defaultProfilePicture,
             fullName: this.formatFullName(
               dashboardData.user.first_name,
               dashboardData.user.middle_name,
@@ -66,7 +68,7 @@ export default {
             ),
             role: dashboardData.user.role,
             email: dashboardData.user.email,
-            reportsSubmitted: dashboardData.user.reports_submitted || 0, // Ensure backend has this field
+            reportsSubmitted: 0, // Ensure backend has this field
           };
         } else {
           throw new Error("Failed to load user data.");
@@ -78,14 +80,12 @@ export default {
         this.isLoading = false;
       }
     },
-    formatFullName(firstName, middleName, lastName) {
-      // If middle name exists, include it; otherwise, skip it.
+    formatFullName(firstName: string, lastName: string, middleName?: string): string {
       return `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim();
     }
   }
 };
 </script>
-
 
 <style scoped>
 .my-profile {
