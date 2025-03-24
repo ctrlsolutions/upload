@@ -2,16 +2,21 @@
   <div
     v-bind="$attrs"
     :style="{
-      width: width || '100%',
-      height: height || 'auto',
-      backgroundColor: bgColor || 'white',
+      width: width,
+      height: height,
+      backgroundColor: bgColor,
+      boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
+      borderRadius: '12px',
     }"
     class="card-container"
   >
-    <header v-if="header" class="profile-header" role="banner">
-      <h2 class="profile-title">{{ title }}</h2>
+    <header v-if="header" class="card-header">
+      <slot name="header">
+        <h2 class="card-title">{{ title }}</h2>
+      </slot>
     </header>
-    <div class="content-wrapper">
+
+    <div class="card-content">
       <slot></slot>
     </div>
   </div>
@@ -19,54 +24,32 @@
 
 <script setup lang="ts">
 defineProps({
-  width: {
-    type: String,
-    default: '100%',
-  },
-  height: {
-    type: String,
-    default: 'auto',
-  },
-  bgColor: {
-    type: String,
-    default: 'white',
-  },
-  header: {
-    type: Boolean,
-    default: false,
-  },
-  title: {
-    type: String,
-    default: '',
-  },
+  width: { type: String, default: '100%' },
+  height: { type: String, default: 'auto' },
+  bgColor: { type: String, default: 'white' },
+  header: { type: Boolean, default: false },
+  title: { type: String, default: '' },
 })
 </script>
 
 <style lang="scss" scoped>
-.card-container {
-  box-sizing: border-box;
-  margin: 2rem;
-  border-radius: 22px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.profile-header {
-  width: 100%;
-  padding: 0 25px;
-  height: 10%;
-  border-radius: 20px;
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  background-color: #014421;
-}
-
-.profile-title {
+.card-header {
+  padding: .75rem 1rem;
+  background: #014421;
   color: white;
-  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-    'Helvetica Neue', sans-serif;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: .8rem;
+  font-weight: 900;
+  border-radius: 15px 15px 0px 0px;
+  width: 100%;  
+  box-sizing: border-box;
+}
+
+.card-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.card-content {
+  padding: 1rem;
 }
 </style>
