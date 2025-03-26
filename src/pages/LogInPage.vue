@@ -32,7 +32,7 @@
 
       <a href="#" class="forgot-password">Forgot Password?</a>
 
-      <FormButton variant="green" width="100%" @click="validateForm">
+      <FormButton variant="green" width="100%" @click.prevent="validateForm">
         LOG IN
       </FormButton>
     </form>
@@ -57,14 +57,14 @@ import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
 import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
 } from '@/validators/AuthValidators'
-import { login, googleLogin } from '@/services/AuthService'
+import { login, googleLogin, logout } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
-import axios from 'axios'
 
 const router = useRouter()
 
@@ -95,18 +95,19 @@ const validateForm = async () => {
   errors.email = validationErrors.email || ''
   errors.password = validationErrors.password || ''
 
-  if (!errors.email && !errors.password) {
-    await submitForm()
-  }
+  // if (!errors.email && !errors.password) {
+  //   await submitForm()
+  // }
 }
 
 const submitForm = async () => {
   try {
-    const token = await login(form)
+    const response = await login(form)
+    const username = response.data.username
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      window.location.href = '/authenticated/dashboard'
+      router.push(`/${username}`)
     }, 2000)
   } catch (error: any) {
     const errorMessage =
@@ -124,6 +125,22 @@ const handleGoogleLogin = async (googleResponse: any) => {
     toast.value?.showToast('Google login failed', 'error')
   }
 }
+
+onMounted(async () => {
+  console.log('HERE')
+
+  const storedUsername = sessionStorage.getItem('username')
+
+  if (storedUsername) {
+    try {
+      await logout()
+      sessionStorage.removeItem('username') // Clear stored session data
+      router.push('/login')
+    } catch (error) {
+      console.error('Logout failed', error)
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>

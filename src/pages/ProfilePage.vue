@@ -1,17 +1,26 @@
 <template>
   <div class="container">
-    <div class="upper-part">
-      <CardComponent class="profile-card" width="46.5rem" height="23rem" :header="true" title="My Profile">
+    <div class="upper-area">
+      <CardComponent
+        class="profile-card"
+        width="100%"
+        height="100%"
+        :header="true"
+        title="My Profile"
+      >
         <div class="content">
-          <img 
-            :src="dashboardData?.user.profile_picture || 'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'"
-            alt="Profile Picture" 
+          <img
+            :src="
+              dashboardData?.user.profile_picture ||
+              'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'
+            "
+            alt="Profile Picture"
             class="profile-image"
           />
           <div class="profile-container">
             <h4 class="name">
-              {{ dashboardData?.user.first_name }} 
-              {{ dashboardData?.user.middle_name || '' }} 
+              {{ dashboardData?.user.first_name }}
+              {{ dashboardData?.user.middle_name || '' }}
               {{ dashboardData?.user.last_name }}
             </h4>
             <h6 class="role">{{ formattedRole }}</h6>
@@ -20,7 +29,7 @@
         </div>
       </CardComponent>
 
-      <CardComponent class="green-container" width="46.5rem" height="23rem">
+      <CardComponent class="green-container" width="100%" height="100%">
         <div class="num-reports">1269</div>
         <div class="desc-container">
           <p class="desc">Record of Report Submissions</p>
@@ -29,7 +38,13 @@
       </CardComponent>
     </div>
 
-    <CardComponent class="lower-part" width="94rem" height="28rem" :header="true" title="Personal Information">
+    <CardComponent
+      class="lower-area"
+      width="100%"
+      height="100%"
+      :header="true"
+      title="Personal Information"
+    >
       <div class="content">
         <div class="info-grid">
           <div class="info-container" id="left-info">
@@ -62,46 +77,56 @@
   </div>
 </template>
 
-
 <script lang="ts" setup>
-import CardComponent from '@/components/Global/CardComponent.vue';
-import { ref, computed, onMounted } from "vue";
-import { getDashboardData } from "@/services/DashboardService";
-import { DashboardData } from "@/types/DashboardInterface";
+import CardComponent from '@/components/Global/CardComponent.vue'
+import { ref, computed, onMounted } from 'vue'
+import { getProfileData } from '@/services/ProfileService'
+import { ProfileData } from '@/types/ProfileInterface'
 
-const dashboardData = ref<DashboardData | null>(null);
+const dashboardData = ref<ProfileData | null>(null)
 
 onMounted(async () => {
-  dashboardData.value = await getDashboardData();
-});
+  const username = sessionStorage.getItem('username')
+  const response = await getProfileData(username)
+  dashboardData.value = response.data
+})
 
 const formattedRole = computed(() => {
-  if (!dashboardData.value?.user.role) return "";
-  const role = dashboardData.value.user.role.toLowerCase(); 
-  if (role === "cd") return "College Dean";
-  if (role === "f") return "Faculty";
-  if (role === "c") return "Chancellor";
-  if (role === "dc") return "Department Chair";
-  return dashboardData.value.user.role;
-});
-
+  if (!dashboardData.value?.user.role) return ''
+  const role = dashboardData.value.user.role.toLowerCase()
+  if (role === 'cd') return 'College Dean'
+  if (role === 'f') return 'Faculty'
+  if (role === 'c') return 'Chancellor'
+  if (role === 'dc') return 'Department Chair'
+  return dashboardData.value.user.role
+})
 </script>
 
 <style lang="scss" scoped>
 .container {
+  padding: 0;
   width: 100%;
+  box-sizing: border-box;
   margin: 0;
-  padding: 0rem 0rem 4rem 2rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  grid-template-rows: 2fr 2.5fr;
+  gap: 1em 0%;
+  grid-template-areas:
+    'upper-area'
+    'lower-area';
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+.upper-area {
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 3.5fr 3fr;
+  gap: 0px 1em;
+  grid-area: upper-area;
+}
+
+.lower-area {
+  grid-area: lower-area;
 }
 
 .header {
@@ -115,14 +140,10 @@ const formattedRole = computed(() => {
   width: calc(100% + 2rem);
 }
 
-.content {
-  padding: 2rem;
-}
-
 .upper-part {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;  
+  gap: 1rem;
   width: 100%;
 }
 
@@ -133,9 +154,10 @@ const formattedRole = computed(() => {
   width: 100%;
 
   .content {
+    padding: 2rem;
     display: flex;
     align-items: flex-start;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .profile-image {
@@ -155,7 +177,7 @@ const formattedRole = computed(() => {
   padding-top: 1rem;
 
   .name {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 600;
     margin: 0;
     color: #333;
@@ -176,67 +198,62 @@ const formattedRole = computed(() => {
 }
 
 .green-container {
-    background: linear-gradient(135deg, #014421, #036632, #007C3B);
-    border-radius: 20px;
-    color: white;
+  background: linear-gradient(135deg, #014421, #036632, #007c3b);
+  border-radius: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+
+  .num-reports {
+    font-size: 13.5rem;
+    font-weight: bold;
+    margin-bottom: -3.5rem;
+    margin-top: -3rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .desc-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
+    align-items: flex-start;
+    padding-left: 2rem;
 
-    .num-reports {
-        font-size: 13.5rem;
-        font-weight: bold;
-        margin-bottom: -3.5rem;
-        margin-top: -3rem;
-        color: rgba(255, 255, 255, 0.7);
+    .desc {
+      font-size: 1.4rem;
+      margin: 0;
+      line-height: 1.5;
     }
 
-    .desc-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; 
-        padding-left: 2rem; 
-        
-        .desc {
-            font-size: 1.4rem;
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .year {
-            font-size: 1rem;
-            margin: 0.5rem 0 0;
-            opacity: 0.9;
-        }
+    .year {
+      font-size: 1rem;
+      margin: 0.5rem 0 0;
+      opacity: 0.9;
     }
-}
-
-.lower-part {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  width: 100%;
-  grid-column: span 2;
+  }
 }
 
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
   gap: 3rem;
-  padding-left: 4rem 4rem;
+  padding: 0rem;
 }
 
 .info-container {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  padding-left: 2rem;
+  gap: 0.5rem;
+  padding-left: 1rem;
   .info-group {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -245,13 +262,13 @@ const formattedRole = computed(() => {
 
   .info-type {
     color: #666;
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin: 0 0 0.25rem;
   }
 
   .info {
     color: #333;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     margin: 0;
     padding-left: 1rem;

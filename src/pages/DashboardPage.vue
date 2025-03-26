@@ -14,63 +14,67 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { getDashboardData } from "@/services/DashboardService";
-import GreetingCard from "@/components/Dashboard/GreetingCard.vue";
-import SearchBar from "@/components/Dashboard/SearchBar.vue";
-import StatisticReport from "@/components/Dashboard/StatisticReport.vue";
-import LastReport from "@/components/Dashboard/LastReport.vue";
-import MyProfile from "@/components/Dashboard/MyProfile.vue";
-import MyCalendar from "@/components/Dashboard/MyCalendar.vue";
+import { ref, onMounted } from 'vue'
+import { getProfileData } from '@/services/ProfileService'
+import GreetingCard from '@/components/Dashboard/GreetingCard.vue'
+import SearchBar from '@/components/Dashboard/SearchBar.vue'
+import StatisticReport from '@/components/Dashboard/StatisticReport.vue'
+import LastReport from '@/components/Dashboard/LastReport.vue'
+import MyProfile from '@/components/Dashboard/MyProfile.vue'
+import MyCalendar from '@/components/Dashboard/MyCalendar.vue'
 
 interface User {
-  last_name?: string;
+  last_name?: string
 }
 
-const user = ref<User | null>(null);
+const user = ref<User | null>(null)
 
 onMounted(async () => {
   try {
-    const data = await getDashboardData();
-    if (data && data.user) {
-      user.value = data.user;
+    const username = sessionStorage.getItem('username')
+    const response = await getProfileData(username)
+    if (response && response.data.user) {
+      user.value = response.data.user
     }
   } catch (error) {
-    console.error("Error fetching user data:", error);
+    console.error('Error fetching user data:', error)
   }
-});
+})
 </script>
 
-<style lang="scss" scoped> 
-
+<style lang="scss" scoped>
 .dashboard-page {
   display: grid;
   gap: 2vh;
   padding: 4vh 0 0 1vw;
   width: 88vw;
   min-height: 88vh;
-  background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
+  // background: url('@/assets/DashboardBG.png') no-repeat center center fixed;
   background-size: cover;
-  background: linear-gradient(to bottom right, #F6DDDE, #DDF6E9);
+  background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
   box-sizing: border-box;
   justify-content: space-between;
 
-  @media (max-width: 600px) { // Equivalent to mixins.sm
+  @media (max-width: 600px) {
+    // Equivalent to mixins.sm
     grid-template-columns: 97%;
     padding: 2vh 2vw 0vh 0;
   }
 
-  @media (max-width: 900px) { // Equivalent to mixins.md
+  @media (max-width: 900px) {
+    // Equivalent to mixins.md
     grid-template-columns: 51% 58%;
     padding: 0vh;
   }
 
-  @media (max-width: 1200px) { // Equivalent to mixins.lg
+  @media (max-width: 1200px) {
+    // Equivalent to mixins.lg
     grid-template-columns: 47% 47%;
     padding: 0vh 0vw 0vh 2vh;
   }
 
-  @media (min-width: 1201px) { // Equivalent to mixins.xl
+  @media (min-width: 1201px) {
+    // Equivalent to mixins.xl
     grid-template-columns: 48% 50%;
     padding: 0vh 0vw 0vh 2vh;
   }
@@ -85,11 +89,11 @@ onMounted(async () => {
 }
 
 .right-section {
-    padding: 3vh 0vw 0vh 0;
+  padding: 3vh 0vw 0vh 0;
 }
 
-
-.left-section, .right-section {
+.left-section,
+.right-section {
   display: flex;
   flex-direction: column;
   gap: 2vh;
@@ -104,22 +108,26 @@ onMounted(async () => {
 .search-bar,
 .my-profile,
 .my-calendar {
-  @media (max-width: 600px) { // Equivalent to mixins.sm
+  @media (max-width: 600px) {
+    // Equivalent to mixins.sm
     min-height: 24vh;
     width: 85vw;
   }
 
-  @media (max-width: 900px) { // Equivalent to mixins.md
+  @media (max-width: 900px) {
+    // Equivalent to mixins.md
     min-height: 24vh;
     width: 45vw;
   }
 
-  @media (max-width: 1200px) { // Equivalent to mixins.lg
+  @media (max-width: 1200px) {
+    // Equivalent to mixins.lg
     min-height: 24vh;
     width: 42vw;
   }
 
-  @media (min-width: 1201px) { // Equivalent to mixins.xl
+  @media (min-width: 1201px) {
+    // Equivalent to mixins.xl
     min-height: 25vh;
     width: 42vw;
   }
