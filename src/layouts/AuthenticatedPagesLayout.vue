@@ -144,7 +144,7 @@ export default {}
 .content {
   grid-area: main;
   width: calc((100vw - 2em - 1%) * (4 / 4.5));
-  background-color: red;
+  background-color: transparent;
   // margin: 2em 2em 2em 0em;
 }
 </style>

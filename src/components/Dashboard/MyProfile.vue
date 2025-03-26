@@ -1,25 +1,34 @@
 <template>
   <div class="my-profile">
-    <div class="profile-header">MY PROFILE</div>
-    <div v-if="isLoading" class="loading">Loading...</div>
-    <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else class="profile-content">
-      <img :src="profileImage" alt="Profile Picture" />
-      <div class="user-info">
-        <p class="name"> Prof. {{ user.fullName }}</p>
-        <p class="role">{{ formattedRole }}</p>
-        <p class="email">{{ user.email }}</p>
+    <CardComponent 
+      title="My Profile" 
+      height="100%" 
+      width="100%" 
+      :header="true"
+    >
+      <div class="profile-header">MY PROFILE</div>
+      <div v-if="isLoading" class="loading">Loading...</div>
+      <div v-else-if="error" class="error-message">{{ error }}</div>
+      <div v-else class="profile-content">
+        <img :src="profileImage" alt="Profile Picture" class="profile-pic" />
+        <div class="user-info">
+          <p class="name"> Prof. {{ user.fullName }}</p>
+          <p class="role">{{ formattedRole }}</p>
+          <p class="email">{{ user.email }}</p>
+        </div>
+        <div class="reports">
+          <p class="ReportsSubmitted">Reports Submitted</p>
+          <p class="ReportsNumber">{{ user.reportsSubmitted }}</p>
+        </div>
       </div>
-      <div class="reports">
-        <p class="ReportsSubmitted">Reports Submitted</p>
-        <p class="ReportsNumber">{{ user.reportsSubmitted }}</p>
-      </div>
-    </div>
+    </CardComponent>
   </div>
 </template>
 
+
 <script lang="ts">
 import { getDashboardData } from "@/services/DashboardService";
+import CardComponent from '@/components/Global/CardComponent.vue';
 
 export default {
   name: "MyProfile",
@@ -102,7 +111,7 @@ export default {
 }
 
 .profile-header {
-  width: 100%;
+  width: 46vw;
   background: #1a3d21;
   color: white;
   text-align: left;
@@ -167,5 +176,25 @@ export default {
   font-weight: bold;
   color: #555;
   padding: 2rem 0rem 0rem 0rem;
+}
+
+.card-header {
+  padding: .75rem 1rem;
+  background: #014421;
+  color: white;
+  font-size: .8rem;
+  font-weight: 900;
+  border-radius: 15px 15px 0px 0px;
+  width: 100%;  
+  box-sizing: border-box;
+}
+
+.card-title {
+  margin: 0;
+  font-weight: bold;
+}
+
+.card-content {
+  padding: 1rem;
 }
 </style>

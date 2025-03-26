@@ -42,7 +42,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped> 
-// Removed @use "@/styles/mixins" as mixins;
 
 .dashboard-page {
   display: grid;
