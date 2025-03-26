@@ -7,7 +7,7 @@
         <img src="@/assets/navbar/logo.png" alt="logo" class="logo" />
       </div>
       <div class="sidebar-mid-group">
-        <router-link to="/authenticated/dashboard" class="nav-link">
+        <router-link :to="dashboardRoute" class="nav-link">
           <img
             src="@/assets/navbar/dashboard.png"
             alt="dashboard"
@@ -45,10 +45,10 @@
         </router-link>
       </div>
       <div class="sidebar-bottom-group">
-        <router-link to="/" class="profile-link">
+        <router-link :to="profileRoute" class="profile-link">
           <img src="@/assets/navbar/profile.png" alt="profile" class="icon" />
         </router-link>
-        <router-link to="/" class="settings-link">
+        <router-link :to="settingsRoute" class="settings-link">
           <img src="@/assets/navbar/settings.png" alt="settings" class="icon" />
         </router-link>
       </div>
@@ -61,8 +61,18 @@
   </div>
 </template>
 
-<script>
-export default {}
+<script setup>
+import { computed } from 'vue'
+
+const username = sessionStorage.getItem('username') || ''
+
+const dashboardRoute = computed(() => (username ? `/${username}` : '/login'))
+const profileRoute = computed(() =>
+  username ? `/${username}/profile` : '/login',
+)
+const settingsRoute = computed(() =>
+  username ? `/${username}/settings` : '/login',
+)
 </script>
 
 <style scoped lang="scss">
@@ -70,13 +80,14 @@ export default {}
   display: grid;
   grid-template-columns: 0.5fr 4.5fr;
   grid-template-rows: 1fr;
-  padding: 2em;
+  padding: 0.5em;
+  gap: 0em 1%;
   grid-template-areas: 'sidebar main';
   width: 100vw;
   height: 100vh;
-  background: url("@/assets/DashboardBG.png") no-repeat center center fixed;
+  // background: url('@/assets/DashboardBG.png') no-repeat center center fixed;
   background-size: cover;
-  background: linear-gradient(to bottom right, #F6DDDE, #DDF6E9);
+  background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
   box-sizing: border-box;
 }
 
@@ -85,12 +96,13 @@ export default {}
   width: 5em;
   background-color: $red;
   padding: 2em;
-  // margin: 2em 0em 2em 2em;
+  margin: 1em 0em 1em 1em;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  z-index: 5;
 }
 
 .nav-link,
@@ -122,7 +134,6 @@ export default {}
   width: 0px;
   height: 30px;
   position: relative;
-  z-index: 2;
   padding-left: 5px;
 }
 .nav-link:hover {
@@ -144,6 +155,10 @@ export default {}
 .content {
   grid-area: main;
   width: calc((100vw - 2em - 1%) * (4 / 4.5));
+  z-index: 0;
+  padding: 0;
+  justify-content: start;
+  align-items: start;
   background-color: transparent;
   // margin: 2em 2em 2em 0em;
 }
