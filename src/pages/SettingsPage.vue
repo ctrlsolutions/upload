@@ -3,23 +3,25 @@
     <h1 class="title">Account Settings</h1>
     <CardComponent title="My Profile" height="100%" width="100%" :header="true">
       <CardComponent width="99.36%" height="100%" class="user-card">
-        <img
-          src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
-          alt="User profile"
-          class="user-image"
-        />
-        <div class="user-info">
-          <p class="name">
-            {{
-              userProfile.first_name +
-              ' ' +
-              userProfile.middle_name +
-              ' ' +
-              userProfile.last_name
-            }}
-          </p>
-          <p class="role">College Dean</p>
-          <p class="college">College of Science</p>
+        <div class="user-profile">
+          <img
+            src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
+            alt="User profile"
+            class="user-image"
+          />
+          <div class="user-info">
+            <p class="name">
+              {{
+                userProfile.first_name +
+                ' ' +
+                userProfile.middle_name +
+                ' ' +
+                userProfile.last_name
+              }}
+            </p>
+            <p class="role">{{ userProfile.role }}</p>
+            <p class="college">College of Science</p>
+          </div>
         </div>
         <div class="button-container">
           <BaseFormButton variant="red">Delete Account</BaseFormButton>
@@ -42,9 +44,14 @@
           >
             Edit
           </BaseFormButton>
-          <BaseFormButton v-if="isEditing" @click="submitForm"
-            >Save</BaseFormButton
-          >
+          <BaseFormButton
+            v-if="isEditing"
+            variant="black"
+            width="6rem"
+            height="2rem"
+            @click="submitForm">
+            Save
+          </BaseFormButton>
         </div>
         <div class="info-grid">
           <div class="input-group">
@@ -192,10 +199,19 @@ const submitForm = async () => {
   gap: 1.5rem;
   margin: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  // justify-content: space-between;
+
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-left: 0.5rem;
+  }
 
   .user-image {
-    width: 100px;
-    height: 100px;
+    width: 10rem;
+    height: 10rem;
     border-radius: 50%;
     object-fit: cover;
   }
@@ -211,6 +227,7 @@ const submitForm = async () => {
       font-size: 1.2rem;
       font-weight: bold;
       margin: 0;
+      padding-left: 3rem;
     }
 
     .role,
@@ -218,14 +235,18 @@ const submitForm = async () => {
       font-size: 0.9rem;
       color: #666;
       margin: 2px 0;
+      padding-left: 3rem;
     }
   }
 
   .button-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    justify-self: end;
+  display: flex;
+  flex-direction: column !important;
+  gap: 5rem;
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   }
 }
 
