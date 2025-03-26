@@ -1,18 +1,27 @@
 <template>
   <div class="greeting-card">
-    <div class="date-time">
-      <span>📅 {{ currentDate }} &nbsp; {{ currentTime }}</span>
-    </div>
-    <div class="greeting-text">
-      <h2 v-if="lastName"> Good Day, Prof. {{ lastName }}</h2>
-      <p>Have a great day!</p>
-    </div>
-    <img src="@/assets/UPSystemLogo.png" alt="UP Logo" class="up-logo" />
+    <CardComponent 
+      title="My Profile" 
+      height="100%" 
+      width="100%" 
+      :header="false" 
+      class="transparent-card"
+    >
+      <div class="date-time">
+        <span>📅 {{ currentDate }} &nbsp; {{ currentTime }}</span>
+      </div>
+      <div class="greeting-text">
+        <h2 v-if="lastName"> Good Day, Prof. {{ lastName }}</h2>
+        <p>Have a great day!</p>
+      </div>
+      <img src="@/assets/UPSystemLogo.png" alt="UP Logo" class="up-logo" />
+    </CardComponent>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, defineProps } from "vue";
+import CardComponent from '@/components/Global/CardComponent.vue';
 
 const props = defineProps<{ lastName: string }>();
 const currentDate = ref("");
@@ -43,18 +52,30 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* Ensure the gradient is on the outer div */
 .greeting-card {
   width: 100vw;
   height: 22vh;
   background: linear-gradient(to right, #1a3d21, #2f6035);
   border-radius: 15px;
-  padding: 1rem 0rem 0rem 1rem;
+  padding: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
   color: white;
-  overflow: hidden; 
+  overflow: hidden;
+}
+
+/* Remove the white background from CardComponent */
+::v-deep(.card) {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.transparent-card {
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .date-time {
@@ -66,7 +87,7 @@ onBeforeUnmount(() => {
 }
 
 .greeting-text h2 {
-  padding: 0rem 0rem 1.75rem .25rem;
+  padding: 0rem 0rem 1.75rem 0.25rem;
   margin: 10px 0 5px;
   font-size: 24px;
   font-weight: bold;
@@ -76,19 +97,16 @@ onBeforeUnmount(() => {
   font-size: 1.125rem;
   margin: 0;
   position: absolute;
-  right: 0rem;
   left: 1.3rem;
   top: 9rem;
   bottom: 0rem;
-
 }
 
 .up-logo {
   position: absolute;
   right: 14rem;
   left: 28rem;
-  top: -2.0rem;
-  bottom: 0rem;
+  top: -2rem;
   width: 16rem;
   opacity: 0.3;
 }
