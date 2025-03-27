@@ -11,23 +11,21 @@
           />
           <div class="user-info">
             <p class="name">
-              {{
-                userProfile.first_name +
-                ' ' +
-                userProfile.middle_name +
-                ' ' +
-                userProfile.last_name
-              }}
+              {{ userProfile.first_name }} {{ userProfile.middle_name }}
+              {{ userProfile.last_name }}
             </p>
-            <p class="role">{{ userProfile.role }}</p>
+            <p class="role">Faculty</p>
             <p class="college">College of Science</p>
           </div>
         </div>
         <div class="button-container">
           <BaseFormButton variant="red">Delete Account</BaseFormButton>
-          <BaseFormButton variant="green">Log out</BaseFormButton>
+          <BaseFormButton variant="green" @click.once="handleLogout"
+            >Log out</BaseFormButton
+          >
         </div>
       </CardComponent>
+
       <CardComponent
         width="100%"
         height="100%"
@@ -49,7 +47,8 @@
             variant="black"
             width="6rem"
             height="2rem"
-            @click="submitForm">
+            @click="submitForm"
+          >
             Save
           </BaseFormButton>
         </div>
@@ -58,46 +57,57 @@
             <label>First Name</label>
             <BaseTextInput
               id="firstName"
-              :value="userProfile.first_name"
+              :model-value="userProfile.first_name"
               variant="red"
               :disabled="!isEditing"
+              @update:model-value="
+                value => handleInputChange('first_name', value)
+              "
             />
           </div>
           <div class="input-group">
             <label>Middle Name</label>
             <BaseTextInput
               id="middleName"
-              v-model="userProfile.middle_name"
+              :model-value="userProfile.middle_name"
               variant="red"
               :disabled="!isEditing"
+              @update:model-value="
+                value => handleInputChange('middle_name', value)
+              "
             />
           </div>
           <div class="input-group">
             <label>Last Name</label>
             <BaseTextInput
               id="lastName"
-              v-model="userProfile.last_name"
+              :model-value="userProfile.last_name"
               variant="red"
               :disabled="!isEditing"
+              @update:model-value="
+                value => handleInputChange('last_name', value)
+              "
             />
           </div>
           <div class="input-group">
             <label>Email</label>
             <BaseTextInput
               id="email"
-              v-model="userProfile.email"
+              :model-value="userProfile.email"
               type="email"
               variant="red"
               :disabled="!isEditing"
+              @update:model-value="value => handleInputChange('email', value)"
             />
           </div>
           <div class="input-group">
             <label>Bio</label>
             <BaseTextInput
               id="bio"
-              v-model="userProfile.role"
+              :model-value="userProfile.role"
               variant="red"
               :disabled="!isEditing"
+              @update:model-value="value => handleInputChange('role', value)"
             />
           </div>
         </div>
@@ -112,7 +122,11 @@ import axios from 'axios'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import CardComponent from '@/components/Global/CardComponent.vue'
-import { getDashboardData } from '@/services/DashboardService'
+import { getProfileData, updateProfile } from '@/services/ProfileService'
+import { useRouter } from 'vue-router'
+import { logout } from '@/services/AuthService'
+
+const router = useRouter()
 
 interface UserProfile {
   first_name: string
@@ -129,24 +143,51 @@ const userProfile = ref<UserProfile>({
   email: '',
   role: '',
 })
+
+const editedProfile = ref<Partial<UserProfile>>({})
+
 const isEditing = ref(false)
+
 onMounted(async () => {
   try {
-    const data = await getDashboardData()
-    if (data && data.user) {
-      userProfile.value = data.user
+    const username = sessionStorage.getItem('username')
+    const response = await getProfileData(username)
+    if (response && response.data.user) {
+      userProfile.value = response.data.user
     }
   } catch (error) {
     console.error('Error fetching user data:', error)
   }
 })
 
-// Submit updated user data
-const submitForm = async () => {
+const handleLogout = async () => {
   try {
-    await axios.put('/api/user/edit_profile', userProfile.value, {
-      withCredentials: true,
-    })
+    await logout()
+    sessionStorage.clear()
+    router.push('/login')
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
+}
+
+const handleInputChange = (field: keyof UserProfile, value: string) => {
+  if (userProfile.value[field] !== value) {
+    editedProfile.value[field] = value
+  } else {
+    delete editedProfile.value[field]
+  }
+}
+
+const submitForm = async () => {
+  if (Object.keys(editedProfile.value).length === 0) {
+    alert('No changes made.')
+    return
+  }
+
+  try {
+    await updateProfile(editedProfile.value)
+    Object.assign(userProfile.value, editedProfile.value)
+    editedProfile.value = {}
     isEditing.value = false
     alert('Profile updated successfully')
   } catch (error) {
@@ -193,16 +234,16 @@ const submitForm = async () => {
 .user-card {
   background: #f7f6f6;
   padding: 1.5rem;
-  display: flex;
-  grid-template-columns: auto 1fr 1fr;
-  align-items: flex-end;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
   margin: 1rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
+  grid-template-areas: 'user-profile button';
   // justify-content: space-between;
 
   .user-profile {
+    grid-area: user-profile;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -240,13 +281,13 @@ const submitForm = async () => {
   }
 
   .button-container {
-  display: flex;
-  flex-direction: column !important;
-  gap: 5rem;
-  position: absolute;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
+    grid-area: button;
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    width: 9rem;
+    justify-items: center;
+    gap: 2rem;
   }
 }
 
