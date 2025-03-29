@@ -42,7 +42,7 @@ export const signupUser = async (
 ): Promise<ApiResponse> => {
   try {
     const response = await api.post('/user/signup/', userData, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', withCredentials: false },
     })
     return { success: true, data: response.data }
   } catch (error: any) {
