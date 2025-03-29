@@ -88,7 +88,8 @@
     <GoogleLogin :callback="googleSignUp" popup-type="TOKEN">
       <FormButton variant="red" width="25rem" type="button">
         <v-icon name="fc-google" scale="1.2"></v-icon>
-        &emsp; CONTINUE WITH GOOGLE</FormButton>
+        CONTINUE WITH GOOGLE</FormButton
+      >
     </GoogleLogin>
   </div>
   <ExtraInfoModal
