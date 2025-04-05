@@ -1,5 +1,10 @@
 <template>
-
+    <div class="info-container" v-if="infoVisible">
+        <v-icon name="bi-book" scale="2" />
+        <div class="info-text">
+            hahahahahahas hsiachihac hiahsichaischas
+        </div>      
+    </div>
     <div class="form-container">
         <div class="form">
             <div class="form-group">
@@ -31,14 +36,35 @@
     </div>
 </template>
 
-<script>
-    import BaseDateInput from "@/components/Global/BaseDateInput.vue";
+<script setup>
+import { ref } from 'vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 
-    export default {
-        components: {
-            BaseDateInput
-        }
-    }
+// Props
+const props = defineProps({
+  infoVisible: {
+    type: Boolean,
+    default: false
+  }
+})
+
+// Form data
+const title = ref('')
+const months = ref('')
+const startDate = ref(null)
+const endDate = ref(null)
+const researchers = ref('')
+
+// Submit handler
+function handleSubmit() {
+  console.log('Submitted:', {
+    title: title.value,
+    months: months.value,
+    startDate: startDate.value,
+    endDate: endDate.value,
+    researchers: researchers.value
+  })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -101,5 +127,18 @@
         font-weight: 900;
     }
 
+    .info-container {
+        margin-top: 1rem;
+        border: 2px solid rgba(251, 255, 0, 0.58);
+        background: rgba(255, 238, 0, 0.12);
+        padding: 1rem;
+        color: rgba(0, 0, 0, 0.648);
 
+        display: flex;
+        align-items: center;
+    }
+
+    .info-text {
+        margin-left: 1rem;
+    }
 </style>
