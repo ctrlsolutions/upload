@@ -1,6 +1,11 @@
 <template>
   <div class="dropdown-container">
-    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle">
+    <select
+      :value="modelValue"
+      @change="$emit('update:modelValue', $event.target.value)"
+      class="dropdown"
+      :style="dropdownStyle"
+    >
       <option value="" disabled class="placeholder">{{ placeholder }}</option>
       <option
         v-for="option in options"
@@ -16,15 +21,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps<{
+  modelValue: string
   options: { value: string; label: string }[]
   placeholder?: string
   width?: string | null
 }>()
 
-const selectedValue = ref('')
+const emit = defineEmits(['update:modelValue'])
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
@@ -102,6 +108,5 @@ const dropdownStyle = computed(() => ({
   height: 100%;
   padding: 2%;
   width: auto;
-
 }
 </style>
