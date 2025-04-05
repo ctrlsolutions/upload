@@ -20,7 +20,7 @@
             </div>
             
 
-            <component :is="selectedComponent" />
+            <component :is="selectedComponent" :infoVisible="infoVisible" />
 
         </div>
         <div class="file-drop-area-container">
