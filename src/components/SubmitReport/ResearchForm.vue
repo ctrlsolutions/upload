@@ -1,32 +1,34 @@
 <template>
-     <div class="form">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" placeholder="Title">
-                </div>
 
-                <div class="form-group">
-                    <label>Number of Months in Original Timeframe</label>
-                    <input type="text" placeholder="Months">
-                </div>
-
-                <div class="form-group">
-                    <label>Start Date</label>
-                    <BaseDateInput width="100%"/>
-                </div>
-
-                <div class="form-group">
-                    <label>End Date</label>
-                    <BaseDateInput width="100%"/>
-                </div>
-
-                <div class="form-group">
-                    <label>Names of Researcher/s</label>
-                    <input type="text" placeholder="Names">
-                </div>
-
-                <button class="submit-btn">SUBMIT</button>
+    <div class="form-container">
+        <div class="form">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" placeholder="Title">
             </div>
+
+            <div class="form-group">
+                <label>Number of Months in Original Timeframe</label>
+                <input type="text" placeholder="Months">
+            </div>
+
+            <div class="form-group">
+                <label>Start Date</label>
+                <BaseDateInput width="100%"/>
+            </div>
+
+            <div class="form-group">
+                <label>End Date</label>
+                <BaseDateInput width="100%"/>
+            </div>
+
+            <div class="form-group">
+                <label>Names of Researcher/s</label>
+                <input type="text" placeholder="Names">
+            </div>
+        </div>
+        <button class="submit-btn">SUBMIT</button>
+    </div>
 </template>
 
 <script>
@@ -40,16 +42,29 @@
 </script>
 
 <style lang="scss" scoped>
-    .form {
+    .form-container {
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
+    }
+    .form {
         flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        margin-top: 2rem;
 
-        color: $red;
+        border-radius: 10px;
+        background: #FCFCFC;
+        box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
+        padding: 1.5rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
     
     .form-group {
-        margin-top: 30px;
+        margin-bottom: 30px;
         display: flex;
         flex-direction: column;
     }
@@ -69,6 +84,7 @@
         border-radius: 5px;
         margin-top: auto;
         cursor: pointer;
+        margin-top: 2rem;
     }
 
     .form-group input {

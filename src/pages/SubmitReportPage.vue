@@ -7,14 +7,18 @@
                 </div>
             </div>
 
-            <BaseSelectInput
-                width="100%"
-                v-model="reportType"
-                :options="[
-                    { value: 'research', label: 'Research' },
-                    { value: 'publication', label: 'Publication' }
-                ]"
-            />
+            <div class="folder-head">
+                <BaseSelectInput
+                    width="90%"
+                    v-model="reportType"
+                    :options="[
+                        { value: 'research', label: 'Research' },
+                        { value: 'publication', label: 'Publication' }
+                    ]"
+                />    
+                <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo"/>
+            </div>
+            
 
             <component :is="selectedComponent" />
 
@@ -50,6 +54,12 @@ const components = {
 
 const selectedComponent = computed(() => components[reportType.value]);
 
+
+const infoVisible = ref(false);
+const toggleInfo = () => {
+    infoVisible.value = !infoVisible.value;
+    console.log(infoVisible.value);
+}
 
 </script>
 
@@ -166,4 +176,15 @@ const selectedComponent = computed(() => components[reportType.value]);
     font-size: 1.2rem;
     color: $green;
 }
+
+.info-icon {
+  height: 2rem;
+  margin-left: 1rem;
+
+}
+
+.folder-head {
+    display: flex;
+}
+
 </style>
