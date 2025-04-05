@@ -2,43 +2,22 @@
     <div class="container">
         <div class="folder-container">
             <div class="folder-tab">
-                <div class="dropdown-container">
-                    <select class="dropdown">
-                        <option value="submit">Submit Report</option>
-                        <option value="submit">dev: placeholder</option> <!-- plavce holder onley -->
-                    </select>
+                <div class="title-container">
+                    Submit Report
                 </div>
             </div>
-            
-            <div class="form">
-                <div class="form-group">
-                    <label>Title</label>
-                    <input type="text" placeholder="Title">
-                </div>
 
-                <div class="form-group">
-                    <label>Number of Months in Original Timeframe</label>
-                    <input type="text" placeholder="Months">
-                </div>
+            <BaseSelectInput
+                width="100%"
+                v-model="reportType"
+                :options="[
+                    { value: 'research', label: 'Research' },
+                    { value: 'publication', label: 'Publication' }
+                ]"
+            />
 
-                <div class="form-group">
-                    <label>Start Date</label>
-                    <BaseDateInput width="100%"/>
-                </div>
+            <component :is="selectedComponent" />
 
-                <div class="form-group">
-                    <label>End Date</label>
-                    <BaseDateInput width="100%"/>
-                </div>
-
-                <div class="form-group">
-                    <label>Names of Researcher/s</label>
-                    <input type="text" placeholder="Names">
-                </div>
-
-                <button class="submit-btn">SUBMIT</button>
-            </div>
-            
         </div>
         <div class="file-drop-area-container">
             <div class="drop-area-head">Supporting Evidence/s</div>
@@ -57,8 +36,19 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import BaseDateInput from "@/components/Global/BaseDateInput.vue";
+import { ref, computed } from "vue";
+
+import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
+import research from "@/components/SubmitReport/ResearchForm.vue";
+import publication from "@/components/SubmitReport/PublicationForm.vue";
+
+const reportType = ref('research');
+const components = {
+  research,
+  publication
+};
+
+const selectedComponent = computed(() => components[reportType.value]);
 
 
 </script>
@@ -101,54 +91,6 @@ import BaseDateInput from "@/components/Global/BaseDateInput.vue";
     padding-top: 4%;
 }
 
-.form {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-
-    color: $red;
-}
-
-.form-group {
-    margin-top: 30px;
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-input {
-    height: 2.4rem;
-    font-family: 'Inter', sans-serif;
-    font-weight: 900;
-}
-
-input::placeholder {
-    color: $red;
-    padding-left: 2.7rem;
-}
-.form-group input {
-    padding: 8px;
-    border: 0.15px solid $red;
-    border-radius: 10px;
-    outline: none;
-    color: $red;
-}
-
-.submit-btn {
-    width: 100%;
-    background: $red;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    margin-top: auto;
-    cursor: pointer;
-}
 
 .file-drop-area-container {
     height: 87vh;
@@ -219,34 +161,9 @@ input::placeholder {
     
 }
 
-
-.dropdown-container {
-    display: inline-block;
-    position: relative;
-    font-family: Arial, sans-serif;
-}
-
-.dropdown {
-    appearance: none;
-    background: none;
-    border: none;
-    font-size: 18px;
+.title-container {
     font-weight: bold;
-    color: $green; /* Dark green */
-    text-transform: uppercase;
-    cursor: pointer;
-    padding-right: 20px;
+    font-size: 1.2rem;
+    color: $green;
 }
-
-.dropdown-container::after {
-    content: "▼";
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 16px;
-    color: $green; /* Dark green */
-    pointer-events: none;
-}
-
 </style>
