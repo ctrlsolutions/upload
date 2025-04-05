@@ -1,6 +1,6 @@
 // publication as research blaaaaah raaaghgh
 <template>
-    <
+    <div class="form">fom</div>
 </template>
 
 <style lang="scss" scoped>
