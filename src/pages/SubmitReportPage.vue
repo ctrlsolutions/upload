@@ -43,8 +43,8 @@
 import { ref, computed } from "vue";
 
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
-import research from "@/components/SubmitReport/ResearchForm.vue";
-import publication from "@/components/SubmitReport/PublicationForm.vue";
+import research from "@/components/SubmitReport/Forms/ResearchForm.vue";
+import publication from "@/components/SubmitReport/Forms/PublicationForm.vue";
 
 const reportType = ref('research');
 const components = {
@@ -186,5 +186,4 @@ const toggleInfo = () => {
 .folder-head {
     display: flex;
 }
-
 </style>
