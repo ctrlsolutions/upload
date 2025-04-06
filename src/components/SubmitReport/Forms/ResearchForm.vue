@@ -29,19 +29,34 @@
         <input type="text" v-model="form.researchers" placeholder="Names" />
         <span v-if="errors.researchers" class="error">{{ errors.researchers }}</span>
       </div>
+
+      <div class="form-group">
+        <label>Source of Majority Share of this Research Funding</label>
+        <BaseSelectInput v-model="form.sourceOfMajorityShare" :options="sourceOfMajorityShare" />
+      </div>
     </div>
   </template>
   
   <script setup>
   import { reactive, ref } from 'vue'
   import BaseDateInput from '@/components/Global/BaseDateInput.vue'
-  
+  import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+
+
+  //probably should be fetched from the database
+  const sourceOfMajorityShare = ref([
+    { value: 'up-entity', label: 'Local' },
+    { value: 'rp-governemnt-entity-or-public-sector-entity', label: 'RP Government Entity or Public Sector Entity' },
+    { value: 'rp-private-sector-entity', label: 'RP Private Sector Entity' },
+    { value: 'foreign-or-nondomestic-entity', label: 'Foreign or Non-Domestic Entity' },
+  ])
   const form = reactive({
     title: '',
     months: '',
     startDate: '',
     endDate: '',
     researchers: '',
+    sourceOfMajorityShare: '',
   })
   
   const errors = reactive({
@@ -50,6 +65,7 @@
     startDate: '',
     endDate: '',
     researchers: '',
+    sourceOfMajorityShare: '',
   })
   
   function validateForm() {
@@ -60,7 +76,7 @@
     errors.startDate = form.startDate ? '' : 'Start date is required.'
     errors.endDate = form.endDate ? '' : 'End date is required.'
     errors.researchers = form.researchers ? '' : 'Researcher name(s) required.'
-  
+    errors.sourceOfMajorityShare = form.sourceOfMajorityShare ? '' : 'Source of majority share is required.'
     // Additional logic: ensure endDate is after startDate
     if (form.startDate && form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
       errors.endDate = 'End date must be after start date.'
