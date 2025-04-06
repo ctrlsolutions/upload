@@ -37,10 +37,10 @@
             
             <!-- Report Form -->
             <div class="form-container">
-                <component :is="formComponents[reportType]" />
+                <component :is="formComponents[reportType]" ref="formComponent" />
             </div>
 
-            <button class="submit-btn">SUBMIT</button>
+            <button class="submit-btn" @click="formComponent.submitForm()">SUBMIT</button>
 
         </div>
 
@@ -69,6 +69,8 @@ import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
 import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
 import PartnershipForm from "@/components/SubmitReport/Forms/PartnershipForm.vue";
 import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
+
+const formComponent = ref(null);
 
 const reportType = ref('research');
 const formComponents = { 
@@ -225,6 +227,8 @@ const toggleInfo = () => {
 
     display: flex;
     align-items: center;
+    z-index: 100;
+    position: absolute;
 }
 .info-text {
     margin-left: 1rem;
@@ -299,6 +303,8 @@ const toggleInfo = () => {
     font-weight: 900;
 }
 
-
-
+:deep(.error) {
+    color: red;
+    font-size: 0.8rem;
+}
 </style>
