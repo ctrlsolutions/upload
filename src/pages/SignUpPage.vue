@@ -155,7 +155,7 @@ const submitForm = async () => {
       birthdate: '',
     }
 
-    setTimeout(() => (window.location.href = '/auth/login'), 2000)
+    setTimeout(() => (window.location.href = '/login'), 2000)
   } else {
     toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
   }
