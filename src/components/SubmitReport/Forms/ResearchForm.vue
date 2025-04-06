@@ -39,7 +39,6 @@
   
 <script setup>
   import { reactive, ref } from 'vue'
-  import axios from 'axios'
   import BaseDateInput from '@/components/Global/BaseDateInput.vue'
   import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
@@ -90,19 +89,9 @@
     return valid
   }
 
-  async function submitForm() {
+  function exposeForm() {
     if (validateForm()) {
-      try {
-        const response = await axios.post('https://api.example.com/submit-form', {
-          ...form,
-        })
-        console.log('Form submitted successfully:', response.data)
-        return response.data
-      } catch (error) {
-        console.error('Submission failed:', error)
-        // You can also show an error message to the user here
-        return null
-      }
+      return form
     } else {
       console.warn('Validation failed')
       return null
@@ -110,7 +99,7 @@
   }
 
   defineExpose({
-    submitForm,
+    exposeForm,
   })
 </script>
 
