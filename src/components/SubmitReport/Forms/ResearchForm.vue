@@ -39,8 +39,8 @@
   const form = reactive({
     title: '',
     months: '',
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
     researchers: '',
   })
   
