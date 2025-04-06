@@ -1,12 +1,14 @@
 <template>
     <div class="container">
         <div class="folder-container">
+            <!-- Header -->
             <div class="folder-tab">
                 <div class="title-container">
                     Submit Report
                 </div>
             </div>
 
+            <!-- Report Type Selector -->
             <div class="folder-head">
                 <BaseSelectInput
                     width="90%"
@@ -18,11 +20,22 @@
                 />    
                 <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo"/>
             </div>
-            
 
-            <component :is="selectedComponent" :infoVisible="infoVisible" />
+            <!-- Information Div -->
+            <InformationDiv :infoVisible="infoVisible" >
+                {{ formInformation[reportType] }}
+            </InformationDiv>
+            
+            <!-- Report Form -->
+            <div class="form-container">
+                <component :is="formComponents[reportType]" />
+            </div>
+
+            <button class="submit-btn">SUBMIT</button>
 
         </div>
+
+        <!-- Supporting Evidence/s -->
         <div class="file-drop-area-container">
             <div class="drop-area-head">Supporting Evidence/s</div>
             <div class="drop-area-desc">PDF Image File: Research Proposal, Research Contract or Application for Load Credits containing description, duration, and funding information and properly endorsed by the Dean/Head of Unit and/or approved by Authorized Officials.</div>
@@ -43,17 +56,20 @@
 import { ref, computed } from "vue";
 
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
-import research from "@/components/SubmitReport/Forms/ResearchForm.vue";
-import publication from "@/components/SubmitReport/Forms/PublicationForm.vue";
+import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
+import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
+import InformationDiv from '@/components/SubmitReport/InformationDiv.vue';
+
 
 const reportType = ref('research');
-const components = {
-  research,
-  publication
+const formComponents = { 
+  research: ResearchForm,
+  publication: PublicationForm
 };
-
-const selectedComponent = computed(() => components[reportType.value]);
-
+const formInformation = {
+    research: "Research Form",
+    publication: "Publication Form"
+}
 
 const infoVisible = ref(false);
 const toggleInfo = () => {
@@ -186,4 +202,67 @@ const toggleInfo = () => {
 .folder-head {
     display: flex;
 }
+
+.form-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+}
+    
+.submit-btn {
+    width: 100%;
+    background: $red;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+:deep(.form) {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    margin-top: 2rem;
+
+    border-radius: 10px;
+    background: #FCFCFC;
+    box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
+    padding: 1.5rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+:deep(.form-group) {
+    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+:deep(.form-group label) {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+:deep(.form-group input) {
+    padding: 8px;
+    padding-left: 2.7rem;
+    border: 0.15px solid $red;
+    border-radius: 10px;
+    outline: none;
+    color: $red;
+}
+
+:deep(.form-group input::placeholder) {
+    color: $red;
+    font-weight: 900;
+}
+
+
+
 </style>
