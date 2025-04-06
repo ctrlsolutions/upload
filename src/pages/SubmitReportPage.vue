@@ -38,7 +38,7 @@
                 <component :is="formComponents[reportType]" ref="formComponent" />
             </div>
 
-            <button class="submit-btn" @click="formComponent.submitForm()">SUBMIT</button>
+            <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
         </div>
 
         <!-- Supporting Evidence/s -->
@@ -134,22 +134,69 @@
     };
 
     const uploadFiles = () => {
-    if (!selectedFiles.value.length) {
-        alert("No files selected.");
-        return;
-    }
+        if (!selectedFiles.value.length) {
+            alert("No files selected.");
+            return;
+        }
 
-    const formData = new FormData();
-    selectedFiles.value.forEach(file => {
-        formData.append("files[]", file);
-    });
+        const formData = new FormData();
 
-    // This is where you'd send to your backend
-    console.log("Files ready to upload:", selectedFiles.value);
+        selectedFiles.value.forEach(file => {
+            formData.append("files[]", file);
+        });
 
-    // Example:
-    // await axios.post('/api/upload', formData);
+        // This is where you'd send to your backend
+        console.log("Files ready to upload:", selectedFiles.value);
+
+        // Example:
+        // await axios.post('/api/upload', formData);
     };
+
+    const handleSubmit = async () => {
+        const formValues = formComponent.value.exposeForm();
+
+        if (!formValues) {
+            alert("Form is not ready.");
+            return;
+        }
+
+        try {
+            const submissionData = new FormData();
+
+            for (const key in formValues) {
+                if (formValues[key] !== null && formValues[key] !== undefined) {
+                    submissionData.append(key, formValues[key]);
+                }
+            }
+
+            if (selectedFiles.value?.length) {
+                selectedFiles.value.forEach(file => {
+                    submissionData.append("supporting_files[]", file);
+                });
+            }
+
+            console.log("Preparing to submit form with files...");
+            for (let [key, value] of submissionData.entries()) {
+                console.log(`${key}:`, value);
+            }
+
+            // await axios.post('/api/report-submit', submissionData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data',
+            //     }
+            // });
+
+            // alert("Report submitted successfully!");
+            // selectedFiles.value = [];
+            // formComponent.value.reset?.();
+
+        } catch (err) {
+            console.error("Form submission failed:", err);
+            alert("Submission failed. Please try again.");
+        }
+    };
+
+
 </script>
   
 
@@ -354,6 +401,7 @@
     color: red;
     font-size: 0.8rem;
 }
+
 .drag-area-divs {
     opacity: 50%;
     position: absolute;
@@ -361,6 +409,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .file-icon-container {
     display: flex;
     flex-direction: column;
@@ -379,6 +428,4 @@
     white-space: nowrap;
     max-width: 100%;
 }
-
-
 </style>
