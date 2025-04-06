@@ -32,7 +32,7 @@
 
       <div class="form-group">
         <label>Source of Majority Share of this Research Funding</label>
-        <BaseSelectInput v-model="form.sourceOfMajorityShare" :options="sourceOfMajorityShare" />
+        <BaseSelectInput v-model="form.sourceOfMajorityShare" :options="sourceOfMajorityShare" style="width: 100%; height: 38px;"/>
       </div>
     </div>
   </template>
