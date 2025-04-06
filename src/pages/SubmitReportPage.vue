@@ -67,22 +67,17 @@ import { ref, computed } from "vue";
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
 import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
 import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
-import PartnershipForm from "@/components/SubmitReport/Forms/PartnershipForm.vue";
+
 import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
 
 const formComponent = ref(null);
 
 const reportType = ref('research');
+const formComponent = ref(null);
 const formComponents = { 
     research: ResearchForm,
     publication: PublicationForm,
-    paper_presentation: ResearchForm,
-    patent: ResearchForm,
-    other_research: ResearchForm,
-    training: ResearchForm,
-    extension: ResearchForm,
-    partnership: PartnershipForm,
-    other: Other,
+    
 };
 const formInformation = {
     research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations.Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
