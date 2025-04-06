@@ -81,7 +81,6 @@ const settingsRoute = computed(() =>
   grid-template-columns: 0.5fr 4.5fr;
   grid-template-rows: 1fr;
   padding: 0.5em;
-  gap: 0em 1%;
   grid-template-areas: 'sidebar main';
   width: 100vw;
   height: 100vh;
@@ -89,6 +88,7 @@ const settingsRoute = computed(() =>
   background-size: cover;
   background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
   box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .sidebar {
@@ -96,13 +96,16 @@ const settingsRoute = computed(() =>
   width: 5em;
   background-color: $red;
   padding: 2em;
-  margin: 1em 0em 1em 1em;
+  margin: 1em;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   z-index: 5;
+  box-sizing: border-box;
+  margin-top: 0.05em;
+  margin-bottom: 0.02em;
 }
 
 .nav-link,
@@ -131,7 +134,6 @@ const settingsRoute = computed(() =>
 }
 .icon-label {
   display: none;
-  width: 0px;
   height: 30px;
   position: relative;
   padding-left: 5px;
@@ -154,12 +156,10 @@ const settingsRoute = computed(() =>
 }
 .content {
   grid-area: main;
-  width: calc((100vw - 2em - 1%) * (4 / 4.5));
+  width: 100%;
   z-index: 0;
-  padding: 0;
   justify-content: start;
   align-items: start;
-  background-color: transparent;
-  // margin: 2em 2em 2em 0em;
+  margin-left: -3rem;
 }
 </style>

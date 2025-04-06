@@ -1,118 +1,119 @@
 <template>
   <div class="container">
     <h1 class="title">Account Settings</h1>
-    <CardComponent title="My Profile" height="100%" width="100%" :header="true">
-      <CardComponent width="99.36%" height="100%" class="user-card">
-        <div class="user-profile">
-          <img
-            src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
-            alt="User profile"
-            class="user-image"
-          />
-          <div class="user-info">
-            <p class="name">
-              {{ userProfile.first_name }} {{ userProfile.middle_name }}
-              {{ userProfile.last_name }}
-            </p>
-            <p class="role">Faculty</p>
-            <p class="college">College of Science</p>
+    <div class="inner-cont">
+      <CardComponent title="My Profile" height="100%" width="100%" :header="true">
+        <div class="user-card">
+          <CardComponent width="100%" height="100%">
+            <div class="user">
+              <div class="user-profile">
+                <img
+                  src="https://i.pinimg.com/736x/93/dd/a6/93dda651f941477847f7f74835f67288.jpg"
+                  alt="User profile"
+                  class="user-image"
+                />
+                <div class="user-info">
+                  <p class="name">
+                    {{ userProfile.first_name }} {{ userProfile.middle_name }}
+                    {{ userProfile.last_name }}
+                  </p>
+                  <p class="role">Faculty</p>
+                  <p class="college">College of Science</p>
+                </div>
+              </div>
+              <div class="button-container">
+                <BaseFormButton variant="red">Delete Account</BaseFormButton>
+                <BaseFormButton variant="green" @click.once="handleLogout"
+                  >Log out</BaseFormButton
+                >
+              </div>
           </div>
+          </CardComponent>
         </div>
-        <div class="button-container">
-          <BaseFormButton variant="red">Delete Account</BaseFormButton>
-          <BaseFormButton variant="green" @click.once="handleLogout"
-            >Log out</BaseFormButton
-          >
-        </div>
-      </CardComponent>
 
-      <CardComponent
-        width="100%"
-        height="100%"
-        title="Personal Information"
-        :header="true"
-      >
-        <div class="edit-container">
-          <BaseFormButton
-            variant="black"
-            width="6rem"
-            height="2rem"
-            @click="isEditing = true"
-            v-if="!isEditing"
-          >
-            Edit
-          </BaseFormButton>
-          <BaseFormButton
-            v-if="isEditing"
-            variant="black"
-            width="6rem"
-            height="2rem"
-            @click="submitForm"
-          >
-            Save
-          </BaseFormButton>
-        </div>
-        <div class="info-grid">
-          <div class="input-group">
-            <label>First Name</label>
-            <BaseTextInput
-              id="firstName"
-              :model-value="userProfile.first_name"
-              variant="red"
-              :disabled="!isEditing"
-              @update:model-value="
-                value => handleInputChange('first_name', value)
-              "
-            />
+        <CardComponent width="100%" height="100%" title="Personal Information" :header="true">
+          <div class="edit-container">
+            <BaseFormButton
+              variant="black"
+              width="6rem"
+              height="2rem"
+              @click="isEditing = true"
+              v-if="!isEditing"
+            >
+              Edit
+            </BaseFormButton>
+            <BaseFormButton
+              v-if="isEditing"
+              variant="black"
+              width="6rem"
+              height="2rem"
+              @click="submitForm"
+            >
+              Save
+            </BaseFormButton>
           </div>
-          <div class="input-group">
-            <label>Middle Name</label>
-            <BaseTextInput
-              id="middleName"
-              :model-value="userProfile.middle_name"
-              variant="red"
-              :disabled="!isEditing"
-              @update:model-value="
-                value => handleInputChange('middle_name', value)
-              "
-            />
+          <div class="info-grid">
+            <div class="input-group">
+              <label>First Name</label>
+              <BaseTextInput
+                id="firstName"
+                :model-value="userProfile.first_name"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="
+                  value => handleInputChange('first_name', value)
+                "
+              />
+            </div>
+            <div class="input-group">
+              <label>Middle Name</label>
+              <BaseTextInput
+                id="middleName"
+                :model-value="userProfile.middle_name"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="
+                  value => handleInputChange('middle_name', value)
+                "
+              />
+            </div>
+            <div class="input-group">
+              <label>Last Name</label>
+              <BaseTextInput
+                id="lastName"
+                :model-value="userProfile.last_name"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="
+                  value => handleInputChange('last_name', value)
+                "
+              />
+            </div>
+            <div class="input-group">
+              <label>Email</label>
+              <BaseTextInput
+                id="email"
+                :model-value="userProfile.email"
+                type="email"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="value => handleInputChange('email', value)"
+              />
+            </div>
+            <div class="input-group">
+              <label>Bio</label>
+              <BaseTextInput
+                id="bio"
+                :model-value="userProfile.role"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="value => handleInputChange('role', value)"
+              />
+            </div>
           </div>
-          <div class="input-group">
-            <label>Last Name</label>
-            <BaseTextInput
-              id="lastName"
-              :model-value="userProfile.last_name"
-              variant="red"
-              :disabled="!isEditing"
-              @update:model-value="
-                value => handleInputChange('last_name', value)
-              "
-            />
-          </div>
-          <div class="input-group">
-            <label>Email</label>
-            <BaseTextInput
-              id="email"
-              :model-value="userProfile.email"
-              type="email"
-              variant="red"
-              :disabled="!isEditing"
-              @update:model-value="value => handleInputChange('email', value)"
-            />
-          </div>
-          <div class="input-group">
-            <label>Bio</label>
-            <BaseTextInput
-              id="bio"
-              :model-value="userProfile.role"
-              variant="red"
-              :disabled="!isEditing"
-              @update:model-value="value => handleInputChange('role', value)"
-            />
-          </div>
-        </div>
+        </CardComponent>
       </CardComponent>
-    </CardComponent>
+    </div>
   </div>
 </template>
 
@@ -206,12 +207,18 @@ const submitForm = async () => {
   border-radius: 25px;
   display: flex;
   flex-direction: column;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  padding-bottom: 2rem;
 }
 
 .title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-left: 20px;
+  margin-left: 1rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+
 }
 
 .header {
@@ -232,13 +239,17 @@ const submitForm = async () => {
 }
 
 .user-card {
-  background: #f7f6f6;
+  width: 100%;
+  margin-bottom: 1.2rem;
+}
+
+.user {
+  background: transparent;
   padding: 1.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   margin: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   grid-template-areas: 'user-profile button';
   // justify-content: space-between;
 
@@ -283,11 +294,12 @@ const submitForm = async () => {
   .button-container {
     grid-area: button;
     display: flex;
-    align-items: flex-end;
     flex-direction: column;
     width: 9rem;
     justify-items: center;
     gap: 2rem;
+    justify-content: center;
+    justify-self: end;
   }
 }
 
@@ -299,7 +311,7 @@ const submitForm = async () => {
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 3rem;
   margin-bottom: 1rem;
   margin-left: 2rem;
 

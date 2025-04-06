@@ -15,7 +15,7 @@
 <style scoped>
 .coming-soon {
     width: 100%; /* Make it stretch to full width */
-    height: v-bind(height);
+    height: 100%;
     background-color: white;
     border-radius:10px;
     position: relative;

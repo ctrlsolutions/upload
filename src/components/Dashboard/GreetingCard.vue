@@ -54,8 +54,6 @@ onBeforeUnmount(() => {
 <style scoped>
 /* Ensure the gradient is on the outer div */
 .greeting-card {
-  width: 100vw;
-  height: 22vh;
   background: linear-gradient(to right, #1a3d21, #2f6035);
   border-radius: 15px;
   padding: 0;
@@ -65,6 +63,7 @@ onBeforeUnmount(() => {
   position: relative;
   color: white;
   overflow: hidden;
+  height: 100%;
 }
 
 /* Remove the white background from CardComponent */

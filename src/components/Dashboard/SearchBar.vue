@@ -27,8 +27,6 @@ export default {};
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 44.5rem;
-  height: 3.188rem;
   background: white;
   border-radius: 1.5rem;
   padding: .625rem .938rem;
@@ -53,8 +51,8 @@ export default {};
 }
 
 .notification-icon {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
 }
 
