@@ -44,6 +44,7 @@ export const signupUser = async (
     const response = await api.post('/user/signup/', userData, {
       headers: { 'Content-Type': 'application/json', withCredentials: false },
     })
+    console.log('Signup response:', response.data)
     return { success: true, data: response.data }
   } catch (error: any) {
     const errorMessage =

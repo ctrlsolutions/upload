@@ -10,10 +10,10 @@
     </div>
     <div class="subtitle">Honor, Excellence, Service</div>
     <div class="buttons">
-      <BaseNavButton route="/auth/login" variant="red-full">
+      <BaseNavButton route="/login" variant="red-full">
         Log in
       </BaseNavButton>
-      <BaseNavButton route="/auth/signup" variant="green-outline">
+      <BaseNavButton route="/signup" variant="green-outline">
         Sign up
       </BaseNavButton>
     </div>
