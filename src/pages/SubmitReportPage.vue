@@ -222,8 +222,6 @@ const toggleInfo = () => {
 
     display: flex;
     align-items: center;
-    z-index: 100;
-    position: absolute;
 }
 .info-text {
     margin-left: 1rem;
