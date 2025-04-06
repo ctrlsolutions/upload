@@ -1,6 +1,6 @@
 import './assets/main.css'
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { BiCaretDownFill, FcGoogle, BiCalendar, IoPeople, FaClipboardList, IoPerson, FaSignOutAlt, MdAdminpanelsettingsRound, RiArrowUpSFill, BiGearFill, FaHistory, FaFolderOpen, MdSpacedashboardRound, HiInformationCircle, BiBook} from 'oh-vue-icons/icons'
+import { BiCaretDownFill, FcGoogle, BiCalendar, IoPeople, FaClipboardList, IoPerson, FaSignOutAlt, MdAdminpanelsettingsRound, RiArrowUpSFill, BiGearFill, FaHistory, FaFolderOpen, MdSpacedashboardRound, HiInformationCircle, BiBook, BiFileEarmarkMedical} from 'oh-vue-icons/icons'
 import vue3GoogleLogin from 'vue3-google-login'
 
 import { createApp } from 'vue'
@@ -9,7 +9,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-addIcons(BiCaretDownFill, FcGoogle, BiCalendar, RiArrowUpSFill, IoPeople, IoPerson, FaHistory, FaSignOutAlt, MdAdminpanelsettingsRound, FaFolderOpen, BiGearFill, FaClipboardList, MdSpacedashboardRound, HiInformationCircle, BiBook)
+addIcons(BiCaretDownFill, FcGoogle, BiCalendar, RiArrowUpSFill, IoPeople, IoPerson, FaHistory, FaSignOutAlt, MdAdminpanelsettingsRound, FaFolderOpen, BiGearFill, FaClipboardList, MdSpacedashboardRound, HiInformationCircle, BiBook, BiFileEarmarkMedical)
 
 const pinia = createPinia()
 const app = createApp(App)
