@@ -31,7 +31,7 @@
             <div class="info-container" v-if="infoVisible"> 
                 <v-icon name="bi-book" scale="2" />
                 <div class="info-text">
-                    {{ formInformation[reportType] }}
+                {{ formInformation[reportType] }}
                 </div>
             </div>
             
