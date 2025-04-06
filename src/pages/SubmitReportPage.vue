@@ -43,68 +43,67 @@
 
         <!-- Supporting Evidence/s -->
         <div class="file-drop-area-container">
-        <div class="drop-area-head">Supporting Evidence/s</div>
-        <div class="drop-area-desc">
-            PDF Image File: Research Proposal, Research Contract or Application for Load Credits containing
-            description, duration, and funding information and properly endorsed by the Dean/Head of Unit and/or
-            approved by Authorized Officials.
-        </div>
+            <div class="drop-area-head">Supporting Evidence/s</div>
+            <div class="drop-area-desc">
+                PDF Image File: Research Proposal, Research Contract or Application for Load Credits containing
+                description, duration, and funding information and properly endorsed by the Dean/Head of Unit and/or
+                approved by Authorized Officials.
+            </div>
 
-        <div
-            class="drop-area"
-            @dragover.prevent
-            @drop.prevent="handleDrop"
-        >
-            <div style="opacity: 0.5">DRAG FILES HERE</div>
-            <div style="opacity: 0.5">or</div>
-            <button class="choose-file-button" @click="triggerFileInput">Choose Files</button>
-            <input
-            type="file"
-            ref="fileInput"
-            multiple
-            style="display: none"
-            @change="handleFileChange"
-            />
-        </div>
+            <div
+                class="drop-area"
+                @dragover.prevent
+                @drop.prevent="handleDrop"
+            >
+                <div v-if="selectedFiles.length" v-for="file in selectedFiles" :key="file.name">
+                    <div class="file-icon-container">
+                        <v-icon name="bi-file-earmark-medical" scale="3.5" />
+                        <p class="file-name">{{ file.name }}</p>
+                    </div>
+                </div>
+                <div class="drag-area-divs">DRAG FILES HERE</div>
+                <!-- <div style="opacity: 0.5">or</div> -->
+                <!-- <button class="choose-file-button" @click="triggerFileInput">Choose Files</button> -->
+                <input
+                type="file"
+                ref="fileInput"
+                multiple
+                style="display: none"
+                @change="handleFileChange"
+                />
+            </div>
 
-        <!-- File List -->
-        <ul class="file-list" v-if="selectedFiles.length">
-            <li v-for="(file, index) in selectedFiles" :key="index">
-            {{ file.name }}
-            </li>
-        </ul>
-
-        <button class="file-upload-button" @click="uploadFiles">
-            <img src="../assets/oble_icon.png" alt="" style="margin-right: auto; margin-bottom: 0;" />
-            <span style="margin: 0 auto;">UPLOAD</span>
-        </button>
+            <button class="file-upload-button" @click="uploadFiles">
+                <img src="../assets/oble_icon.png" alt="" style="margin-right: auto; margin-bottom: 0;" />
+                <span style="margin: 0 auto;">UPLOAD</span>
+            </button>
         </div>
     </div>
 </template>
   
-  <script setup>
-  import { ref } from "vue";
-  
-  import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
-  import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
-  import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
-  import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
-  
-  const reportType = ref('research');
-  const formComponent = ref(null);
-  const infoVisible = ref(false);
-  
-  const toggleInfo = () => {
+<script setup>
+    import { ref } from "vue";
+
+    import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
+    import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
+    import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
+    import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
+
+    const reportType = ref('research');
+    const formComponent = ref(null);
+    const infoVisible = ref(false);
+
+    const toggleInfo = () => {
     infoVisible.value = !infoVisible.value;
-  };
-  
-  const formComponents = {
+    };
+
+    const formComponents = {
     research: ResearchForm,
     publication: PublicationForm,
     other: Other,
-  };
-  
-  const formInformation = {
+    };
+
+    const formInformation = {
     research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations. Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
     publication: "Publications may be produced in print, online or in digital on non-print media.",
     paper_presentation: "The same paper may be presented at different conference events.",
@@ -114,44 +113,44 @@
     extension: "Extension Program must be part of the approved Extension Work Agenda.",
     partnership: "The partner stakeholder must be another agency, organization, private company, media or any institution recognized by UP as a partner by means of a MOA, MOU or a partnership agreement. Extension Activity must be part of the approved Extension Work Agenda.",
     other: "Other Form",
-  };
-  
-  // File upload logic
-  const fileInput = ref(null);
-  const selectedFiles = ref([]);
-  
-  const triggerFileInput = () => {
+    };
+
+    // File upload logic
+    const fileInput = ref(null);
+    const selectedFiles = ref([]);
+
+    const triggerFileInput = () => {
     fileInput.value.click();
-  };
-  
-  const handleFileChange = (event) => {
+    };
+
+    const handleFileChange = (event) => {
     selectedFiles.value = [...event.target.files];
-  };
-  
-  const handleDrop = (event) => {
+    };
+
+    const handleDrop = (event) => {
     if (event.dataTransfer?.files?.length) {
-      selectedFiles.value = [...event.dataTransfer.files];
+        selectedFiles.value = [...event.dataTransfer.files];
     }
-  };
-  
-  const uploadFiles = () => {
+    };
+
+    const uploadFiles = () => {
     if (!selectedFiles.value.length) {
-      alert("No files selected.");
-      return;
+        alert("No files selected.");
+        return;
     }
-  
+
     const formData = new FormData();
     selectedFiles.value.forEach(file => {
-      formData.append("files[]", file);
+        formData.append("files[]", file);
     });
-  
+
     // This is where you'd send to your backend
     console.log("Files ready to upload:", selectedFiles.value);
-  
+
     // Example:
     // await axios.post('/api/upload', formData);
-  };
-  </script>
+    };
+</script>
   
 
 <style lang="scss" scoped>
@@ -223,11 +222,10 @@
     font-size: medium;
     font-weight: 900;
     align-self: center;
+    padding: 1rem;
 
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    position: relative;
 
     flex-grow: 1;
 }
@@ -356,4 +354,31 @@
     color: red;
     font-size: 0.8rem;
 }
+.drag-area-divs {
+    opacity: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.file-icon-container {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    max-width: 70px;
+    margin: 0.5rem;
+
+    z-index: 100;
+}
+
+.file-name {
+    font-size: 0.7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+}
+
+
 </style>
