@@ -1,6 +1,11 @@
 <template>
   <div class="dropdown-container">
-    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle">
+    <select
+      :value="props.modelValue"
+      @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
+      class="dropdown"
+      :style="dropdownStyle"
+    >
       <option value="" disabled class="placeholder">{{ placeholder }}</option>
       <option
         v-for="option in options"
@@ -11,23 +16,32 @@
         {{ option.label }}
       </option>
     </select>
-    <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
+    <v-icon name="bi-caret-down-fill" class="dropdown-icon" :style="iconStyle" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue'
+import { ref, defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps<{
   options: { value: string; label: string }[]
   placeholder?: string
   width?: string | null
+  textColor?: string
+  borderColor?: string
+  modelValue: string // Add this for two-way binding
 }>()
 
-const selectedValue = ref('')
+const emit = defineEmits(['update:modelValue'])
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
+  color: props.textColor || 'inherit',
+  borderColor: props.borderColor || 'inherit',
+}))
+
+const iconStyle = computed(() => ({
+  fill: props.textColor || 'inherit',
 }))
 </script>
 
