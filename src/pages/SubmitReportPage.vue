@@ -289,6 +289,7 @@ const toggleInfo = () => {
     border-radius: 10px;
     outline: none;
     color: $red;
+    margin-top: 10px;
 }
 
 :deep(.form-group input::placeholder) {
