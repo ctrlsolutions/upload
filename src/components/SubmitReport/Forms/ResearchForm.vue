@@ -39,10 +39,11 @@
   
 <script setup>
   import { reactive, ref } from 'vue'
+  import axios from 'axios'
   import BaseDateInput from '@/components/Global/BaseDateInput.vue'
   import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
-  // probably should be fetched from the database
+  // options for select input (mocked)
   const sourceOfMajorityShare = ref([
     { value: 'up-entity', label: 'Local' },
     { value: 'rp-governemnt-entity-or-public-sector-entity', label: 'RP Government Entity or Public Sector Entity' },
@@ -50,7 +51,6 @@
     { value: 'foreign-or-nondomestic-entity', label: 'Foreign or Non-Domestic Entity' },
   ])
 
-  // reactives
   const form = reactive({
     title: '',
     months: '',
@@ -59,6 +59,7 @@
     researchers: '',
     sourceOfMajorityShare: '',
   })
+
   const errors = reactive({
     title: '',
     months: '',
@@ -68,7 +69,6 @@
     sourceOfMajorityShare: '',
   })
 
-  // functions
   function validateForm() {
     let valid = true
     errors.title = form.title ? '' : 'Title is required.'
@@ -77,7 +77,7 @@
     errors.endDate = form.endDate ? '' : 'End date is required.'
     errors.researchers = form.researchers ? '' : 'Researcher name(s) required.'
     errors.sourceOfMajorityShare = form.sourceOfMajorityShare ? '' : 'Source of majority share is required.'
-    // Additional logic: ensure endDate is after startDate
+
     if (form.startDate && form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
       errors.endDate = 'End date must be after start date.'
       valid = false
@@ -89,22 +89,31 @@
 
     return valid
   }
-  function submitForm() {
+
+  async function submitForm() {
     if (validateForm()) {
-      // Replace this with your actual submit logic (e.g., API call)
-      console.log('Form submitted:', { ...form })
-      return { ...form } // or return data as needed
+      try {
+        const response = await axios.post('https://api.example.com/submit-form', {
+          ...form,
+        })
+        console.log('Form submitted successfully:', response.data)
+        return response.data
+      } catch (error) {
+        console.error('Submission failed:', error)
+        // You can also show an error message to the user here
+        return null
+      }
     } else {
       console.warn('Validation failed')
       return null
     }
   }
 
-  // Expose the submitForm method to parent
   defineExpose({
     submitForm,
   })
 </script>
+
 
 <style scoped>
   .error {
