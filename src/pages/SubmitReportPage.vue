@@ -15,7 +15,14 @@
                     v-model="reportType"
                     :options="[
                         { value: 'research', label: 'Research' },
-                        { value: 'publication', label: 'Publication' }
+                        { value: 'publication', label: 'Publication as a Research Output' },
+                        { value: 'paper_presentation', label: 'Paper Presentation as a Research Output' },
+                        { value: 'patent', label: 'Patent as a Research Output' },
+                        { value: 'other_research', label: 'Other Research Output' },
+                        { value: 'training', label: 'Training Course and/or Advisory Service' },
+                        { value: 'extension', label: 'Extension Program' },
+                        { value: 'partnership', label: 'Partnership with Stakeholder' },
+                        { value: 'other', label: 'Other' }
                     ]"
                 />    
                 <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo"/>
@@ -60,16 +67,31 @@ import { ref, computed } from "vue";
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
 import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
 import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
-
+import PartnershipForm from "@/components/SubmitReport/Forms/PartnershipForm.vue";
+import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
 
 const reportType = ref('research');
 const formComponents = { 
-  research: ResearchForm,
-  publication: PublicationForm
+    research: ResearchForm,
+    publication: PublicationForm,
+    paper_presentation: ResearchForm,
+    patent: ResearchForm,
+    other_research: ResearchForm,
+    training: ResearchForm,
+    extension: ResearchForm,
+    partnership: PartnershipForm,
+    other: Other,
 };
 const formInformation = {
-    research: "Research Form",
-    publication: "Publication Form"
+    research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations.Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
+    publication: "Publications may be produced in print, online or in digital on non-print media.",
+    paper_presentation: "The same paper may be presented at different conference events.",
+    patent: "Please include only the inventions, utility models and industrial designs owned by the University of the Philippines.",
+    other_research: "Include research or creative work outputs that could not be categorized as peer-reviewed publication, academic conference paper presentation or patenting. The output must be exposed in a public event such as exhibitions, public performances, or publication, i.e., when the output was first shown in a public place or released to the public.",
+    training: "Training Course/Advisory Service must be part of the approved Extension Work Agenda.",
+    extension: "Extension Program must be part of the approved Extension Work Agenda.",
+    partnership: "The partner stakeholder must be another agency, organization, private company, media or any institution recognized by UP as a partner by means of a MOA, MOU or a partnership agreement. Extension Activity must be part of the approved Extension Work Agenda.",
+    other: "Other Form",
 }
 
 const infoVisible = ref(false);
