@@ -67,7 +67,6 @@ import { ref, computed } from "vue";
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
 import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
 import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
-
 import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
 
 const formComponent = ref(null);
@@ -77,6 +76,7 @@ const formComponent = ref(null);
 const formComponents = { 
     research: ResearchForm,
     publication: PublicationForm,
+    other: Other,
     
 };
 const formInformation = {
