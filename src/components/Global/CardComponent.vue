@@ -6,7 +6,7 @@
       height: height,
       backgroundColor: bgColor,
       boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
-      borderRadius: '12px',
+      borderRadius: '25px',
     }"
     class="card-container"
   >
@@ -42,10 +42,12 @@ defineProps({
   border-radius: 15px 15px 0px 0px;
   width: 100%;  
   box-sizing: border-box;
+  height: 5rem;
 }
 
 .card-title {
-  margin: 0;
+  margin-left: 1rem;
+  margin-top: 1rem;
   font-weight: bold;
 }
 

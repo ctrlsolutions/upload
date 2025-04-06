@@ -1,14 +1,14 @@
 <template>
   <div class="dashboard-page">
     <div class="left-section">
-      <GreetingCard class="greeting-card" :lastName="user?.last_name ?? ''" />
-      <StatisticReport class="statistic-report" />
-      <LastReport class="last-report" />
+      <div class="greeting-card"><GreetingCard :lastName="user?.last_name ?? ''" /></div>
+      <div class="statistic-report"><StatisticReport /> </div>
+      <div class="last-report"><LastReport/> </div>
     </div>
     <div class="right-section">
-      <SearchBar class="search-bar" />
-      <MyProfile class="my-profile" :user="user" />
-      <MyCalendar class="my-calendar" />
+      <div class="search-bar"><SearchBar/> </div>
+      <div class="my-profile"><MyProfile :user="user" /> </div>
+      <div class="my-calendar"><MyCalendar/> </div>
     </div>
   </div>
 </template>
@@ -43,203 +43,52 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.dashboard-page {
+.dashboard-page {  
   display: grid;
-  gap: 2vh;
-  padding: 4vh 0 0 1vw;
-  width: 88vw;
-  min-height: 88vh;
-  // background: url('@/assets/DashboardBG.png') no-repeat center center fixed;
-  background-size: cover;
-  background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
-  box-sizing: border-box;
-  justify-content: space-between;
-
-  @media (max-width: 600px) {
-    // Equivalent to mixins.sm
-    grid-template-columns: 97%;
-    padding: 2vh 2vw 0vh 0;
-  }
-
-  @media (max-width: 900px) {
-    // Equivalent to mixins.md
-    grid-template-columns: 51% 58%;
-    padding: 0vh;
-  }
-
-  @media (max-width: 1200px) {
-    // Equivalent to mixins.lg
-    grid-template-columns: 47% 47%;
-    padding: 0vh 0vw 0vh 2vh;
-  }
-
-  @media (min-width: 1201px) {
-    // Equivalent to mixins.xl
-    grid-template-columns: 48% 50%;
-    padding: 0vh 0vw 0vh 2vh;
-  }
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 1%;
+  grid-template-areas:
+    "left-section right-section";
+  width: 100%;
+  height: 100%;
 }
 
-.left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  width: 25vw;
-  justify-content: space-between;
+.left-section {  
+  grid-area: left-section;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.6fr 1fr 1fr;
+  grid-auto-columns: 1fr;
+  gap: 2% 0%;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "greeting-card"
+    "statistic-report"
+    "last-report";
 }
 
-.right-section {
-  padding: 3vh 0vw 0vh 0;
+.greeting-card { grid-area: greeting-card; }
+
+.statistic-report { grid-area: statistic-report; }
+
+.last-report { grid-area: last-report; }
+
+.right-section {  
+  grid-area: right-section;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.1fr 0.4fr 1fr;
+  gap: 2% 0px;
+  grid-template-areas:
+    "search-bar"
+    "my-profile"
+    "my-calendar";
 }
 
-.left-section,
-.right-section {
-  display: flex;
-  flex-direction: column;
-  gap: 2vh;
-  width: 25vw;
-  justify-content: space-between;
-}
+.search-bar { grid-area: search-bar; }
 
-/* Component Breakpoints with vw/vh units */
-.greeting-card,
-.statistic-report,
-.last-report,
-.search-bar,
-.my-profile,
-.my-calendar {
-  @media (max-width: 600px) {
-    // Equivalent to mixins.sm
-    min-height: 24vh;
-    width: 85vw;
-  }
+.my-profile { grid-area: my-profile; }
 
-  @media (max-width: 900px) {
-    // Equivalent to mixins.md
-    min-height: 24vh;
-    width: 45vw;
-  }
-
-  @media (max-width: 1200px) {
-    // Equivalent to mixins.lg
-    min-height: 24vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    // Equivalent to mixins.xl
-    min-height: 25vh;
-    width: 42vw;
-  }
-}
-
-.statistic-report {
-  @media (max-width: 600px) {
-    min-height: 30vh;
-    width: 85vw;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 33vh;
-    width: 45vw;
-  }
-
-  @media (max-width: 1200px) {
-    min-height: 34vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    min-height: 32vh;
-    width: 42vw;
-  }
-}
-
-.last-report {
-  @media (max-width: 600px) {
-    min-height: 30vh;
-    width: 85vw;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 34vh;
-    width: 45vw;
-  }
-
-  @media (max-width: 1200px) {
-    min-height: 34vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    min-height: 32vh;
-    width: 42vw;
-  }
-}
-
-.search-bar {
-  @media (max-width: 600px) {
-    min-height: 6vh;
-    width: 85vw;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 6vh;
-    width: 50vw;
-  }
-
-  @media (max-width: 1200px) {
-    min-height: 6vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    min-height: 6vh;
-    width: 46vw;
-  }
-}
-
-.my-profile {
-  @media (max-width: 600px) {
-    min-height: 24vh;
-    width: 85vw;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 24vh;
-    width: 44vw;
-  }
-
-  @media (max-width: 1200px) {
-    min-height: 24vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    min-height: 32vh;
-    width: 46vw;
-  }
-}
-
-.my-calendar {
-  @media (max-width: 600px) {
-    min-height: 38vh;
-    width: 85vw;
-  }
-
-  @media (max-width: 900px) {
-    min-height: 32vh;
-    width: 44vw;
-  }
-
-  @media (max-width: 1200px) {
-    min-height: 54vh;
-    width: 42vw;
-  }
-
-  @media (min-width: 1201px) {
-    min-height: 42vh;
-    width: 46vw;
-  }
-}
+.my-calendar { grid-area: my-calendar; }
 </style>

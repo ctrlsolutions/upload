@@ -1,13 +1,7 @@
 <template>
   <div class="container">
     <div class="upper-area">
-      <CardComponent
-        class="profile-card"
-        width="100%"
-        height="100%"
-        :header="true"
-        title="My Profile"
-      >
+      <CardComponent class="profile-card" width="100%" height="100%" :header="true" title="My Profile">
         <div class="content">
           <img
             :src="
@@ -38,37 +32,33 @@
       </CardComponent>
     </div>
 
-    <CardComponent
-      class="lower-area"
-      width="100%"
-      height="100%"
-      :header="true"
-      title="Personal Information"
-    >
-      <div class="content">
-        <div class="info-grid">
-          <div class="info-container" id="left-info">
-            <div class="info-group">
-              <p class="info-type">First Name</p>
-              <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
+    <CardComponent width="100%" height="100%" :header="true" title="Personal Information">
+      <div class="lower-area">
+        <div class="content">
+          <div class="info-grid">
+            <div class="info-container" id="left-info">
+              <div class="info-group">
+                <p class="info-type">First Name</p>
+                <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
+              </div>
+              <div class="info-group">
+                <p class="info-type">Last Name</p>
+                <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
+              </div>
+              <div class="info-group">
+                <p class="info-type">Bio</p>
+                <p class="info">{{ formattedRole }}</p>
+              </div>
             </div>
-            <div class="info-group">
-              <p class="info-type">Last Name</p>
-              <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
-            </div>
-            <div class="info-group">
-              <p class="info-type">Bio</p>
-              <p class="info">{{ formattedRole }}</p>
-            </div>
-          </div>
-          <div class="info-container" id="right-info">
-            <div class="info-group">
-              <p class="info-type">Middle Name</p>
-              <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
-            </div>
-            <div class="info-group">
-              <p class="info-type">Email</p>
-              <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
+            <div class="info-container" id="right-info">
+              <div class="info-group">
+                <p class="info-type">Middle Name</p>
+                <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
+              </div>
+              <div class="info-group">
+                <p class="info-type">Email</p>
+                <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -108,13 +98,15 @@ const formattedRole = computed(() => {
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 2fr 2.5fr;
-  gap: 1em 0%;
-  grid-template-areas:
-    'upper-area'
-    'lower-area';
+  display: grid; 
+  grid-auto-columns: 1fr; 
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr 1fr; 
+  gap: 1% 1%; 
+  grid-template-areas: 
+    "upper-area"
+    "lower-area"; 
+  overflow: hidden;
 }
 
 .upper-area {
@@ -126,37 +118,21 @@ const formattedRole = computed(() => {
 }
 
 .lower-area {
-  grid-area: lower-area;
-}
-
-.header {
-  background: #006837;
-  color: white;
-  padding: 1rem 2rem;
-  font-weight: 500;
-  font-size: 1.1rem;
-  width: 100%;
-  margin: -1rem -1rem 0;
-  width: calc(100% + 2rem);
-}
-
-.upper-part {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  width: 100%;
+  display: grid; 
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0% 0px; 
+  grid-template-areas: 
+    "."; 
+  grid-area: lower-area; 
 }
 
 .profile-card {
-  background: white;
-  border-radius: 20px;
-  overflow: hidden;
-  width: 100%;
-
   .content {
-    padding: 2rem;
+    padding: 1rem;
+    justify-self: flex-start;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: 1rem;
   }
 
@@ -166,15 +142,16 @@ const formattedRole = computed(() => {
     border-radius: 100%;
     object-fit: cover;
     margin-left: 2rem;
+    margin-right: 2rem;
   }
 }
 
 .profile-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding-left: 3rem;
-  padding-top: 1rem;
+  display: grid; 
+  grid-template-columns: 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0% 0px;
+  grid-area: lower-area; 
 
   .name {
     font-size: 1.5rem;
@@ -205,8 +182,6 @@ const formattedRole = computed(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
 
   .num-reports {
     font-size: 13.5rem;
@@ -217,7 +192,6 @@ const formattedRole = computed(() => {
   }
 
   .desc-container {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -239,21 +213,21 @@ const formattedRole = computed(() => {
 
 .info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 3rem;
-  padding: 0rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.3rem;
+  margin: 0;
+  padding: 1rem;
 }
 
 .info-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding-left: 1rem;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+
   .info-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
+    padding-bottom: 4rem;
 
     &:last-child {
       margin-bottom: 0;
@@ -267,7 +241,7 @@ const formattedRole = computed(() => {
   }
 
   .info {
-    color: #333;
+
     font-size: 1rem;
     font-weight: 500;
     margin: 0;
