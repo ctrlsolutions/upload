@@ -21,10 +21,12 @@
                 <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo"/>
             </div>
 
-            <!-- Information Div -->
-            <InformationDiv :infoVisible="infoVisible" >
-                {{ formInformation[reportType] }}
-            </InformationDiv>
+            <div class="info-container" v-if="infoVisible"> 
+                <v-icon name="bi-book" scale="2" />
+                <div class="info-text">
+                    {{ formInformation[reportType] }}
+                </div>
+            </div>
             
             <!-- Report Form -->
             <div class="form-container">
@@ -58,7 +60,6 @@ import { ref, computed } from "vue";
 import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
 import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
 import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
-import InformationDiv from '@/components/SubmitReport/InformationDiv.vue';
 
 
 const reportType = ref('research');
@@ -193,6 +194,19 @@ const toggleInfo = () => {
     color: $green;
 }
 
+.info-container {
+    margin-top: 1rem;
+    border: 3px solid rgba(152, 155, 0, 0.58);
+    background: rgba(255, 238, 0, 0.12);
+    padding: 1rem;
+    color: rgba(0, 0, 0, 0.648);
+
+    display: flex;
+    align-items: center;
+}
+.info-text {
+    margin-left: 1rem;
+}
 .info-icon {
   height: 2rem;
   margin-left: 1rem;
