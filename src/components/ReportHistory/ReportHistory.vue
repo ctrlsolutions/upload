@@ -333,6 +333,15 @@ export default {
   padding: 10px 50px;
   gap: 10px;
   overflow-y: hidden;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #D9D9D9;
+    padding-bottom: 200px;
+    border-radius: 8px;
+    transition: padding 0.3s ease, background-color 0.3s ease, border-radius 0.3s ease;
+  }
 }
 
 .timestamp {
