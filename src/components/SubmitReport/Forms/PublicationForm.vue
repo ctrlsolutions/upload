@@ -2,13 +2,13 @@
     <div class="form">
       <div class="form-group">
         <label>Title of Publication</label>
-        <input type="text" v-model="form.title" placeholder="Title" />
+        <input type="text" v-model="form.title" />
       </div>
   
       <div class="form-group">
         <label>Type of Publication</label>
-        <BaseSelectInput v-model="form.typeOfPublication" :options="typeOfPublication" />
-        <input type="text" v-model="form.typeOfPublicationOther" v-if="form.typeOfPublication === 'Other'"/>
+        <BaseSelectInput v-model="form.typeOfPublication" :options="typeOfPublication"/>
+        <input type="text" v-model="form.typeOfPublicationOther" v-if="form.typeOfPublication === 'Other'" />
       </div>
   
       <div class="form-group">
