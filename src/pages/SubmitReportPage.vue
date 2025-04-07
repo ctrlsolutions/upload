@@ -83,6 +83,7 @@
   
 <script setup>
     import { ref } from "vue";
+    import axios from "axios";
 
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
@@ -184,22 +185,15 @@
             //     console.log(`${key}:`, value);
             // }
 
-            axios.post('http://127.0.0.1:8000/api/report/research/', 
-                formValues, 
-                {
+            await axios.post(`http://localhost:8000/api/report/${reportType.value}/`, submissionData, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    // Authorization: `Bearer ${token}` if using JWT auth
+                    'Content-Type': 'multipart/form-data',
                 }
-            })
-            .then(response => {
-                console.log('Report created:', response.data);
-            })
-            .catch(error => {
-                console.error('Error details:', error.response?.data);
             });
-            selectedFiles.value = [];
-            formComponent.value.reset?.();
+
+            // alert("Report submitted successfu lly!");
+            // selectedFiles.value = [];
+            // formComponent.value.reset?.();
 
         } catch (err) {
             console.error("Form submission failed:", err);
