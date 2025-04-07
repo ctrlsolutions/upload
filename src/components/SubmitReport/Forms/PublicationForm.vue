@@ -85,43 +85,43 @@ const form = reactive({
     numberOfCitations: '',
 })
 
-
-// probably pull this from the database
 const typeOfPublication = ref([
-    {
-        value: 'Peer-Reviewed Journal',
-        label: 'Peer-Reviewed Journal'
-    },
-    {
-        value: 'Book/Monograph',
-        label: 'Book/Monograph'
-    },
-    {
-        value: 'Edited/Peer-Reviewed Book Chapter',
-        label: 'Edited/Peer-Reviewed Book Chapter'
-    },
-    {
-        value: 'Peer-Reviewed Conference Paper Publication',
-        label: 'Peer-Reviewed Conference Paper Publication'
-    },
-    {
-        value: 'Other',
-        label: 'Other'
-    }
+    { value: 'Peer-Reviewed Journal', label: 'Peer-Reviewed Journal' },
+    { value: 'Book/Monograph', label: 'Book/Monograph' },
+    { value: 'Edited/Peer-Reviewed Book Chapter', label: 'Edited/Peer-Reviewed Book Chapter' },
+    { value: 'Peer-Reviewed Conference Paper Publication', label: 'Peer-Reviewed Conference Paper Publication' },
+    { value: 'Other', label: 'Other' }
 ])
-const typeOfPublisher = ref([
-    {
-        value: 'Commercial',
-        label: 'Commercial'
-    },
-    {
-        value: 'learned-society-and-association',
-        label: 'Learned Society and Association'
-    },
-    {
-        value: 'university-press',
-        label: 'University Press'
-    },
 
+const typeOfPublisher = ref([
+    { value: 'Commercial', label: 'Commercial' },
+    { value: 'learned-society-and-association', label: 'Learned Society and Association' },
+    { value: 'university-press', label: 'University Press' },
 ])
+
+function isFormValid() {
+    if (!form.title ||
+        !form.typeOfPublication ||
+        (form.typeOfPublication === 'Other' && !form.typeOfPublicationOther) ||
+        !form.nameOfAuthor ||
+        !form.datePublished ||
+        !form.nameOfPublication ||
+        !form.typeOfPublisher ||
+        !form.locationOfPublisher) {
+        return false
+    }
+    return true
+}
+
+function exposeForm() {
+    if (!isFormValid()) {
+        alert('Please fill out all required fields.')
+        return null
+    }
+    return form
+}
+
+defineExpose({
+    exposeForm
+})
 </script>

@@ -161,24 +161,27 @@
         }
 
         try {
-            const submissionData = new FormData();
+            // const submissionData = new FormData();
+            const submissionData = formValues;
 
-            for (const key in formValues) {
-                if (formValues[key] !== null && formValues[key] !== undefined) {
-                    submissionData.append(key, formValues[key]);
-                }
-            }
+            // for (const key in formValues) {
+            //     if (formValues[key] !== null && formValues[key] !== undefined) {
+            //         submissionData.append(key, formValues[key]);
+            //     }
+            // }
 
-            if (selectedFiles.value?.length) {
-                selectedFiles.value.forEach(file => {
-                    submissionData.append("supporting_files[]", file);
-                });
-            }
+            // if (selectedFiles.value?.length) {
+            //     selectedFiles.value.forEach(file => {
+            //         submissionData.append("supporting_files[]", file);
+            //     });
+            // }
 
-            console.log("Preparing to submit form with files...");
-            for (let [key, value] of submissionData.entries()) {
-                console.log(`${key}:`, value);
-            }
+            console.log(formValues)
+
+            // console.log("Preparing to submit form with files...");
+            // for (let [key, value] of submissionData.entries()) {
+            //     console.log(`${key}:`, value);
+            // }
 
             // await axios.post('/api/report-submit', submissionData, {
             //     headers: {
