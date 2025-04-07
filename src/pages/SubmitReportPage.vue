@@ -88,6 +88,7 @@
     import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
     import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
     import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
+    import axios from "axios";
 
     const reportType = ref('research');
     const formComponent = ref(null);
@@ -183,15 +184,22 @@
             //     console.log(`${key}:`, value);
             // }
 
-            // await axios.post('/api/report-submit', submissionData, {
-            //     headers: {
-            //         'Content-Type': 'multipart/form-data',
-            //     }
-            // });
-
-            // alert("Report submitted successfully!");
-            // selectedFiles.value = [];
-            // formComponent.value.reset?.();
+            axios.post('http://127.0.0.1:8000/api/report/research/', 
+                formValues, 
+                {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Authorization: `Bearer ${token}` if using JWT auth
+                }
+            })
+            .then(response => {
+                console.log('Report created:', response.data);
+            })
+            .catch(error => {
+                console.error('Error details:', error.response?.data);
+            });
+            selectedFiles.value = [];
+            formComponent.value.reset?.();
 
         } catch (err) {
             console.error("Form submission failed:", err);
