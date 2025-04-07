@@ -88,15 +88,28 @@
 
     return valid
   }
-
+  function getSourceLabel(value) {
+    const option = sourceOfMajorityShare.value.find(opt => opt.value === value)
+    return option ? option.label : value
+  }
   function exposeForm() {
     if (validateForm()) {
-      return form
+      return {
+        report: {
+          title: form.title
+        },
+        timeframe: `Q${Math.ceil(parseInt(form.months) / 3)} ${new Date(form.startDate).getFullYear()}`,
+        start_date: form.startDate,
+        end_date: form.endDate,
+        name_of_researchers: form.researchers,
+        source_of_funding: getSourceLabel(form.sourceOfMajorityShare)
+      }
     } else {
       console.warn('Validation failed')
       return null
     }
   }
+
 
   defineExpose({
     exposeForm,
