@@ -7,32 +7,32 @@
     </div>
 
     <div class="form-group">
-      <label>Number of Months in Original Timeframe</label>
-      <input type="text" v-model="form.months" placeholder="Months" />
-      <span v-if="errors.months" class="error">{{ errors.months }}</span>
+      <label>Number of timeframe in Original Timeframe</label>
+      <input type="text" v-model="form.timeframe" placeholder="timeframe" />
+      <span v-if="errors.timeframe" class="error">{{ errors.timeframe }}</span>
     </div>
 
     <div class="form-group">
       <label>Start Date</label>
-      <BaseDateInput v-model="form.startDate" width="100%" />
-      <span v-if="errors.startDate" class="error">{{ errors.startDate }}</span>
+      <BaseDateInput v-model="form.start_date" width="100%" />
+      <span v-if="errors.start_date" class="error">{{ errors.start_date }}</span>
     </div>
 
     <div class="form-group">
       <label>End Date</label>
-      <BaseDateInput v-model="form.endDate" width="100%" />
-      <span v-if="errors.endDate" class="error">{{ errors.endDate }}</span>
+      <BaseDateInput v-model="form.end_date" width="100%" />
+      <span v-if="errors.end_date" class="error">{{ errors.end_date }}</span>
     </div>
 
     <div class="form-group">
       <label>Names of Researcher/s</label>
-      <input type="text" v-model="form.researchers" placeholder="Names" />
-      <span v-if="errors.researchers" class="error">{{ errors.researchers }}</span>
+      <input type="text" v-model="form.name_of_researchers" placeholder="Names" />
+      <span v-if="errors.name_of_researchers" class="error">{{ errors.name_of_researchers }}</span>
     </div>
 
     <div class="form-group">
       <label>Source of Majority Share of this Research Funding</label>
-      <BaseSelectInput v-model="form.sourceOfMajorityShare" :options="sourceOfMajorityShare" style="width: 100%; height: 38px;"/>
+      <BaseSelectInput v-model="form.source_of_funding" :options="source_of_funding" style="width: 100%; height: 38px;"/>
     </div>
   </div>
 </template>
@@ -43,7 +43,7 @@
   import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
   // options for select input (mocked)
-  const sourceOfMajorityShare = ref([
+  const source_of_funding = ref([
     { value: 'up-entity', label: 'Local' },
     { value: 'rp-governemnt-entity-or-public-sector-entity', label: 'RP Government Entity or Public Sector Entity' },
     { value: 'rp-private-sector-entity', label: 'RP Private Sector Entity' },
@@ -51,34 +51,35 @@
   ])
 
   const form = reactive({
+    report: '',
     title: '',
-    months: '',
-    startDate: '',
-    endDate: '',
-    researchers: '',
-    sourceOfMajorityShare: '',
+    timeframe: '',
+    start_date: '',
+    end_date: '',
+    name_of_researchers: '',
+    source_of_funding: '',
   })
 
   const errors = reactive({
     title: '',
-    months: '',
-    startDate: '',
-    endDate: '',
-    researchers: '',
-    sourceOfMajorityShare: '',
+    timeframe: '',
+    start_date: '',
+    end_date: '',
+    name_of_researchers: '',
+    source_of_funding: '',
   })
 
   function validateForm() {
     let valid = true
     errors.title = form.title ? '' : 'Title is required.'
-    errors.months = form.months && !isNaN(form.months) ? '' : 'Valid months are required.'
-    errors.startDate = form.startDate ? '' : 'Start date is required.'
-    errors.endDate = form.endDate ? '' : 'End date is required.'
-    errors.researchers = form.researchers ? '' : 'Researcher name(s) required.'
-    errors.sourceOfMajorityShare = form.sourceOfMajorityShare ? '' : 'Source of majority share is required.'
+    errors.timeframe = form.timeframe && !isNaN(Number(form.timeframe)) ? '' : 'Valid timeframe are required.'
+    errors.start_date = form.start_date ? '' : 'Start date is required.'
+    errors.end_date = form.end_date ? '' : 'End date is required.'
+    errors.name_of_researchers = form.name_of_researchers ? '' : 'Researcher name(s) required.'
+    errors.source_of_funding = form.source_of_funding ? '' : 'Source of majority share is required.'
 
-    if (form.startDate && form.endDate && new Date(form.endDate) < new Date(form.startDate)) {
-      errors.endDate = 'End date must be after start date.'
+    if (form.start_date && form.end_date && new Date(form.end_date) < new Date(form.start_date)) {
+      errors.end_date = 'End date must be after start date.'
       valid = false
     }
 
@@ -89,7 +90,7 @@
     return valid
   }
   function getSourceLabel(value) {
-    const option = sourceOfMajorityShare.value.find(opt => opt.value === value)
+    const option = source_of_funding.value.find(opt => opt.value === value)
     return option ? option.label : value
   }
   function exposeForm() {
@@ -102,11 +103,11 @@
         report: {
           title: form.title
         },
-        timeframe: `Q${Math.ceil(parseInt(form.months) / 3)} ${new Date(form.startDate).getFullYear()}`,
-        start_date: form.startDate,
-        end_date: form.endDate,
-        name_of_researchers: nameList,
-        source_of_funding: getSourceLabel(form.sourceOfMajorityShare)
+        timeframe: `Q${Math.ceil(parseInt(form.timeframe) / 3)} ${new Date(form.start_date).getFullYear()}`,
+        start_date: form.start_date,
+        end_date: form.end_date,
+        name_of_researchers: form.name_of_researchers,
+        source_of_funding: getSourceLabel(form.source_of_funding)
       }
     } else {
       console.warn('Validation failed')
