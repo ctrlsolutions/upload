@@ -21,29 +21,31 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue'
-  
-  const title = ref('')
-  const description = ref('')
-  
-  // Simple validation: check if required fields are filled
-  function exposeForm() {
-    const isValid = title.value.trim() !== '' && description.value.trim() !== ''
-  
-    if (!isValid) {
-        alert("Form is not ready.");
-        return null;
+    import { ref } from 'vue'
+    
+    const title = ref('')
+    const description = ref('')
+    
+    // Simple validation: check if required fields are filled
+    function exposeForm() {
+        const isValid = title.value.trim() !== '' && description.value.trim() !== ''
+    
+        if (!isValid) {
+        alert("Form is not ready.")
+        return null
+        }
+    
+        return {
+            report: {
+                title: title.value,
+            },
+            description: description.value,
+        }
     }
-    return {
-      data: {
-        title: title.value,
-        description: description.value,
-      },
-    }
-  }
-  
-  defineExpose({
-    exposeForm,
-  })
+    
+    defineExpose({
+        exposeForm,
+    })
   </script>
+  
   

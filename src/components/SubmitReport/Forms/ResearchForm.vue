@@ -94,6 +94,10 @@
   }
   function exposeForm() {
     if (validateForm()) {
+      const nameList = form.researchers
+        .split(',')
+        .map(name => name.trim())
+        .filter(name => name.length > 0);
       return {
         report: {
           title: form.title
@@ -101,7 +105,7 @@
         timeframe: `Q${Math.ceil(parseInt(form.months) / 3)} ${new Date(form.startDate).getFullYear()}`,
         start_date: form.startDate,
         end_date: form.endDate,
-        name_of_researchers: form.researchers,
+        name_of_researchers: nameList,
         source_of_funding: getSourceLabel(form.sourceOfMajorityShare)
       }
     } else {
