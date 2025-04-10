@@ -1,17 +1,20 @@
 <template>
-  <input
-    :id="id"
-    :type="type"
-    :class="['input-box', variantClass]"
-    :style="boxStyle"
-    :placeholder="placeholder"
-    :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
-    v-bind="$attrs"
-  />
+  <div class="input-container">
+    <input
+      :id="id"
+      :type="type"
+      :class="['input-box', variantClass]"
+      :style="boxStyle"
+      placeholder=" "
+      :value="modelValue"
+      @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+      v-bind="$attrs"
+    />
+    <label :class="['input-label', variantClass]" :for="id">{{ placeholder }}</label>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     id: {
@@ -58,56 +61,77 @@ export default {
 }
 </script>
 
+<style scoped>
+.input-container {
+  position: relative;
+  width: fit-content;
+}
 
-<style lang="scss" scoped>
 .input-box {
   font-family: 'Inter', serif;
   height: fit-content;
   border-radius: 0.6rem;
-  @include sm {
-    width: 15rem;
-    padding: 0.6rem 0.6rem;
-    font-size: 1em;
-  }
-  @include md {
-    width: 18rem;
-    padding: 0.6rem 0.8rem;
-    font-size: 1em;
-  }
-  @include lg {
-    width: 20rem;
-    padding: 0.6rem 1rem;
-    font-size: 1.3em;
-  }
+  background: transparent;
+  width: 20rem;
+  padding: 1rem 1rem 0.4rem;
+  font-size: 1em;
+  border: 1px solid black;
+  background: white;
+}
 
-  &::placeholder {
-    color: #999;
-    opacity: 0.7;
-  }
+.input-box--red {
+  font-size: 0.9rem;
+  border: 1px solid var(--red);
+  outline: none;
+  font-weight: 600;
+  color: var(--red);
+}
 
-  &--red {
-    font-size: 0.9rem;
-    border: 0.15px $red;
-    border-style: solid;
-    outline: none;
-    font-weight: 850;
-    color: $red;
+.input-box--green {
+  border: 1px solid var(--green);
+  outline: none;
+  font-weight: 600;
+  color: var(--green);
+}
 
-    &::placeholder {
-      color: $red;
-    }
-  }
+.input-label {
+  position: absolute;
+  left: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1em;
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+  opacity: 0.7;
+  padding: 0 0.4rem;
+  background-color: var(--background-color);
+}
 
-  &--green {
-    border: 0.15px $green;
-    border-style: solid;
-    outline: none;
-    font-weight: bold;
-    color: $green;
+.input-box:focus ~ .input-label,
+.input-box:not(:placeholder-shown) ~ .input-label {
+  top: 0;
+  font-size: 0.8em;
+  transform: translateY(-50%);
+  border: 2px solid var(--green);
+}
 
-    &::placeholder {
-      color: $green;
-    }
+.input-box--red ~ .input-label {
+  color: var(--red);
+}
+
+.input-box--green ~ .input-label {
+  color: var(--green);
+}
+
+:root {
+  --red: #ff4444;
+  --green: #4CAF50;
+  --background-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #242424;
   }
 }
 </style>
