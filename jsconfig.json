@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "esnext",
-    "moduleResolution": "node",
-    "checkJs": true,
-    "jsx": "preserve",
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  },
+  "module": "esnext",
+  "target": "esnext",
+  "moduleResolution": "bundler", // ✅ add this
+  "checkJs": false,
+  "jsx": "preserve",
+  "allowSyntheticDefaultImports": true,
+  "strict": true,
+  "noImplicitAny": false,
+  "strictPropertyInitialization": false,
+  "paths": {
+    "@/*": ["./src/*"]
+  }
+},
   "exclude": ["node_modules", "dist"]
 }

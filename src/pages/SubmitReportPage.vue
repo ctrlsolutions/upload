@@ -12,6 +12,7 @@
                     width="90%"
                     v-model="reportType"
                     :options="[
+                        { value: 'abstract', label: 'abstarct'},
                         { value: 'research', label: 'Research' },
                         { value: 'publication', label: 'Publication as a Research Output' },
                         { value: 'paper_presentation', label: 'Paper Presentation as a Research Output' },
@@ -35,7 +36,7 @@
 
             <!-- Report Form -->
             <div class="form-container">
-                <component :is="formComponents[reportType]" ref="formComponent" />
+                <component :is="formComponents[reportType]" ref="formComponent" :fields = fields />
             </div>
 
             <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
@@ -88,21 +89,31 @@
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
     import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
+    import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue";
+
     import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
     import axios from "axios";
+    import BaseDateInput from "@/components/Global/BaseDateInput.vue";
 
     const reportType = ref('research');
     const formComponent = ref(null);
     const infoVisible = ref(false);
+
+    const fields = [
+        { label: 'Name', model: 'name', component: 'text', isRequired: true },
+
+        { label: 'Start Date', model: 'startDate', component: 'date', isRequired: true }
+    ]
 
     const toggleInfo = () => {
     infoVisible.value = !infoVisible.value;
     };
 
     const formComponents = {
-    research: ResearchForm,
-    publication: PublicationForm,
-    other: Other,
+        research: ResearchForm,
+        publication: PublicationForm,
+        other: Other,
+        abstract: AbstractForm,
     };
 
     const formInformation = {
@@ -122,7 +133,7 @@
     const selectedFiles = ref([]);
 
     const triggerFileInput = () => {
-    fileInput.value.click();
+    fileInput.value?.click();
     };
 
     const handleFileChange = (event) => {
