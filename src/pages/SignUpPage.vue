@@ -58,10 +58,25 @@
             width="100%"
             v-model="userData.last_name"
           />
-          <div class="radio-group">
-            <label class="label">Sex</label>
-            <FormRadio id="M" label="Male" v-model="userData.sex" value="M" />
-            <FormRadio id="F" label="Female" v-model="userData.sex" value="F" />
+          <div class="select-group">
+            <div class="select-item">
+              <BaseSelectInput
+                v-model="userData.sex"
+                :options="sexOptions"
+                placeholder="Sex"
+                width="100%"
+                class="small-select"
+              />
+            </div>
+            <div class="select-item">
+              <BaseSelectInput
+                v-model="userData.role"
+                :options="roleOptions"
+                placeholder="Role"
+                width="100%"
+                class="small-select"
+              />
+            </div>
           </div>
           <div class="dob-group">
             <label class="label">Date of Birth</label>
@@ -107,7 +122,7 @@ import { validatePasswordMatch } from '@/validators/AuthValidators'
 import { signupUser, googleSignup } from '@/services/AuthService'
 import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
 import FormButton from '@/components/Global/BaseFormButton.vue'
-import FormRadio from '@/components/Global/BaseFormRadio.vue'
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 import InputField from '@/components/Global/BaseTextInput.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import Toast from '@/components/Global/Toast.vue'
@@ -122,6 +137,18 @@ const userData = ref<SignupData>({
   sex: '',
   birthdate: '',
 })
+
+const sexOptions = [
+  { value: 'M', label: 'Male' },
+  { value: 'F', label: 'Female' },
+]
+
+const roleOptions = [
+  { value: 'faculty', label: 'Faculty' },
+  { value: 'faculty_member', label: 'Faculty Member' },
+  { value: 'department_head', label: 'Department Head' },
+  { value: 'chancellor', label: 'Chancellor' },
+]
 
 const passwordError = ref<string | null>(null)
 const signupSuccess = ref<string>('')
@@ -204,11 +231,23 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   margin-left: 100rem;
 }
 
-.radio-group {
+.select-group {
   display: flex;
-  align-items: center;
-  gap: -0.5rem;
-  margin: -0.5rem 0;
+  gap: 1rem;
+  margin: 1rem 0;
+  margin-top: -0.1rem;
+  margin-bottom: -0.2rem;
+}
+
+.select-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.small-select {
+  font-size: 0.6rem;
+  color: gray;
 }
 
 .signup-container {
