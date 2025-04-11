@@ -278,6 +278,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 .label {
