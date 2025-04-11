@@ -95,7 +95,7 @@
 
 
     // models define the key of json POST
-     const fields = {
+    const fields = {
         abstract: [
             { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true }
         ],
@@ -127,7 +127,167 @@
                     { value: 'haha', label: 'haha' },
                     { value: 'sda', label: 'sda' }
                 ]},
+        ], // [TODO]: name should be arrayed
+        publication: [
+            { label: 'Publication Title', model: 'title', component: 'text', placeholder: 'title', isRequired: true },
+            { label: 'Type of Publication', model: 'publication_title', component: 'text', placeholder: 'title', isRequired: true },
+            { label: 'Author/Co-Authors', model: 'publicatin_type', component: 'text', placeholder: 'Name', isRequired: true },
+            { label: 'Published or Accepted for Publication', model: 'publication_date', component: 'date', isRequired: true },
+            { 
+                label: 'Name of Journal/Book/Conference Publication/Other Publication', 
+                model: 'publisher_name',
+                component: 'text',
+                isRequired: true 
+            },
+            { label: 'Type of Publisher', model: 'publisher_type', component: 'select', isRequired: true },
+            { label: 'Location of Publisher', model: 'publisher_location', component: 'select', options: [{value: 'local', label: 'Local'},{value: 'internationl', label: 'International'}], isRequired: true },
+            { label: 'Volume Number', model: 'volume_number', component: 'text', isRequired: true },
+            { label: 'Issue Number', model: 'issue_number', component: 'text', isRequired: true },
+            { label: 'Editor Names', model: 'editor_names', component: 'text', isRequired: true },
+            { label: 'DOI or URL', model: 'doi_or_url', component: 'text', isRequired: true },
+            { label: 'ISBN or ISSN', model: 'isbn_or_issn', component: 'text', isRequired: true },   
+            { label: 'Number of Citations', model: 'number_of_citations', component: 'number', isRequired: true },
         ],
+        paper_presentation: [
+            {
+                label: 'Research Project/Program/Work Title',
+                model: 'research_title',
+                component: 'select',
+                placeholder: 'Select Research Title',
+                isRequired: true,
+                options: [
+                    { value: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines', label: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines' },
+                    { value: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks', label: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks' },
+                    { value: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra', label: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra' },
+                    { value: 'Survey of Heatwaves in the Philippine Seas', label: 'Survey of Heatwaves in the Philippine Seas' },
+                    { value: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf', label: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf' },
+                    { value: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas', label: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas' },
+                    { value: 'River Ecosystem Health Assessment using Biomonitoring Tools', label: 'River Ecosystem Health Assessment using Biomonitoring Tools' },
+                    { value: 'Other', label: 'Other' },
+                ]
+            },
+            { label: 'Title of Paper Presented', model: 'paper_title', component: 'text', placeholder: 'Title of Paper Presented', isRequired: true },
+            {
+                label: 'Type of Presentation',
+                model: 'presentation_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'Oral Presentation', label: 'Oral Presentation' },
+                    { value: 'Poster Presentation', label: 'Poster Presentation' },
+                ]
+            },
+            { label: 'Title of Conference', model: 'conference_title', component: 'text', placeholder: 'Title of Conference', isRequired: true },
+            { label: 'Name of Organizer', model: 'organizer_name', component: 'text', placeholder: 'Name of Organizer', isRequired: true },
+            {
+                label: 'Location of Conference',
+                model: 'conference_location_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'Institutional/In-House', label: 'Institutional/In-House' },
+                    { value: 'Local/Regional', label: 'Local/Regional' },
+                    { value: 'National', label: 'National' },
+                    { value: 'International', label: 'International' },
+                ]
+            },
+            { label: 'Venue, City and Country', model: 'conference_venue', component: 'text', placeholder: 'Venue, City and Country', isRequired: true },
+            { label: 'Conference Start Date', model: 'conference_start_date', component: 'date', isRequired: true },
+            { label: 'Conference End Date', model: 'conference_end_date', component: 'date', isRequired: true },
+            { label: 'Date of Presentation', model: 'presentation_date', component: 'date', isRequired: true },
+        ],
+        patent: [
+            {
+                label: 'Title of Patent',
+                model: 'patent_title',
+                component: 'select',
+                placeholder: 'Select Patent Title',
+                isRequired: true,
+                options: [
+                    // Options will be dynamically populated based on Research data
+                    { value: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines', label: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines' },
+                    { value: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks', label: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks' },
+                    { value: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra', label: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra' },
+                    { value: 'Survey of Heatwaves in the Philippine Seas', label: 'Survey of Heatwaves in the Philippine Seas' },
+                    { value: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf', label: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf' },
+                    { value: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas', label: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas' },
+                    { value: 'Other', label: 'Other' },
+                ]
+            },
+            {
+                label: 'Type of Patent',
+                model: 'patent_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'Invention', label: 'Invention' },
+                    { value: 'Utility Model', label: 'Utility Model' },
+                    { value: 'Industrial Design', label: 'Industrial Design' },
+                ]
+            },
+            { label: 'Application Number', model: 'application_number', component: 'text', placeholder: 'Application Number', isRequired: true },
+            { label: 'Name of Inventor/s', model: 'inventors', component: 'text', placeholder: 'Name of Inventor/s', isRequired: true },
+            { label: 'Name of Applicant/Owner/s', model: 'applicants', component: 'text', placeholder: 'Name of Applicant/Owner/s', isRequired: true },
+            { label: 'Date of Publication of the Unexamined Application', model: 'publication_date', component: 'date', isRequired: true },
+            { label: 'Date of Grant of Patent', model: 'grant_date', component: 'date', placeholder: 'Leave blank if patent has not been granted.', isRequired: false },
+            { label: 'Registration Number', model: 'registration_number', component: 'text', placeholder: 'Leave blank if patent has not been granted.', isRequired: false },
+            {
+                label: 'Name of Commercial Product',
+                model: 'commercial_product_name',
+                component: 'text',
+                placeholder: 'Name of Commercial Product',
+                isRequired: false
+            },
+            {
+                label: 'Use of Patent',
+                model: 'patent_use',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'For development of technology', label: 'For development of technology' },
+                    { value: 'For service provision', label: 'For service provision' },
+                    { value: 'As an end-product in itself', label: 'As an end-product in itself' },
+                ]
+            },
+        ], // [TODO]: bug on title input
+        training: [
+            {
+                label: 'Type of Activity',
+                model: 'activity_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'Training Course (non-degree and non-credit)', label: 'Training Course (non-degree and non-credit)' },
+                    { value: 'Advisory Service', label: 'Advisory Service' },
+                ]
+            },
+            { label: 'Title of Training Course/Advisory Service Conducted', model: 'title', component: 'text', placeholder: 'Title of Training Course/Advisory Service Conducted', isRequired: true },
+            { label: 'Venue, City, Municipality and Province', model: 'venue', component: 'text', placeholder: 'Venue, City, Municipality and Province', isRequired: true },
+            { label: 'Start Date', model: 'start_date', component: 'date', isRequired: true },
+            { label: 'End Date', model: 'end_date', component: 'date', isRequired: true },
+            { label: 'Special Notes about the Schedule', model: 'schedule_notes', component: 'textarea', placeholder: 'Provide special notes about the schedule...', isRequired: false },
+            { label: 'Number of Hours Required to Complete This Training Course', model: 'total_hours', component: 'number', placeholder: 'Specify in hours only', isRequired: false },
+            { label: 'Total Number of Trainees/Persons Served', model: 'total_served', component: 'number', isRequired: true },
+            {
+                label: 'Source of Majority Share of Funding for this Training Course/Advisory Service',
+                model: 'funding_source',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'UP Entity', label: 'UP Entity' },
+                    { value: 'RP Government Entity or Public Sector Entity', label: 'RP Government Entity or Public Sector Entity' },
+                    { value: 'RP Private Sector Entity', label: 'RP Private Sector Entity' },
+                    { value: 'Foreign or Non-Domestic Entity', label: 'Foreign or Non-Domestic Entity' },
+                ]
+            },
+            { label: 'Number of Responses - Poor/Below Fair', model: 'responses_poor', component: 'number', isRequired: false },
+            { label: 'Number of Responses - Fair', model: 'responses_fair', component: 'number', isRequired: false },
+            { label: 'Number of Responses - Satisfactory', model: 'responses_satisfactory', component: 'number', isRequired: false },
+            { label: 'Number of Responses - Very Satisfactory', model: 'responses_very_satisfactory', component: 'number', isRequired: false },
+            { label: 'Number of Responses - Outstanding', model: 'responses_outstanding', component: 'number', isRequired: false },
+        ], // [TODO]: recheck
+
+        // [TODO]: check which are required.
     }
 
     const toggleInfo = () => {
