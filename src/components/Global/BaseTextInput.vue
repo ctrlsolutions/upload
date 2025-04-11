@@ -64,7 +64,9 @@ export default {
 <style scoped>
 .input-container {
   position: relative;
-  width: fit-content;
+  width: 100%;
+  border: black 2px solid;
+  border-radius: 0.6rem;
 }
 
 .input-box {
@@ -102,9 +104,8 @@ export default {
   font-size: 1em;
   transition: all 0.2s ease-out;
   pointer-events: none;
-  opacity: 0.7;
   padding: 0 0.4rem;
-  background-color: var(--background-color);
+  background-color: white;
 }
 
 .input-box:focus ~ .input-label,
