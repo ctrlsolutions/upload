@@ -92,7 +92,6 @@
     import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue";
 
     import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
-    import axios from "axios";
     import BaseDateInput from "@/components/Global/BaseDateInput.vue";
 
     const reportType = ref('research');
@@ -100,9 +99,8 @@
     const infoVisible = ref(false);
 
     const fields = [
-        { label: 'Name', model: 'name', component: 'text', isRequired: true },
-
-        { label: 'Start Date', model: 'startDate', component: 'date', isRequired: true }
+        { label: 'Title', model: 'title', component: 'text', isRequired: true },
+        { label: 'Number of Months in Original Timeframe', model: 'number_of_months_in_original_time_frame', component: 'date', isRequired: true }
     ]
 
     const toggleInfo = () => {

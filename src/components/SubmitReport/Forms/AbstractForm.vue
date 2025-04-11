@@ -1,51 +1,50 @@
 <template>
-    <div class="form">
-      <div class="form-group" v-for="(field, index) in fields" :key="index">
-        <label>{{ field.label }}</label>
-  
-        <!-- Text, Number Input -->
-        <input
-          v-if="['text', 'number'].includes(field.component)"
-          :type="field.component"
-          v-model="form[field.model]"
-          :placeholder="field.placeholder || ''"
-        />
-  
-        <!-- Textarea -->
-        <textarea
-          v-else-if="field.component === 'textarea'"
-          v-model="form[field.model]"
-          :placeholder="field.placeholder || ''"
-        ></textarea>
-  
-        <!-- Date Input -->
-        <BaseDateInput
-          v-else-if="field.component === 'date'"
-          v-model="form[field.model]"
-          :width="'100%'"
-        />
-  
-        <!-- Select Input -->
-        <BaseSelectInput
-          v-else-if="field.component === 'select'"
-          v-model="form[field.model]"
-          :options="field.options ?? []"
-          style="width: 100%; height: 38px"
-        />
+  <div class="form">
+    <div class="form-group" v-for="(field, index) in fields" :key="index">
+      <label>{{ field.label }}</label>
 
-  
-        <span v-if="errors[field.model]" class="error">{{ errors[field.model] }}</span>
-      </div>
+      <!-- Text, Number Input -->
+      <input
+        v-if="['text', 'number'].includes(field.component)"
+        :type="field.component"
+        v-model="form[field.model]"
+        :placeholder="field.placeholder || ''"
+      />
+
+      <!-- Textarea -->
+      <textarea
+        v-else-if="field.component === 'textarea'"
+        v-model="form[field.model]"
+        :placeholder="field.placeholder || ''"
+      ></textarea>
+
+      <!-- Date Input -->
+      <BaseDateInput
+        v-else-if="field.component === 'date'"
+        v-model="form[field.model]"
+        :width="'100%'"
+      />
+
+      <!-- Select Input -->
+      <BaseSelectInput
+        v-else-if="field.component === 'select'"
+        v-model="form[field.model]"
+        :options="field.options ?? []"
+        style="width: 100%; height: 38px"
+      />
+
+      <span v-if="errors[field.model]" class="error">{{ errors[field.model] }}</span>
     </div>
-  </template>
+  </div>
+</template>
   
 
 
-  <script setup lang="ts">
+<script setup lang="ts">
   import BaseDateInput from '@/components/Global/BaseDateInput.vue'
-  import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
-  import { reactive } from 'vue'
-  
+    import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+    import { reactive } from 'vue'
+    
   // 1. Define field type
   type Field = {
     model: string
@@ -113,13 +112,13 @@
   }
   
   defineExpose({ exposeForm })
-  </script>
+</script>
   
   
 <style scoped>
-    .error {
-        color: red;
-        font-size: 0.8rem;
-    }
+  .error {
+      color: red;
+      font-size: 0.8rem;
+  }
 </style>
   
