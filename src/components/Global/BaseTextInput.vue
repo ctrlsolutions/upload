@@ -1,14 +1,17 @@
 <template>
-  <input
-    :id="id"
-    :type="type"
-    :class="['input-box', variantClass]"
-    :style="boxStyle"
-    :placeholder="placeholder"
-    :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
-    v-bind="$attrs"
-  />
+  <div class="input-container">
+    <input
+      :id="id"
+      :type="type"
+      :class="['input-box', variantClass]"
+      :style="boxStyle"
+      :placeholder="placeholder"
+      :value="modelValue"
+      @input="$emit('update:modelValue', $event.target.value)"
+      v-bind="$attrs"
+    />
+    <label :for="id" class="input-label">{{ placeholder }}</label>
+  </div>
 </template>
 
 <script>
@@ -60,6 +63,12 @@ export default {
 
 
 <style lang="scss" scoped>
+.input-container {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
 .input-box {
   font-family: 'Inter', serif;
   height: fit-content;
@@ -94,7 +103,7 @@ export default {
     color: $red;
 
     &::placeholder {
-      color: $red;
+      color: transparent;
     }
   }
 
@@ -106,8 +115,37 @@ export default {
     color: $green;
 
     &::placeholder {
-      color: $green;
+      color: transparent;
     }
   }
+}
+
+.input-label {
+  position: absolute;
+  top: 50%;
+  left: 0.6rem;
+  transform: translateY(-50%);
+  font-size: 1em;
+  color: #999;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  background-color: white;
+  padding: 0 0.4rem;
+  z-index: 1000;
+
+  &--red {
+    color: $red;
+  }
+
+  &--green {
+    color: $green;
+  }
+}
+
+.input-box:focus + .input-label,
+.input-box:not(:placeholder-shown) + .input-label {
+  top: 0;
+  font-size: 0.8em;
+  transform: translateY(-50%);
 }
 </style>
