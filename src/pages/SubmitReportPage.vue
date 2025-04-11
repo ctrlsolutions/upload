@@ -36,7 +36,7 @@
 
             <!-- Report Form -->
             <div class="form-container">
-                <component :is="formComponents[reportType]" ref="formComponent" :fields = fields />
+                <component :is="AbstractForm" ref="formComponent" :fields = fields[reportType] />
             </div>
 
             <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
@@ -87,43 +87,64 @@
     import axios from "axios";
 
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
-    import ResearchForm from "@/components/SubmitReport/Forms/ResearchForm.vue";
-    import PublicationForm from "@/components/SubmitReport/Forms/PublicationForm.vue";
     import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue";
-
-    import Other from "@/components/SubmitReport/Forms/OtherForm.vue";
-    import BaseDateInput from "@/components/Global/BaseDateInput.vue";
 
     const reportType = ref('research');
     const formComponent = ref(null);
     const infoVisible = ref(false);
 
-    const fields = [
-        { label: 'Title', model: 'title', component: 'text', isRequired: true },
-        { label: 'Number of Months in Original Timeframe', model: 'number_of_months_in_original_time_frame', component: 'date', isRequired: true }
-    ]
+
+    // models define the key of json POST
+     const fields = {
+        abstract: [
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true }
+        ],
+        research: [
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { 
+                label: 'Number of Months in Original Timeframe', 
+                model: 'timeframe', 
+                component: 'number', 
+                isRequired: true,
+                placeholder: 'months'
+            },
+            { label: 'Start Date', model: 'start_date', component: 'date', isRequired: true },
+            { label: 'End Date', model: 'end_date', component: 'date', isRequired: true },
+            { 
+                label: 'Names of Researchers', 
+                model: 'names_of_researchers', 
+                component: 'text', 
+                isRequired: false,
+                placeholder: 'Ex: Randall A. Alquicer, Brent Jordan Aguinalde, ...',
+            
+            },
+            {
+                label: 'Source of Majority of Funding', 
+                model: 'source_of_funding', 
+                component: 'select', 
+                isRequired: false, 
+                options:[
+                    { value: 'haha', label: 'haha' },
+                    { value: 'sda', label: 'sda' }
+                ]},
+        ],
+    }
 
     const toggleInfo = () => {
     infoVisible.value = !infoVisible.value;
     };
 
-    const formComponents = {
-        research: ResearchForm,
-        publication: PublicationForm,
-        other: Other,
-        abstract: AbstractForm,
-    };
 
     const formInformation = {
-    research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations. Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
-    publication: "Publications may be produced in print, online or in digital on non-print media.",
-    paper_presentation: "The same paper may be presented at different conference events.",
-    patent: "Please include only the inventions, utility models and industrial designs owned by the University of the Philippines.",
-    other_research: "Include research or creative work outputs that could not be categorized as peer-reviewed publication, academic conference paper presentation or patenting. The output must be exposed in a public event such as exhibitions, public performances, or publication, i.e., when the output was first shown in a public place or released to the public.",
-    training: "Training Course/Advisory Service must be part of the approved Extension Work Agenda.",
-    extension: "Extension Program must be part of the approved Extension Work Agenda.",
-    partnership: "The partner stakeholder must be another agency, organization, private company, media or any institution recognized by UP as a partner by means of a MOA, MOU or a partnership agreement. Extension Activity must be part of the approved Extension Work Agenda.",
-    other: "Other Form",
+        research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations. Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
+        publication: "Publications may be produced in print, online or in digital on non-print media.",
+        paper_presentation: "The same paper may be presented at different conference events.",
+        patent: "Please include only the inventions, utility models and industrial designs owned by the University of the Philippines.",
+        other_research: "Include research or creative work outputs that could not be categorized as peer-reviewed publication, academic conference paper presentation or patenting. The output must be exposed in a public event such as exhibitions, public performances, or publication, i.e., when the output was first shown in a public place or released to the public.",
+        training: "Training Course/Advisory Service must be part of the approved Extension Work Agenda.",
+        extension: "Extension Program must be part of the approved Extension Work Agenda.",
+        partnership: "The partner stakeholder must be another agency, organization, private company, media or any institution recognized by UP as a partner by means of a MOA, MOU or a partnership agreement. Extension Activity must be part of the approved Extension Work Agenda.",
+        other: "Other Form",
     };
 
     // File upload logic
@@ -187,16 +208,17 @@
             //     });
             // }
 
-            console.log(formValues)
+
 
             // console.log("Preparing to submit form with files...");
             // for (let [key, value] of submissionData.entries()) {
             //     console.log(`${key}:`, value);
             // }
+            console.log(JSON.stringify(submissionData, null, 2));
 
             await axios.post(`http://localhost:8000/api/report/${reportType.value}/`, submissionData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json', // change this to formdata
                 }
             });
 
@@ -408,7 +430,8 @@
 
 :deep(.form-group input::placeholder) {
     color: $red;
-    font-weight: 900;
+    font-weight: 600;
+    opacity: 0.4;
 }
 
 :deep(.error) {
