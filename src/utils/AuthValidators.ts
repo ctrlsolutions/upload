@@ -34,3 +34,5 @@ export const validatePasswordMatch = (
 ): string | null => {
   return password !== password2 ? 'Passwords do not match.' : null
 }
+
+

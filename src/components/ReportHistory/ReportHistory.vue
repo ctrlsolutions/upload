@@ -20,7 +20,7 @@
         width="210px"
         :textColor="'#fff'"
         :borderColor="'transparent'"
-        class="select2"
+        class="select2" 
       />
       <div class="search-container">
         <OhVueIcon name="co-magnifying-glass" class="search-icon" />
@@ -45,40 +45,42 @@
       />
     </div>
     <div class="report-history-container">
-      <div v-for="(reports, date) in groupedReports" :key="date">
-        <div v-if="selectedCount > 0" class="delete-container">
-          <BaseFormButton
-            variant="red"
-            width="7rem"
-            height="2.5rem"
-            @click="deleteSelectedReports"
-          >
-            Delete ({{ selectedCount }})
-          </BaseFormButton>
-        </div>
+      <div v-if="selectedCount > 0" class="delete-container">
+        <BaseFormButton
+          variant="red"
+          width="7rem"
+          height="2.5rem"
+          @click="deleteSelectedReports"
+        >
+          Delete ({{ selectedCount }})
+        </BaseFormButton>
+      </div>
+
+      <div v-for="(reportGroup, date) in groupedReports" :key="date">
         <div class="date-header">{{ date }}</div>
-        <div v-for="(report, index) in reports.slice(0, 5)" :key="index" class="report-item">
-          <BaseFormCheckbox v-model="selectedReports[index]" :id="`report-${index}`" />
-          <span class="timestamp">{{ report.time || '...' }}</span>
-          <img :src="report.icon || 'default-icon.png'" alt="Report Icon" class="report-icon" />
-          <span class="report-title">{{ report.title || '...' }}</span>
-          <span class="report-author">{{ report.author || '...' }}</span>
-          <span class="report-author-college" :style="{ backgroundColor: getCollegeColor(report.college) }">
-            {{ report.college || '...' }}
-          </span>
-          <span class="report-author-department">{{ report.department || '...' }}</span>
-          <span class="report-type">{{ report.reportType || '...' }}</span>
+
+        <div v-for="(report, index) in (reportGroup as Report[]).slice(0, 5)" :key="report.id" class="report-item">
+          <BaseFormCheckbox v-model="selectedReports[report.id]" :id="`report-${report.id}`" />
+          <span class="timestamp">{{ report.time_submitted || 'time' }}</span>
+          <img :src="cosImage" alt="Report" class="report-icon" />
+          <span class="report-title">{{ report.title || 'Research Title' }}</span>
+          <span class="report-author">{{ report.formatted_author || 'Last Name' }}</span>
+          <span class="report-author-college">{{ report.college_code || 'DCS' }}</span>
+          <span class="report-author-department">{{ report.department_code || 'DCS' }}</span>
+          <span class="report-type">{{ report.report_type || 'Research Type' }}</span>
           <button variant="transparent" width="0" height="2rem" class="options-button">⋮</button>
         </div>
       </div>
     </div>
+
     <DeleteModal v-if="showDeleteModal" :isOpen="showDeleteModal" @close="closeModal" @confirm-delete="deleteAllReports" />
-    <DeleteModal v-if="showDeleteSelectedModal" :isOpen="showDeleteSelectedModal" @close="showDeleteSelectedModal = false" @confirm-delete="confirmDeleteSelectedReports" />
+    <DeleteModal v-if="showDeleteSelectedModal" :isOpen="showDeleteSelectedModal" @close="showDeleteSelectedModal = false" @confirm-delete="confirmDeleteSelectedReports" /> 
   </div>
 </template>
 
-<script>
-import axios from "axios";
+<script lang="ts" setup>
+import cosImage from '@/assets/COS.png';
+import { ref, computed, onMounted, watch } from "vue";
 import BaseSelectInput from '@/components/Global/BaseSelectInput.vue';
 import BaseTextInput from '@/components/Global/BaseTextInput.vue';
 import BaseFormButton from '@/components/Global/BaseFormButton.vue';
@@ -86,142 +88,189 @@ import BaseFormCheckbox from '@/components/Global/BaseFormCheckbox.vue';
 import DeleteModal from '@/components/ReportHistory/DeleteModal.vue';
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { CoMagnifyingGlass } from "oh-vue-icons/icons";
+import ReportService from '@/services/ReportService';
+import type { Report } from '@/types/ReportInterface';
 
 addIcons(CoMagnifyingGlass);
 
-export default {
-  name: 'ReportHistory',
-  components: {
-    BaseSelectInput,
-    BaseTextInput,
-    BaseFormButton,
-    BaseFormCheckbox,
-    DeleteModal,
-    OhVueIcon,
-  },
-  data() {
-    return {
-      searchQuery: "",
-      selectedSort: "by-date",
-      selectedDelete: null,
-      selectedFilter: null,
-      selectedReports: {},
-      showDeleteModal: false,
-      showDeleteSelectedModal: false,
-      options: [
-        { label: "By Date", value: "by-date" },
-        { label: "By College", value: "by-college" },
-        { label: "By Department", value: "by-department" },
-        { label: "My Submission", value: "my-submission" },
-      ],
-      deleteOptions: [{ label: "Delete All", value: "delete-all" }],
-      filterOptions: [{ label: "All", value: "all" }],
+const allReports = ref<Report[]>([]);
+const reports = ref<Report[]>([]);
+const searchQuery = ref("");
+const selectedSort = ref("by-date");
+const selectedDelete = ref('');
+const selectedFilter = ref('');
+const selectedReports = ref<{ [key: string]: boolean }>({});
+const showDeleteModal = ref(false);
+const showDeleteSelectedModal = ref(false);
 
-      reportTypes: [],
+const groupedReports = computed((): Record<string, Report[]> => {
+  const groups: Record<string, Report[]> = {};
 
-      reports: [],
-    };
-  },
-  computed: {
-    headerText() {
-      const headers = {
-        "by-date": "Date",
-        "by-college": "College",
-        "by-department": "Department",
-        "my-submission": "My Submissions",
-      };
-      return headers[this.selectedSort] || "Date";
-    },
-    sortedReports() {
-      if (this.selectedSort === "by-date") {
-        return [...this.reports].sort((a, b) => new Date(b.date) - new Date(a.date));
-      } else if (this.selectedSort === "by-college") {
-        return [...this.reports].sort((a, b) => a.college.localeCompare(b.college));
-      } else if (this.selectedSort === "by-department") {
-        return [...this.reports].sort((a, b) => a.department.localeCompare(b.department));
-      } else if (this.selectedSort === "my-submission") {
-        return this.reports.filter((report) => report.author === "Atty. Leo Malagar"); // Replace with actual user data
-      }
-      return this.reports;
-    },
-    filteredReports() {
-      if (!this.searchQuery.trim()) return this.sortedReports;
+  const sortKey = selectedSort.value;
 
-      const query = this.searchQuery.toLowerCase();
-      return this.sortedReports.filter((report) =>
-        [report.title, report.author, report.college, report.department, report.reportType]
-          .some(field => field?.toLowerCase().includes(query))
-      );
-    },
-    groupedReports() {
-      return this.filteredReports.reduce((groups, report) => {
-        let key = this.selectedSort === "by-college"
-          ? report.college
-          : this.selectedSort === "by-department"
-          ? report.department
-          : this.selectedSort === "my-submission"
-          ? "My Submission"
-          : report.date || "No Reports";
+  (reports.value || []).forEach((report) => {
+    let groupKey = '';
 
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(report);
-        return groups;
-      }, {});
-    },
-    selectedCount() {
-      return Object.values(this.selectedReports).filter(Boolean).length;
-    },
-  },
-  watch: {
-    selectedDelete(newValue) {
-      if (newValue === "delete-all") {
-        this.showDeleteModal = true
-        this.selectedDelete = ""
-      }
-    },
-  },
-  mounted() {
-    this.fetchReports();
-  },
-  methods: {
-    async fetchReports() {
-      try {
-        const response = await axios.get("/api/reports");
-        this.reports = response.data;
-      } catch (error) {
-        console.error("Error fetching reports:", error);
-      }
-    },
-    closeModal() {
-      this.showDeleteModal = false;
-      this.selectedDelete = null;
-    },
-    deleteAllReports() {
-      this.reports = [];
-      this.closeModal();
-    },
-    deleteSelectedReports() {
-      this.showDeleteSelectedModal = true;
-    },
-    confirmDeleteSelectedReports() {
-      this.reports = this.reports.filter(report => !this.selectedReports[report.id]);
-      this.selectedReports = {};
-      this.showDeleteSelectedModal = false;
-    },
-    getCollegeColor(college) {
-      const colors = {
-        "College of Science": "#D89E00",
-        "College of Social Sciences": "#7B1113",
-        "School of Management": "#1E46A4",
-        "College of Communication, Arts, and Design": "#28772C",
-      };
-      return colors[college] || "gray";
-    },
-  }
+    if (sortKey === 'by-date') {
+      groupKey = report.created_on || 'Unknown Date';
+    } else if (sortKey === 'by-college') {
+      groupKey = report.college_name || 'Unknown College';
+    } else if (sortKey === 'by-department') {
+      groupKey = report.department_name || 'Unknown Department';
+    } else if (sortKey === 'my-submission') {
+      groupKey = 'My Submissions'; 
+    }
+
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(report);
+  });
+
+  return groups;
+});
+
+const options = [
+  { label: "By Date", value: "by-date" },
+  { label: "By College", value: "by-college" },
+  { label: "By Department", value: "by-department" },
+  { label: "My Submission", value: "my-submission" },
+];
+
+const deleteOptions = [{ label: "Delete All", value: "delete-all" }];
+const filterOptions = [{ label: "All", value: "all" }];
+type SortKey = "by-date" | "by-college" | "by-department" | "my-submission";
+
+const headers: Record<SortKey, string> = {
+  "by-date": "Date",
+  "by-college": "College",
+  "by-department": "Department",
+  "my-submission": "My Submissions",
 };
+
+const headerText = computed(() => {
+  const key = selectedSort.value as SortKey;
+  return headers[key] || "Date";
+});
+
+const selectedCount = computed(() =>
+  Object.values(selectedReports.value).filter(Boolean).length
+);
+
+watch(selectedDelete, (newValue) => {
+  if (newValue === "delete-all") {
+    showDeleteModal.value = true;
+    selectedDelete.value = '';
+  }
+});
+
+watch(reports, (newReports) => {
+  const newSelection: Record<string, boolean> = {};
+
+  for (const report of newReports) {
+    newSelection[report.id] = selectedReports.value[report.id] === true;
+  }
+
+  selectedReports.value = newSelection;
+});
+
+
+watch(selectedSort, (newSort) => {
+  let baseReports = [...allReports.value]; 
+
+  if (newSort === 'my-submission') {
+    reports.value = baseReports.filter(report => report.is_owner === true);
+  } else if (newSort === 'by-date') {
+    reports.value = baseReports.sort((a, b) =>
+      new Date(b.created_on).getTime() - new Date(a.created_on).getTime()
+    );
+  } else if (newSort === 'by-college') {
+    reports.value = baseReports.sort((a, b) =>
+      (a.college_name || '').localeCompare(b.college_name || '')
+    );
+  } else if (newSort === 'by-department') {
+    reports.value = baseReports.sort((a, b) =>
+      (a.department_name || '').localeCompare(b.department_name || '')
+    );
+  }
+});
+
+
+
+onMounted(async () => {
+  await fetchReports();
+});
+
+async function fetchReports() {
+  try {
+    const response = await ReportService.getAllReports();
+    allReports.value = response ?? [];
+    reports.value = [...allReports.value]; 
+    selectedReports.value = {};
+    for (const report of reports.value) {
+      selectedReports.value[report.id] = false;
+    }
+  } catch (error) {
+    console.error("Error fetching reports:", error);
+    reports.value = [];
+  }
+}
+
+function closeModal() {
+  showDeleteModal.value = false;
+  selectedDelete.value = '';
+}
+
+async function deleteAllReports() {
+  try {
+    await ReportService.deleteAllReports();
+    await fetchReports(); // Refresh list after deletion
+    closeModal();
+  } catch (error) {
+    console.error("Error deleting all reports:", error);
+  }
+}
+
+
+function deleteSelectedReports() {
+  showDeleteSelectedModal.value = true;
+}
+
+async function confirmDeleteSelectedReports() {
+  try {
+    const selectedIds = Object.entries(selectedReports.value)
+      .filter(([_, selected]) => selected)
+      .map(([id]) => parseInt(id));
+
+    if (selectedIds.length === 0) {
+      console.warn("No reports selected for deletion.");
+      return;
+    }
+
+    await ReportService.deleteMultipleReports(selectedIds);
+
+    await fetchReports(); // Refresh list after deletion
+    selectedReports.value = {};
+    showDeleteSelectedModal.value = false;
+  } catch (error) {
+    console.error("Error deleting selected reports:", error);
+  }
+}
+
+
+
 </script>
 
+
 <style lang="scss" scoped>
+
+.no-reports {
+  padding: 2rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+}
+
 .report-history {
   display: flex;
   flex-direction: column;
@@ -312,7 +361,7 @@ export default {
   margin: 25px 0;
   margin-bottom: 45px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 .date-header {
@@ -365,7 +414,8 @@ export default {
 }
 
 .report-author-college {
-  color: rgb(240, 240, 240);
+  color: $black;
+  background-color: #FBF5E7;
   border-radius: 8px;
   padding: 1px 10px;
   text-overflow: ellipsis;
