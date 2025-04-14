@@ -9,6 +9,7 @@ import ProfilePage from '@/pages/ProfilePage.vue'
 import { isAuthenticated } from '@/services/AuthService'
 import SettingsPage from '@/pages/SettingsPage.vue'
 import ReportHistory from '@/pages/ReportHistoryPage.vue'
+import ReportHistory from '@/pages/ReportHistoryPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
