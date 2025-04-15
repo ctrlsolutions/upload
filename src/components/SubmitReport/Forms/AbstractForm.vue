@@ -42,95 +42,95 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import BaseDateInput from '@/components/Global/BaseDateInput.vue'
-import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+  import { reactive } from 'vue'
+  import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+  import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
-// 1. Define field type
-type Field = {
-  model: string
-  label: string
-  isRequired: boolean
-  component: string
-  placeholder: string
-  options?: { value: string, label: string }[]
-}
+  // 1. Define field type
+  type Field = {
+    model: string
+    label: string
+    isRequired: boolean
+    component: string
+    placeholder: string
+    options?: { value: string, label: string }[]
+  }
 
-// 2. Use defineProps with type
-const props = defineProps<{
-  fields: Field[]
-}>()
+  // 2. Use defineProps with type
+  const props = defineProps<{
+    fields: Field[]
+  }>()
 
-const form = reactive<Record<string, any>>({})
-const errors = reactive<Record<string, string>>({})
+  const form = reactive<Record<string, any>>({})
+  const errors = reactive<Record<string, string>>({})
 
-// 3. Initialize form and error states
-props.fields.forEach(field => {
-  form[field.model] = ''
-  errors[field.model] = ''
-})
-
-// 4. Validation logic
-function validateForm() {
-  let valid = true
-
+  // 3. Initialize form and error states
   props.fields.forEach(field => {
-    const value = form[field.model]
-
-    if (field.isRequired && (value === '' || value === null || value === undefined)) {
-      errors[field.model] = `${field.label} is required.`
-      valid = false
-    } else if (field.component === 'number' && isNaN(value)) {
-      errors[field.model] = `${field.label} must be a valid number.`
-      valid = false
-    } else if (
-      field.component === 'number' &&
-      field.model === 'months' &&
-      (value <= 0 || isNaN(value))
-    ) {
-      errors[field.model] = 'Valid number of months is required.'
-      valid = false
-    } else {
-      errors[field.model] = ''
-    }
+    form[field.model] = ''
+    errors[field.model] = ''
   })
 
-  // Additional cross-field validation
-  const start = form.startDate
-  const end = form.endDate
-  if (start && end && new Date(end) < new Date(start)) {
-    errors.endDate = 'End date must be after start date.'
-    valid = false
-  }
+  // 4. Validation logic
+  function validateForm() {
+    let valid = true
 
-  return valid
-}
+    props.fields.forEach(field => {
+      const value = form[field.model]
 
-// 5. Expose form result
-function exposeForm() {
-  if (!validateForm()) {
-    console.warn('Validation failed')
-    return null
-  }
-
-  const result: Record<string, any> = {}
-
-  props.fields.forEach(field => {
-    if (field.model == 'title'){
-      result['report'] = {
-        title: form[field.model]
+      if (field.isRequired && (value === '' || value === null || value === undefined)) {
+        errors[field.model] = `${field.label} is required.`
+        valid = false
+      } else if (field.component === 'number' && isNaN(value)) {
+        errors[field.model] = `${field.label} must be a valid number.`
+        valid = false
+      } else if (
+        field.component === 'number' &&
+        field.model === 'months' &&
+        (value <= 0 || isNaN(value))
+      ) {
+        errors[field.model] = 'Valid number of months is required.'
+        valid = false
+      } else {
+        errors[field.model] = ''
       }
-    }
-    else{
-      result[field.model] = form[field.model]
-    }
-    
-  })
+    })
 
-  return result
-}
+    // Additional cross-field validation
+    const start = form.startDate
+    const end = form.endDate
+    if (start && end && new Date(end) < new Date(start)) {
+      errors.endDate = 'End date must be after start date.'
+      valid = false
+    }
 
-defineExpose({ exposeForm })
+    return valid
+  }
+
+  // 5. Expose form result
+  function exposeForm() {
+    if (!validateForm()) {
+      console.warn('Validation failed')
+      return null
+    }
+
+    const result: Record<string, any> = {}
+
+    props.fields.forEach(field => {
+      if (field.model == 'title'){
+        result['report'] = {
+          title: form[field.model]
+        }
+      }
+      else{
+        result[field.model] = form[field.model]
+      }
+      
+    })
+
+    return result
+  }
+
+  defineExpose({ exposeForm })
 </script>
 
 <style scoped>
