@@ -32,7 +32,7 @@
 
       <a href="#" class="forgot-password">Forgot Password?</a>
 
-      <FormButton variant="green" width="100%" @click="validateForm">
+      <FormButton variant="green" width="100%" @click.prevent="validateForm">
         LOG IN
       </FormButton>
     </form>
@@ -55,19 +55,22 @@
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
-import { FormState, ErrorState } from '@/types/AuthInterface'
+import { LoginData, ErrorState } from '@/types/AuthInterface'
+import { useRouter } from 'vue-router'
+import { onMounted } from 'vue'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
 } from '@/validators/AuthValidators'
-import { login, googleLogin } from '@/services/AuthService'
+import { login, googleLogin, logout } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
-import axios from 'axios'
+
+const router = useRouter()
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
-const form = reactive<FormState>({
+const form = reactive<LoginData>({
   email: '',
   password: '',
 })
@@ -77,7 +80,7 @@ const errors = reactive<ErrorState>({
   password: '',
 })
 
-const onBlur = (field: keyof FormState) => {
+const onBlur = (field: keyof LoginData) => {
   clearError(field)
   errors[field] = validateFieldFn(form, field) || ''
 }
@@ -92,20 +95,19 @@ const validateForm = async () => {
   errors.email = validationErrors.email || ''
   errors.password = validationErrors.password || ''
 
-  if (!errors.email && !errors.password) {
-    await submitForm()
-  }
+  // if (!errors.email && !errors.password) {
+  //   await submitForm()
+  // }
 }
 
 const submitForm = async () => {
   try {
-    const token = await login(form)
-    localStorage.setItem('authToken', token)
-    axios.defaults.headers.common['Authorization'] = `Token ${token}`
+    const response = await login(form)
+    const username = response.data.username
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
-      window.location.href = '/authenticated/dashboard'
+      router.push(`/${username}`)
     }, 2000)
   } catch (error: any) {
     const errorMessage =
@@ -123,6 +125,22 @@ const handleGoogleLogin = async (googleResponse: any) => {
     toast.value?.showToast('Google login failed', 'error')
   }
 }
+
+onMounted(async () => {
+  console.log('HERE')
+
+  const storedUsername = sessionStorage.getItem('username')
+
+  if (storedUsername) {
+    try {
+      await logout()
+      sessionStorage.removeItem('username') // Clear stored session data
+      router.push('/login')
+    } catch (error) {
+      console.error('Logout failed', error)
+    }
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -176,11 +194,48 @@ const handleGoogleLogin = async (googleResponse: any) => {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  @include sm {
+    gap: 1rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  @include md {
+    gap: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  @include lg {
+    gap: 2rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.login-button {
+  width: 100%;
 }
 
 .or-text {
-  text-align: center;
-  margin: 1.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+
+  @include sm {
+    margin-bottom: 0.5rem;
+    font-size: 0.9em;
+  }
+
+  @include md {
+    margin-bottom: 0.75rem;
+    font-size: 1em;
+  }
+
+  @include lg {
+    margin-bottom: 1rem;
+    font-size: 1em;
+  }
 }
 
 .forgot-password {
@@ -188,7 +243,24 @@ const handleGoogleLogin = async (googleResponse: any) => {
   text-align: right;
   margin-top: -0.5rem;
   padding-right: 1rem;
-  margin-bottom: 1.5rem;
+
+  @include sm {
+    padding-right: 0.5rem;
+    margin-bottom: 0.1rem;
+  }
+
+  @include md {
+    padding-right: 0.75rem;
+    margin-bottom: 0.2rem;
+  }
+
+  @include lg {
+    padding-right: 1rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
+.forgotp {
   color: $green;
   text-decoration: none;
 

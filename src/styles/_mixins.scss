@@ -2,7 +2,6 @@
 
 // Small devices
 @mixin sm {
-  @debug variables.$screen-sm-min;
   @media (min-width: #{variables.$screen-sm-min}) {
     @content;
   }

@@ -18,14 +18,14 @@
           <div class="buttonContainer">
             <BaseNavButton
               id="signup"
-              route="/auth/signup"
+              route="/signup"
               :variant="isSignupRoute ? 'red-full' : 'empty'"
               width="7rem"
               >Signup</BaseNavButton
             >
             <BaseNavButton
               id="login"
-              route="/auth/login"
+              route="/login"
               :variant="isSignupRoute ? 'empty' : 'green-full'"
               width="7rem"
               >Login</BaseNavButton
@@ -45,7 +45,7 @@ import { useRoute } from 'vue-router'
 import BaseNavButton from '@/components/Global/BaseNavButton.vue'
 
 const route = useRoute()
-const isSignupRoute = computed(() => route.path === '/auth/signup')
+const isSignupRoute = computed(() => route.path === '/signup')
 </script>
 
 <style lang="scss" scoped>
@@ -61,7 +61,6 @@ const isSignupRoute = computed(() => route.path === '/auth/signup')
 .content-container {
   position: relative;
   display: flex;
-  justify-content: space-around;
   align-items: center;
   width: 80%;
   height: 90%;

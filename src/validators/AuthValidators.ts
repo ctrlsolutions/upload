@@ -1,8 +1,8 @@
-import { FormState, ErrorState } from '@/types/AuthInterface'
+import { LoginData, ErrorState } from '@/types/AuthInterface'
 
 export const validateField = (
-  form: FormState,
-  field: keyof FormState,
+  form: LoginData,
+  field: keyof LoginData,
 ): string => {
   if (field === 'email') {
     if (!form.email) {
@@ -21,9 +21,16 @@ export const validateField = (
   return ''
 }
 
-export const validateForm = (form: FormState): ErrorState => {
+export const validateForm = (form: LoginData): ErrorState => {
   return {
     email: validateField(form, 'email'),
     password: validateField(form, 'password'),
   }
+}
+
+export const validatePasswordMatch = (
+  password: string,
+  password2: string,
+): string | null => {
+  return password !== password2 ? 'Passwords do not match.' : null
 }

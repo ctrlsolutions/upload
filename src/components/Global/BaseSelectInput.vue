@@ -61,8 +61,8 @@ const iconStyle = computed(() => ({
   -webkit-appearance: none;
   -moz-appearance: none;
   padding: 0.5rem 2.5rem 0.5rem 0.8rem;
-  border: 0.15rem solid $red;
-  border-radius: 0.8rem;
+  border: 0.15px solid $red;
+  border-radius: 0.6rem;
   cursor: pointer;
   color: $red;
   width: 100%;
