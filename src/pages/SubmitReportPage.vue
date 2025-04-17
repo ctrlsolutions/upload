@@ -36,7 +36,7 @@
 
             <!-- Report Form -->
             <div class="form-container">
-                <component :is="AbstractForm" ref="formComponent" :fields = fields[reportType] />
+                <component :key="componentKey" :is="AbstractForm" ref="formComponent" :fields = fields[reportType] />
             </div>
 
             <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
@@ -101,6 +101,8 @@
     const formComponent = ref(null);
     const infoVisible = ref(false);
 
+    // fro resetting component
+    const componentKey = ref(0)
 
     // models define the key of json POST
     const fields = {
@@ -403,9 +405,9 @@
                 }
             });
 
-            // alert("Report submitted successfu lly!");
-            // selectedFiles.value = [];
-            // formComponent.value.reset?.();
+            alert("Report submitted successfully!");
+            componentKey.value += 1;
+            formComponent.value.reset?.();
 
         } catch (err) {
             console.error("Form submission failed:", err);
