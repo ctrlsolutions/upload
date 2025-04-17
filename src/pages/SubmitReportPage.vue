@@ -74,6 +74,13 @@
                 />
             </div>
 
+            <UploadModal
+                v-if="isModalVisible"
+                :initial-files="selectedFiles"
+                @close="closeModal"
+                @files-selected="handleFilesFromModal"
+            />
+
             <button class="file-upload-button" @click="uploadFiles">
                 <img src="../assets/oble_icon.png" alt="" style="margin-right: auto; margin-bottom: 0;" />
                 <span style="margin: 0 auto;">UPLOAD</span>
@@ -86,6 +93,7 @@
     import { ref } from "vue";
     import axios from "axios";
 
+    import UploadModal from "@/components/SubmitReport/UploadModal.vue";
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue";
 
@@ -294,6 +302,19 @@
     infoVisible.value = !infoVisible.value;
     };
 
+    const openModal = () => {
+        isModalVisible.value = true;
+    };
+
+    const closeModal = () => {
+        isModalVisible.value = false;
+    };
+
+    // Function to handle files selected in the modal (called by modal's 'files-selected' event)
+    const handleFilesFromModal = (files) => {
+        selectedFiles.value = files;
+        // closeModal(); // Modal closes itself after emitting 'files-selected'
+    };
 
     const formInformation = {
         research: "Project/program/work must be part of the approved Research/Creative Work agenda and endorsed by the Dean/Head of Unit and/or approved by the Chancellor/Authorized Official. Exclude student theses and dissertations. Researcher/s here refer to full-time faculty members, REPS and staff, whether with permanent, temporary or contractual appointment, who are in service still during the coverage years in review. Exclude from this data collection those projects/works led by lecturers or non-regular part-time staff.",
