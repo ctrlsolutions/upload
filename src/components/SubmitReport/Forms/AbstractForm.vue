@@ -116,15 +116,7 @@
     const result: Record<string, any> = {}
 
     props.fields.forEach(field => {
-      if (field.model == 'title'){
-        result['report'] = {
-          title: form[field.model]
-        }
-      }
-      else{
-        result[field.model] = form[field.model]
-      }
-      
+      result[field.model] = form[field.model]
     })
 
     return result
@@ -133,9 +125,53 @@
   defineExpose({ exposeForm })
 </script>
 
-<style scoped>
+<style lang="scss" scoped> 
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.form {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  margin-top: 2rem;
+
+  border-radius: 10px;
+  background: #FCFCFC;
+  box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
+  padding: 1.5rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
 .form-group {
   margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 8px;
+  padding-left: 2.7rem;
+  border: 0.15px solid $red;
+  border-radius: 10px;
+  outline: none;
+  color: $red;
+  margin-top: 10px;
+}
+
+.form-group input::placeholder {
+  color: $red;
+  font-weight: 600;
+  opacity: 0.4;
 }
 
 .error {

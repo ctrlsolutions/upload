@@ -56,9 +56,9 @@
                 @dragover.prevent
                 @drop.prevent="handleDrop"
             >
-                <div v-if="selectedFiles.length" v-for="file in selectedFiles" :key="file.name">
-                    <div class="file-icon-container">
-                        <v-icon name="bi-file-earmark-medical" scale="3.5" />
+                <div v-if="selectedFiles.length" v-for="(file, index) in selectedFiles" :key="index">
+                    <div class="file-icon-container" @click="deleteFile(index)">
+                        <v-icon name="bi-file-earmark-medical" scale="3.5" class="file-icon"/>
                         <p class="file-name">{{ file.name }}</p>
                     </div>
                 </div>
@@ -66,13 +66,14 @@
                 <!-- <div style="opacity: 0.5">or</div> -->
                 <!-- <button class="choose-file-button" @click="triggerFileInput">Choose Files</button> -->
                 <input
-                type="file"
-                ref="fileInput"
-                multiple
-                style="display: none"
-                @change="handleFileChange"
+                    type="file"
+                    ref="fileInput"
+                    multiple
+                    style="display: none"
+                    @change="handleFileChange"
                 />
             </div>
+            <!-- <button class="file-upload-button" @click="uploadFiles">
 
             <UploadModal
                 v-if="isModalVisible"
@@ -84,22 +85,30 @@
             <button class="file-upload-button" @click="uploadFiles">
                 <img src="../assets/oble_icon.png" alt="" style="margin-right: auto; margin-bottom: 0;" />
                 <span style="margin: 0 auto;">UPLOAD</span>
-            </button>
+            </button> -->
         </div>
     </div>
 </template>
   
 <script setup>
     import { ref } from "vue";
-    import axios from "axios";
 
     import UploadModal from "@/components/SubmitReport/UploadModal.vue";
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue";
 
+    // import ProgressBar from 'primevue/progressbar'; TODO: later
+    // import axios from "axios" use this for progressbar support
+
     const reportType = ref('research');
     const formComponent = ref(null);
     const infoVisible = ref(false);
+
+    const submissionData = new FormData();
+
+    // File upload logic
+    const fileInput = ref(null);
+    const selectedFiles = ref([]);
 
     // fro resetting component
     const componentKey = ref(0)
@@ -134,8 +143,10 @@
                 component: 'select', 
                 isRequired: false, 
                 options:[
-                    { value: 'haha', label: 'haha' },
-                    { value: 'sda', label: 'sda' }
+                    { value: 'up-entity', label: 'Local' },
+                    { value: 'rp-governemnt-entity-or-public-sector-entity', label: 'RP Government Entity or Public Sector Entity' },
+                    { value: 'rp-private-sector-entity', label: 'RP Private Sector Entity' },
+                    { value: 'foreign-or-nondomestic-entity', label: 'Foreign or Non-Domestic Entity' },
                 ]},
         ], // [TODO]: name should be arrayed
         publication: [
@@ -296,12 +307,11 @@
             { label: 'Number of Responses - Very Satisfactory', model: 'responses_very_satisfactory', component: 'number', isRequired: false },
             { label: 'Number of Responses - Outstanding', model: 'responses_outstanding', component: 'number', isRequired: false },
         ], // [TODO]: recheck
-
         // [TODO]: check which are required.
     }
 
     const toggleInfo = () => {
-    infoVisible.value = !infoVisible.value;
+        infoVisible.value = !infoVisible.value;
     };
 
     const openModal = () => {
@@ -330,322 +340,240 @@
         other: "Other Form",
     };
 
-    // File upload logic
-    const fileInput = ref(null);
-    const selectedFiles = ref([]);
-
-    const triggerFileInput = () => {
-    fileInput.value?.click();
-    };
+    const deleteFile = (index) => {
+        selectedFiles.value.splice(index,1);
+    }
 
     const handleFileChange = (event) => {
-    selectedFiles.value = [...event.target.files];
+        selectedFiles.value = [...event.target.files];
     };
 
     const handleDrop = (event) => {
-    if (event.dataTransfer?.files?.length) {
-        selectedFiles.value = [...event.dataTransfer.files];
-    }
-    };
-
-    const uploadFiles = () => {
-        if (!selectedFiles.value.length) {
-            alert("No files selected.");
-            return;
+        if (event.dataTransfer?.files?.length) {
+            selectedFiles.value.push(...event.dataTransfer.files);
         }
-
-        const formData = new FormData();
-
-        selectedFiles.value.forEach(file => {
-            formData.append("files[]", file);
-        });
-
-        // This is where you'd send to your backend
-        console.log("Files ready to upload:", selectedFiles.value);
-
-        // Example:
-        // await axios.post('/api/upload', formData);
+        console.log(selectedFiles)
     };
 
     const handleSubmit = async () => {
         const formValues = formComponent.value.exposeForm();
 
-        if (!formValues) {
-            alert("Form is not ready.");
-            return;
+        if(!formValues){
+            alert('Form is not ready.')
+            return
         }
-
-        try {
-            // const submissionData = new FormData();
-            const submissionData = formValues;
-
-            // for (const key in formValues) {
-            //     if (formValues[key] !== null && formValues[key] !== undefined) {
-            //         submissionData.append(key, formValues[key]);
-            //     }
-            // }
-
-            // if (selectedFiles.value?.length) {
-            //     selectedFiles.value.forEach(file => {
-            //         submissionData.append("supporting_files[]", file);
-            //     });
-            // }
-
-
-
-            // console.log("Preparing to submit form with files...");
-            // for (let [key, value] of submissionData.entries()) {
-            //     console.log(`${key}:`, value);
-            // }
-            console.log(JSON.stringify(submissionData, null, 2));
-
-            await axios.post(`http://localhost:8000/api/report/${reportType.value}/`, submissionData, {
-                headers: {
-                    'Content-Type': 'application/json', // change this to formdata
-                }
+        selectedFiles.value.forEach(file => {
+            submissionData.append('supporting_document',file);
+        });
+        for (const [key, value] of submissionData.entries()) {
+            console.log(key, value);
+        }
+        for (let key in formValues){
+            submissionData.append(key,formValues[key]);
+        }
+        try {  
+            const response = await fetch(`http://localhost:8000/api/report/${reportType.value}/`, {
+                method: 'POST',
+                body: submissionData,
             });
 
             alert("Report submitted successfully!");
+            console.log(response)
+
+            selectedFiles.value = [];
             componentKey.value += 1;
             formComponent.value.reset?.();
-
         } catch (err) {
             console.error("Form submission failed:", err);
             alert("Submission failed. Please try again.");
         }
     };
-
-
 </script>
   
 
 <style lang="scss" scoped>
-.container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: flex-start;
-    align-items: end;
-    padding: 2vw;
-}
+    .file-icon:hover {
+        color: rgb(191, 0, 0);
+    }
 
-.folder-container {
-    flex-shrink: 0;
-    background: white;
-    width: 650px;
-    height: 87vh;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    padding: 2rem;
+    .container {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: flex-start;
+        align-items: end;
+        padding: 2vw;
+    }
 
-    display: flex;
-    flex-direction: column;
-}
+    .folder-container {
+        flex-shrink: 0;
+        background: white;
+        width: 650px;
+        height: 87vh;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+        padding: 2rem;
 
-.folder-tab {
-    position: absolute;
-    top: -7vh;
-    left: 0%;
-    background: url(@/assets/tab.png) no-repeat left center;
-    background-size: 100% 80%;
-    font-weight: bold;
-    color: darkgreen;  
-    height: 12vh;
-    width: 45%;
-    padding-left: 5%;    
-    padding-top: 4%;
-}
+        display: flex;
+        flex-direction: column;
+    }
 
-
-.file-drop-area-container {
-    height: 87vh;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    padding: 2rem;
-    margin-left: 2vw;
-    margin-right: 2vw;
-    flex-grow: 1;
-
-    display: flex;
-    flex-direction: column;
+    .folder-tab {
+        position: absolute;
+        top: -7vh;
+        left: 0%;
+        background: url(@/assets/tab.png) no-repeat left center;
+        background-size: 100% 80%;
+        font-weight: bold;
+        color: darkgreen;  
+        height: 12vh;
+        width: 45%;
+        padding-left: 5%;    
+        padding-top: 4%;
+    }
 
 
-}
+    .file-drop-area-container {
+        height: 87vh;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        margin-left: 2vw;
+        margin-right: 2vw;
+        flex-grow: 1;
 
-.drop-area-head {
-    color: $red;
-}
+        display: flex;
+        flex-direction: column;
 
-.drop-area {
-    width: 100%;
-    border: 1px dashed $green;
-    color: $green;
-    border-radius: 10px;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-size: medium;
-    font-weight: 900;
-    align-self: center;
-    padding: 1rem;
 
-    display: flex;
-    position: relative;
+    }
 
-    flex-grow: 1;
-}
+    .drop-area-head {
+        color: $red;
+    }
 
-.drop-area-desc {
-    width: 100%;
-    font-size: smaller;
-    margin-top: 5px;
-}
+    .drop-area {
+        width: 100%;
+        border: 1px dashed $green;
+        color: $green;
+        border-radius: 10px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        font-size: medium;
+        font-weight: 900;
+        align-self: center;
+        padding: 1rem;
 
-.choose-file-button {
-    background-color: $red;
-    color: white;
-    font-weight: bolder;
-    padding: 8px;
-    padding-left: 12px;
-    padding-right: 12px;
-    border: none;
-    border-radius: 5px;
+        display: flex;
+        position: relative;
 
-}
+        flex-grow: 1;
+    }
 
-.file-upload-button {
-    margin-top: auto;
-    width: 80%;
-    height: 40px;
-    background-color: $red;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    align-self: center;
-    
-}
+    .drop-area-desc {
+        width: 100%;
+        font-size: smaller;
+        margin-top: 5px;
+    }
 
-.title-container {
-    font-weight: bold;
-    font-size: 1.2rem;
-    color: $green;
-}
+    .choose-file-button {
+        background-color: $red;
+        color: white;
+        font-weight: bolder;
+        padding: 8px;
+        padding-left: 12px;
+        padding-right: 12px;
+        border: none;
+        border-radius: 5px;
 
-.info-container {
-    margin-top: 1rem;
-    border: 3px solid rgba(152, 155, 0, 0.58);
-    background: rgba(255, 238, 0, 0.12);
-    padding: 1rem;
-    color: rgba(0, 0, 0, 0.648);
+    }
 
-    display: flex;
-    align-items: center;
-}
-.info-text {
-    margin-left: 1rem;
-}
-.info-icon {
-  height: 2rem;
-  margin-left: 1rem;
+    .file-upload-button {
+        margin-top: auto;
+        width: 80%;
+        height: 40px;
+        background-color: $red;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        align-self: center;
+        
+    }
 
-}
+    .title-container {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: $green;
+    }
 
-.folder-head {
-    display: flex;
-}
+    .info-container {
+        margin-top: 1rem;
+        border: 3px solid rgba(152, 155, 0, 0.58);
+        background: rgba(255, 238, 0, 0.12);
+        padding: 1rem;
+        color: rgba(0, 0, 0, 0.648);
 
-.form-container {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    margin-bottom: 2rem;
-}
-    
-.submit-btn {
-    width: 100%;
-    background: $red;
-    color: white;
-    padding: 10px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: auto;
-}
+        display: flex;
+        align-items: center;
+    }
+    .info-text {
+        margin-left: 1rem;
+    }
+    .info-icon {
+        height: 2rem;
+        margin-left: 1rem;
+    }
 
-:deep(.form) {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow-y: scroll;
-    margin-top: 2rem;
+    .folder-head {
+        display: flex;
+    }
 
-    border-radius: 10px;
-    background: #FCFCFC;
-    box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
-    padding: 1.5rem;
-    padding-left: 2rem;
-    padding-right: 2rem;
-}
+    .form-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        margin-bottom: 2rem;
+    }
+        
+    .submit-btn {
+        width: 100%;
+        background: $red;
+        color: white;
+        padding: 10px;
+        font-weight: bold;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: auto;
+    }
 
-:deep(.form-group) {
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-}
+    .drag-area-divs {
+        opacity: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
-:deep(.form-group label) {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
+    .file-icon-container {
+        display: flex;
+        flex-direction: column;
 
-:deep(.form-group input) {
-    padding: 8px;
-    padding-left: 2.7rem;
-    border: 0.15px solid $red;
-    border-radius: 10px;
-    outline: none;
-    color: $red;
-    margin-top: 10px;
-}
+        justify-content: center;
+        max-width: 70px;
+        margin: 0.5rem;
 
-:deep(.form-group input::placeholder) {
-    color: $red;
-    font-weight: 600;
-    opacity: 0.4;
-}
+        z-index: 100;
+    }
 
-:deep(.error) {
-    color: red;
-    font-size: 0.8rem;
-}
-
-.drag-area-divs {
-    opacity: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.file-icon-container {
-    display: flex;
-    flex-direction: column;
-
-    justify-content: center;
-    max-width: 70px;
-    margin: 0.5rem;
-
-    z-index: 100;
-}
-
-.file-name {
-    font-size: 0.7rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-}
+    .file-name {
+        font-size: 0.7rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+    }
 </style>
