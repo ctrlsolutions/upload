@@ -16,6 +16,10 @@ export default [
         ecmaVersion: 2021,
         sourceType: 'module',
       },
+      env: {
+        browser: true,
+        es2021: true,
+      }
     },
     plugins: {
       vue: pluginVue,
