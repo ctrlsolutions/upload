@@ -5,7 +5,6 @@ import AuthPagesLayout from '@/layouts/AuthPagesLayout.vue'
 import LandingPage from '@/pages/LandingPage.vue'
 import DashboardPage from '@/pages/DashboardPage.vue'
 import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
-import ReportHistory from '@/pages/ReportHistoryPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
 import { isAuthenticated } from '@/services/AuthService'
 import SettingsPage from '@/pages/SettingsPage.vue'
@@ -36,7 +35,6 @@ const router = createRouter({
       redirect: '/landing',
       children: [
         { path: 'report', component: LogInPage },
-        { path: 'report-history', component: ReportHistory },
         {
           path: ':username/profile',
           component: ProfilePage,
