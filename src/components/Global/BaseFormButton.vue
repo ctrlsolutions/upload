@@ -5,6 +5,7 @@
       :style="buttonStyle"
       v-bind="attrs"
       @click="handleClick"
+      tabindex="0"
     >
       <slot></slot>
     </button>
@@ -110,5 +111,6 @@ const buttonStyle = computed(() => ({
 .form-button:focus {
   outline: 0.125rem solid $white;
   outline-offset: 0.125rem;
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
 }
 </style>

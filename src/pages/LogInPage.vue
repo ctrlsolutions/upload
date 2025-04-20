@@ -42,7 +42,7 @@
     <div class="input-group" id="google-login">
       <GoogleLogin :callback="handleGoogleLogin">
         <FormButton variant="red" width="100%" type="button">
-          CONTINUE WITH GOOGLE
+          <v-icon name="fc-google" style="margin-right: 0.5rem;" scale="1.1"></v-icon>CONTINUE WITH GOOGLE
         </FormButton>
       </GoogleLogin>
     </div>
@@ -150,6 +150,10 @@ onMounted(async () => {
   margin: -0.9rem;
 }
 
+.icon-margin-right {
+  margin-right: 0.5rem;
+}
+
 .login-container {
   display: flex;
   flex-direction: column;
@@ -177,7 +181,7 @@ onMounted(async () => {
   text-align: center;
   font-size: 2rem;
   font-weight: 900;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 }
 
 #title {

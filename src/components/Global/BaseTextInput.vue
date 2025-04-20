@@ -9,6 +9,7 @@
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       v-bind="$attrs"
+      autocomplete="off"
     />
     <label :for="id" class="input-label">{{ placeholder }}</label>
   </div>
@@ -73,6 +74,7 @@ export default {
   font-family: 'Inter', serif;
   height: fit-content;
   border-radius: 0.6rem;
+
   @include sm {
     width: 15rem;
     padding: 0.6rem 0.6rem;
@@ -101,6 +103,7 @@ export default {
     outline: none;
     font-weight: 850;
     color: $red;
+    background-color: white;
 
     &::placeholder {
       color: transparent;
@@ -113,6 +116,7 @@ export default {
     outline: none;
     font-weight: bold;
     color: $green;
+    background-color: white;
 
     &::placeholder {
       color: transparent;
@@ -130,7 +134,8 @@ export default {
   pointer-events: none;
   transition: all 0.2s ease;
   background-color: white;
-  padding: 0 0.4rem;
+  padding-left: 0.4rem;
+  padding-right: 0.4rem;
   z-index: 1000;
 
   &--red {
@@ -144,7 +149,7 @@ export default {
 
 .input-box:focus + .input-label,
 .input-box:not(:placeholder-shown) + .input-label {
-  top: 0;
+  top: 0rem;
   font-size: 0.8em;
   transform: translateY(-50%);
 }
