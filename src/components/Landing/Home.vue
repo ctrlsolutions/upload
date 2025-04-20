@@ -10,10 +10,10 @@
     </div>
     <div class="subtitle">Honor, Excellence, Service</div>
     <div class="buttons">
-      <BaseNavButton route="/login" variant="red-full">
+      <BaseNavButton route="/login" variant="red-full" class="login-btn">
         Log in
       </BaseNavButton>
-      <BaseNavButton route="/signup" variant="green-outline">
+      <BaseNavButton route="/signup" variant="green-outline" class="signup-btn">
         Sign up
       </BaseNavButton>
     </div>
@@ -87,5 +87,13 @@ export default {
   flex-direction: row;
   gap: 1rem;
   margin-top: 1.875rem;
+}
+.login-btn:hover {
+  opacity: 0.9;
+}
+.signup-btn:hover {
+ background-color: #e7ffeb;
+ opacity: 0.9;
+ transition: background-color 0.3s ease, color 0.3s ease, opacity 0.3s ease;
 }
 </style>

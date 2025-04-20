@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="signup-container" :key="formKey" @submit.prevent="submitForm">
+    <form class="signup-container" @submit.prevent="submitForm">
       <h1 class="title">Sign up</h1>
       <p class="subtitle">New here? Create a new account below.</p>
       <div class="form-wrapper">
@@ -78,15 +78,15 @@
         </div>
       </div>
       <div class="button-group">
-        <FormButton variant="black" width="12rem" type="button" @click="resetForm">RESET</FormButton>
-        <FormButton variant="red" width="12rem" type="submit">SUBMIT</FormButton>
+        <BaseFormButton variant="black" width="12rem" type="button" @click="resetForm">RESET</BaseFormButton>
+        <BaseFormButton variant="red" width="12rem" type="submit">SUBMIT</BaseFormButton>
       </div>
     </form>
     <p class="or-text">OR</p>
     <GoogleLogin :callback="googleSignUp" popup-type="TOKEN">
-      <FormButton variant="red" width="25rem" type="button">
+      <BaseFormButton variant="red" width="25rem" type="button">
         <v-icon name="fc-google" scale="1.2"></v-icon>
-        CONTINUE WITH GOOGLE</FormButton
+        CONTINUE WITH GOOGLE</BaseFormButton
       >
     </GoogleLogin>
   </div>
@@ -104,7 +104,7 @@ import { ref } from 'vue'
 import { validatePasswordMatch } from '@/validators/AuthValidators'
 import { signupUser, googleSignup } from '@/services/AuthService'
 import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
-import FormButton from '@/components/Global/BaseFormButton.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import FormRadio from '@/components/Global/BaseFormRadio.vue'
 import InputField from '@/components/Global/BaseTextInput.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
@@ -182,24 +182,15 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   }
 }
 
-const formKey = ref(0)
-
 const resetForm = () => {
-  userData.value = {
-    email: '',
-    password: '',
-    password2: '',
-    first_name: '',
-    middle_name: '',
-    last_name: '',
-    sex: '',
-    birthdate: '',
-  }
-  signupSuccess.value = ''
-  signupError.value = ''
-  passwordError.value = null
-
-  formKey.value++;
+  userData.value.email = '';
+  userData.value.password = '';
+  userData.value.password2 = '';
+  userData.value.first_name = '';
+  userData.value.middle_name = '';
+  userData.value.last_name = '';
+  userData.value.sex = '';
+  userData.value.birthdate = '';
 }
 </script>
 
