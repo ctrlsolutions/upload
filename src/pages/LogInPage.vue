@@ -147,7 +147,7 @@ onMounted(async () => {
 .error-message {
   color: $red;
   font-size: 0.75rem;
-  margin: -0.9rem;
+  margin: -0.9rem 0;
 }
 
 .login-container {
@@ -239,8 +239,8 @@ onMounted(async () => {
 }
 
 .forgot-password {
-  width: 100%;
-  text-align: right;
+  width: 9rem;
+  margin-left: auto;
   margin-top: -0.5rem;
   padding-right: 1rem;
 
@@ -258,13 +258,9 @@ onMounted(async () => {
     padding-right: 1rem;
     margin-bottom: 0.3rem;
   }
-}
-
-.forgotp {
-  color: $green;
-  text-decoration: none;
 
   &:hover {
+    color: $green;
     text-decoration: underline;
     background-color: transparent;
   }
