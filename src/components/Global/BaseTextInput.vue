@@ -2,38 +2,20 @@
   <div class="input-container">
     <input
       :id="id"
-      :type="isPasswordVisible ? 'text' : type"
+      :type="type"
       :class="['input-box', variantClass]"
       :style="boxStyle"
       :placeholder="placeholder"
       :value="modelValue"
-      @input="$emit('update:modelValue', $event.target?.value)"
+      @input="$emit('update:modelValue', $event.target?.value || '')"
       v-bind="$attrs"
     />
     <label :for="id" class="input-label">{{ placeholder }}</label>
-    <BiEyeSlashFill
-      v-if="type === 'password' && isPasswordVisible"
-      class="password-icon"
-      @click="togglePasswordVisibility"
-      aria-label="Hide password"
-    />
-    <BiEye
-      v-if="type === 'password' && !isPasswordVisible"
-      class="password-icon"
-      @click="togglePasswordVisibility"
-      aria-label="Show password"
-    />
   </div>
 </template>
 
 <script>
-import { BiEyeSlashFill, BiEye } from "oh-vue-icons/icons";
-
 export default {
-  components: {
-    BiEyeSlashFill,
-    BiEye,
-  },
   props: {
     id: {
       type: String,
@@ -41,53 +23,44 @@ export default {
     },
     type: {
       type: String,
-      default: "text",
+      default: 'text',
     },
     placeholder: {
       type: String,
-      default: "Placeholder",
+      default: 'Placeholder',
     },
     variant: {
       type: String,
-      default: "red",
+      default: 'red',
     },
     width: {
       type: String,
-      default: "null",
+      default: 'null',
     },
     height: {
       type: String,
-      default: "null",
+      default: 'null',
     },
     modelValue: {
       type: String,
-      default: "",
+      default: '',
     },
-  },
-  data() {
-    return {
-      isPasswordVisible: false,
-    };
   },
   computed: {
     variantClass() {
-      return `input-box--${this.variant}`;
+      return `input-box--${this.variant}`
     },
     boxStyle() {
-      const styles = { height: this.height };
+      const styles = { height: this.height }
       if (this.width) {
-        styles.width = this.width;
+        styles.width = this.width
       }
-      return styles;
+      return styles
     },
   },
-  methods: {
-    togglePasswordVisibility() {
-      this.isPasswordVisible = !this.isPasswordVisible;
-    },
-  },
-};
+}
 </script>
+
 
 <style lang="scss" scoped>
 .input-container {
@@ -158,7 +131,7 @@ export default {
   transition: all 0.2s ease;
   background-color: white;
   padding: 0 0.4rem;
-  z-index: 1;
+  z-index: 1000;
 
   &--red {
     color: $red;
@@ -174,19 +147,5 @@ export default {
   top: 0;
   font-size: 0.8em;
   transform: translateY(-50%);
-}
-
-.password-icon {
-  position: absolute;
-  top: 50%;
-  right: 0.6rem;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #999;
-
-  &:hover {
-    color: #333;
-  }
 }
 </style>
