@@ -21,7 +21,7 @@
                         { value: 'training', label: 'Training Course and/or Advisory Service' },
                         { value: 'extension', label: 'Extension Program' },
                         { value: 'partnership', label: 'Partnership with Stakeholder' },
-                        { value: 'other', label: 'Other' }
+                        { value: 'others', label: 'Other' }
                     ]"
                 />
                 <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo" />
@@ -203,7 +203,7 @@
         paper_presentation: [
             {
                 label: 'Research Project/Program/Work Title',
-                model: 'research_title',
+                model: 'title',
                 component: 'select',
                 placeholder: 'Select Research Title',
                 isRequired: true,
@@ -218,7 +218,7 @@
                     { value: 'Other', label: 'Other' },
                 ]
             },
-            { label: 'Title of Paper Presented', model: 'paper_title', component: 'text', placeholder: 'Title of Paper Presented', isRequired: true },
+            { label: 'Title of Paper Presented', model: 'presented_paper_title', component: 'text', placeholder: 'Title of Paper Presented', isRequired: true },
             {
                 label: 'Type of Presentation',
                 model: 'presentation_type',
@@ -233,7 +233,7 @@
             { label: 'Name of Organizer', model: 'organizer_name', component: 'text', placeholder: 'Name of Organizer', isRequired: true },
             {
                 label: 'Location of Conference',
-                model: 'conference_location_type',
+                model: 'conference_location',
                 component: 'select',
                 isRequired: true,
                 options: [
@@ -243,29 +243,14 @@
                     { value: 'International', label: 'International' },
                 ]
             },
-            { label: 'Venue, City and Country', model: 'conference_venue', component: 'text', placeholder: 'Venue, City and Country', isRequired: true },
+            { label: 'Venue, City and Country', model: 'venue', component: 'text', placeholder: 'Venue, City and Country', isRequired: true },
             { label: 'Conference Start Date', model: 'conference_start_date', component: 'date', isRequired: true },
             { label: 'Conference End Date', model: 'conference_end_date', component: 'date', isRequired: true },
             { label: 'Date of Presentation', model: 'presentation_date', component: 'date', isRequired: true },
         ],
         patent: [
-            {
-                label: 'Title of Patent',
-                model: 'patent_title',
-                component: 'select',
-                placeholder: 'Select Patent Title',
-                isRequired: true,
-                options: [
-                    // Options will be dynamically populated based on Research data
-                    { value: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines', label: 'Project ISAAC: Isolation, Screening, and Antimicrobial Activity of Compounds from Actinobacteria in Mainit Hot Springs, Cebu, Philippines' },
-                    { value: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks', label: 'An Edge-Based Model of SEIR Epidemics on Static Random Networks' },
-                    { value: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra', label: 'On dual B-filters and Dual B-subalgebras in a Topolological Dual B-algebra' },
-                    { value: 'Survey of Heatwaves in the Philippine Seas', label: 'Survey of Heatwaves in the Philippine Seas' },
-                    { value: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf', label: 'Relationship between pearl formation and associated biofouling organisms in the pearl oysters of the Arabian Gulf' },
-                    { value: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas', label: 'Impacts of heatwaves and toxic algal blooms on the physiological performance and future aquaculture of the oysters Ostrea edulis and Magallana (Crassostrea) gigas' },
-                    { value: 'Other', label: 'Other' },
-                ]
-            },
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { label: 'Patent Title', model: 'patent_title', component: 'text', placeholder: 'Title', isRequired: true },
             {
                 label: 'Type of Patent',
                 model: 'patent_type',
@@ -277,9 +262,9 @@
                     { value: 'Industrial Design', label: 'Industrial Design' },
                 ]
             },
-            { label: 'Application Number', model: 'application_number', component: 'text', placeholder: 'Application Number', isRequired: true },
-            { label: 'Name of Inventor/s', model: 'inventors', component: 'text', placeholder: 'Name of Inventor/s', isRequired: true },
-            { label: 'Name of Applicant/Owner/s', model: 'applicants', component: 'text', placeholder: 'Name of Applicant/Owner/s', isRequired: true },
+            { label: 'Application Number', model: 'application_no', component: 'text', placeholder: 'Application Number', isRequired: true },
+            { label: 'Name of Inventor/s', model: 'inventors_name', component: 'text', placeholder: 'Name of Inventor/s', isRequired: true },
+            { label: 'Name of Applicant/Owner/s', model: 'owner_name', component: 'text', placeholder: 'Name of Applicant/Owner/s', isRequired: true },
             { label: 'Date of Publication of the Unexamined Application', model: 'publication_date', component: 'date', isRequired: true },
             { label: 'Date of Grant of Patent', model: 'grant_date', component: 'date', placeholder: 'Leave blank if patent has not been granted.', isRequired: false },
             { label: 'Registration Number', model: 'registration_number', component: 'text', placeholder: 'Leave blank if patent has not been granted.', isRequired: false },
@@ -302,43 +287,57 @@
                 ]
             },
         ], // [TODO]: bug on title input
+        other_research: [
+            { label: 'Output Title', model: 'title', component: 'text', isRequired: true },
+            { label: 'Type of Output', model: 'output_type', component: 'text', isRequired: true },
+            { label: 'Type of Public Event', model: 'public_event_type', component: 'text', isRequired: true },
+            { label: 'Event Title', model: 'event_title', component: 'text', isRequired: true },
+            { label: 'Organizer Name', model: 'organizer_name', component: 'text', isRequired: true },
+            { label: 'Event Venue', model: 'event_venue', component: 'text', isRequired: true },
+            { label: 'Event Location', model: 'event_location', component: 'text', isRequired: true },
+            { label: 'Event Start Date', model: 'event_start_date', component: 'date', isRequired: true },
+            { label: 'Event End Date', model: 'event_end_date', component: 'date', isRequired: true },
+            { label: 'First Shown/Released to Public Date', model: 'output_firstshownorreleasedtopublic_date', component: 'date', isRequired: true },
+            { label: 'Industry Utilization', model: 'industry_utilization', component: 'text', isRequired: false },
+        ],
         training: [
-            {
-                label: 'Type of Activity',
-                model: 'activity_type',
-                component: 'select',
-                isRequired: true,
-                options: [
-                    { value: 'Training Course (non-degree and non-credit)', label: 'Training Course (non-degree and non-credit)' },
-                    { value: 'Advisory Service', label: 'Advisory Service' },
-                ]
-            },
-            { label: 'Title of Training Course/Advisory Service Conducted', model: 'title', component: 'text', placeholder: 'Title of Training Course/Advisory Service Conducted', isRequired: true },
-            { label: 'Venue, City, Municipality and Province', model: 'venue', component: 'text', placeholder: 'Venue, City, Municipality and Province', isRequired: true },
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { label: 'Activity Type', model: 'activity_type', component: 'text', isRequired: true },
+            { label: 'Course or Service Title', model: 'course_or_service_title', component: 'text', isRequired: true },
+            { label: 'Venue', model: 'venue', component: 'text', isRequired: true },
             { label: 'Start Date', model: 'start_date', component: 'date', isRequired: true },
             { label: 'End Date', model: 'end_date', component: 'date', isRequired: true },
-            { label: 'Special Notes about the Schedule', model: 'schedule_notes', component: 'textarea', placeholder: 'Provide special notes about the schedule...', isRequired: false },
-            { label: 'Number of Hours Required to Complete This Training Course', model: 'total_hours', component: 'number', placeholder: 'Specify in hours only', isRequired: false },
-            { label: 'Total Number of Trainees/Persons Served', model: 'total_served', component: 'number', isRequired: true },
-            {
-                label: 'Source of Majority Share of Funding for this Training Course/Advisory Service',
-                model: 'funding_source',
-                component: 'select',
-                isRequired: true,
-                options: [
-                    { value: 'UP Entity', label: 'UP Entity' },
-                    { value: 'RP Government Entity or Public Sector Entity', label: 'RP Government Entity or Public Sector Entity' },
-                    { value: 'RP Private Sector Entity', label: 'RP Private Sector Entity' },
-                    { value: 'Foreign or Non-Domestic Entity', label: 'Foreign or Non-Domestic Entity' },
-                ]
-            },
-            { label: 'Number of Responses - Poor/Below Fair', model: 'responses_poor', component: 'number', isRequired: false },
-            { label: 'Number of Responses - Fair', model: 'responses_fair', component: 'number', isRequired: false },
-            { label: 'Number of Responses - Satisfactory', model: 'responses_satisfactory', component: 'number', isRequired: false },
-            { label: 'Number of Responses - Very Satisfactory', model: 'responses_very_satisfactory', component: 'number', isRequired: false },
-            { label: 'Number of Responses - Outstanding', model: 'responses_outstanding', component: 'number', isRequired: false },
-        ], // [TODO]: recheck
-        // [TODO]: check which are required.
+            { label: 'Schedule Notes', model: 'schedule_special_notes', component: 'text', isRequired: false },
+            { label: 'Hours Required', model: 'hours_required_to_complete', component: 'number', isRequired: false },
+            { label: 'Number of Trainees Served', model: 'number_of_trainees_served', component: 'number', isRequired: false },
+            { label: 'Source of Funding', model: 'source_of_funding', component: 'text', isRequired: false },
+        ],
+        extension: [
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { label: 'Components', model: 'components', component: 'text', isRequired: true },
+            { label: 'Scope', model: 'scope', component: 'text', isRequired: true },
+            { label: 'Start Date', model: 'start_date', component: 'date', isRequired: true },
+            { label: 'End Date', model: 'end_date', component: 'date', isRequired: true },
+            { label: 'Target Beneficiary Group', model: 'target_beneficiary_group', component: 'text', isRequired: true },
+            { label: 'Beneficiaries Served', model: 'tbg_served', component: 'number', isRequired: false },
+            { label: 'Source of Funding', model: 'source_of_funding', component: 'text', isRequired: false },
+        ],
+        partnership: [
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { label: 'Extension Activities under Partnership', model: 'type_of_extension_activities_under_this_partnership', component: 'text', isRequired: true },
+            { label: 'Extension Partnership Title', model: 'extension_partnership_title', component: 'text', isRequired: true },
+            { label: 'Scope of Work (UP)', model: 'up_scope_of_work', component: 'text', isRequired: true },
+            { label: 'Partner/Stakeholder Name', model: 'partner_stakeholder_name', component: 'text', isRequired: true },
+            { label: 'Stakeholder Category', model: 'stakeholder_category', component: 'text', isRequired: true },
+            { label: 'Partnership Agreement Type', model: 'partnership_agreement_type', component: 'text', isRequired: true },
+            { label: 'Agreement Start Date', model: 'partnership_agreement_effectivity_start_date', component: 'date', isRequired: true },
+            { label: 'Agreement End Date', model: 'partnership_agreement_effectivity_end_date', component: 'date', isRequired: false },
+        ],
+        others: [
+            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
+            { label: 'Description', model: 'description', component: 'text', isRequired: true },
+        ],
+
     }
 
     const toggleInfo = () => {
@@ -407,7 +406,9 @@
                 method: 'POST',
                 body: submissionData,
             });
-
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             alert("Report submitted successfully!");
             console.log(response)
 
