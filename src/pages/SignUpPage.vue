@@ -78,7 +78,7 @@
         </div>
       </div>
       <div class="button-group">
-        <BaseFormButton variant="black" width="12rem" type="button" @click="resetForm">RESET</BaseFormButton>
+        <BaseFormButton variant="black" width="12rem" type="button" @click.once="resetForm">RESET</BaseFormButton>
         <BaseFormButton variant="red" width="12rem" type="submit">SUBMIT</BaseFormButton>
       </div>
     </form>
