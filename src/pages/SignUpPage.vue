@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <form class="signup-container" @submit.prevent="submitForm">
+    <form class="signup-container" :key="formKey" @submit.prevent="submitForm">
       <h1 class="title">Sign up</h1>
       <p class="subtitle">New here? Create a new account below.</p>
       <div class="form-wrapper">
@@ -78,10 +78,8 @@
         </div>
       </div>
       <div class="button-group">
-        <FormButton variant="black" width="12rem">CANCEL</FormButton>
-        <FormButton variant="red" width="12rem" type="submit"
-          >SUBMIT</FormButton
-        >
+        <FormButton variant="black" width="12rem" type="button" @click="resetForm">RESET</FormButton>
+        <FormButton variant="red" width="12rem" type="submit">SUBMIT</FormButton>
       </div>
     </form>
     <p class="or-text">OR</p>
@@ -182,6 +180,26 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   } else {
     toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
   }
+}
+
+const formKey = ref(0)
+
+const resetForm = () => {
+  userData.value = {
+    email: '',
+    password: '',
+    password2: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    sex: '',
+    birthdate: '',
+  }
+  signupSuccess.value = ''
+  signupError.value = ''
+  passwordError.value = null
+
+  formKey.value++;
 }
 </script>
 
