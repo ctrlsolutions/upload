@@ -151,8 +151,7 @@
         ], // [TODO]: name should be arrayed
         publication: [
             { label: 'Publication Title', model: 'title', component: 'text', placeholder: 'title', isRequired: true },
-            { label: 'Type of Publication', model: 'publication_title', component: 'text', placeholder: 'title', isRequired: true },
-            { label: 'Author/Co-Authors', model: 'publicatin_type', component: 'text', placeholder: 'Name', isRequired: true },
+            { label: 'Author/Co-Authors', model: 'author_names', component: 'text', placeholder: 'Name', isRequired: true },
             { label: 'Published or Accepted for Publication', model: 'publication_date', component: 'date', isRequired: true },
             { 
                 label: 'Name of Journal/Book/Conference Publication/Other Publication', 
@@ -160,8 +159,40 @@
                 component: 'text',
                 isRequired: true 
             },
-            { label: 'Type of Publisher', model: 'publisher_type', component: 'select', isRequired: true },
-            { label: 'Location of Publisher', model: 'publisher_location', component: 'select', options: [{value: 'local', label: 'Local'},{value: 'internationl', label: 'International'}], isRequired: true },
+            {
+                label: 'Type of Publication',
+                model: 'publication_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'PEER_REVIEWED_JOURNAL_ARTICLE', label: 'Peer Reviewed Journal Article' },
+                    { value: 'BOOK', label: 'Book' },
+                    { value: 'EDITED_OR_PEER_REVIEWED_BOOK_CHAPTER', label: 'Edited or Peer Reviewed Book Chapter' },
+                    { value: 'PEER_REVIEWED_CONFERENCE_PAPER_PUBLICATION', label: 'Peer Reviewed Conference Paper Publication' },
+                    { value: 'OTHER', label: 'Other' },
+                ]
+            },
+            {
+                label: 'Type of Publisher',
+                model: 'publisher_type',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'COMMERCIAL', label: 'Commercial' },
+                    { value: 'LEARNED_SOCIETY_AND_ASSOCIATION', label: 'Learned Society and Association' },
+                    { value: 'UNIVERSITY_PRESS', label: 'University Press' },
+                ]
+            },
+            {
+                label: 'Location of Publisher',
+                model: 'publisher_location',
+                component: 'select',
+                isRequired: true,
+                options: [
+                    { value: 'LOCAL', label: 'Local' },
+                    { value: 'INTERNATIONAL', label: 'International' },
+                ]
+            },
             { label: 'Volume Number', model: 'volume_number', component: 'text', isRequired: true },
             { label: 'Issue Number', model: 'issue_number', component: 'text', isRequired: true },
             { label: 'Editor Names', model: 'editor_names', component: 'text', isRequired: true },
