@@ -139,7 +139,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 
 <template>
   <div class="container">
-    <form class="signup-container" @submit.prevent="submitForm">
+    <form class="signup-container" :key="formKey" @submit.prevent="submitForm">
       <h1 class="title">Sign up</h1>
       <p class="subtitle">New here? Create a new account below.</p>
       <div class="form-wrapper">
@@ -212,7 +212,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
               <BaseDateInput
                 v-model="userData.birthdate"
                 width="11rem"
-                :min="'2000-01-01'" 
+                :min="'2000-01-01'"
                 :max="'2020-12-31'"
               />
             </div>
@@ -244,7 +244,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
         </div>
       </div>
       <div class="button-group">
-        <FormButton variant="black" width="12rem">CANCEL</FormButton>
+        <FormButton variant="black" width="12rem" type="button" @click="resetForm">RESET</FormButton>
         <FormButton variant="red" width="12rem" type="submit">SUBMIT</FormButton>
       </div>
     </form>
@@ -264,6 +264,110 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   />
   <Toast ref="toast" />
 </template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { validatePasswordMatch } from '@/validators/AuthValidators'
+import { signupUser, googleSignup } from '@/services/AuthService'
+import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
+import FormButton from '@/components/Global/BaseFormButton.vue'
+import FormRadio from '@/components/Global/BaseFormRadio.vue'
+import InputField from '@/components/Global/BaseTextInput.vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import Toast from '@/components/Global/Toast.vue'
+
+const userData = ref<SignupData>({
+  email: '',
+  password: '',
+  password2: '',
+  first_name: '',
+  middle_name: '',
+  last_name: '',
+  sex: '',
+  birthdate: '',
+})
+
+const passwordError = ref<string | null>(null)
+const signupSuccess = ref<string>('')
+const signupError = ref<string>('')
+const toast = ref<InstanceType<typeof Toast> | null>(null)
+const accessToken = ref<string | null>(null)
+const showModal = ref<boolean>(false)
+const googleProfile = ref<Record<string, any> | null>(null)
+
+const submitForm = async () => {
+  signupSuccess.value = ''
+  signupError.value = ''
+
+  passwordError.value = validatePasswordMatch(
+    userData.value.password,
+    userData.value.password2,
+  )
+  if (passwordError.value) return
+
+  const response = await signupUser(userData.value)
+  if (response.success) {
+    toast.value?.showToast('Signup successful!', 'success')
+    userData.value = {
+      email: '',
+      password: '',
+      password2: '',
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      sex: '',
+      birthdate: '',
+    }
+
+    setTimeout(() => (window.location.href = '/login'), 2000)
+  } else {
+    toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
+  }
+}
+
+const googleSignUp = (response: any) => {
+  console.log('GOOGLE LOGIN RESPONSE', response)
+  accessToken.value = response.access_token
+  showModal.value = true
+}
+
+const submitToBackend = async (extraInfo: Record<string, any>) => {
+  if (!accessToken.value) return
+
+  const googleData: GoogleSignupData = {
+    access_token: accessToken.value,
+    extra_info: extraInfo,
+  }
+
+  const response = await googleSignup(googleData)
+  if (response.success) {
+    toast.value?.showToast('Google Signup successful!', 'success')
+    showModal.value = false
+  } else {
+    toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
+  }
+}
+
+const formKey = ref(0)
+
+const resetForm = () => {
+  userData.value = {
+    email: '',
+    password: '',
+    password2: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    sex: '',
+    birthdate: '',
+  }
+  signupSuccess.value = ''
+  signupError.value = ''
+  passwordError.value = null
+
+  formKey.value++;
+}
+</script>
 
 <style lang="scss" scoped>
 .container {
@@ -287,13 +391,13 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 .dob-sex-group {
   display: flex;
   gap: 0.5rem;
-  align-items: center; 
+  align-items: center;
   justify-content: space-between;
 }
 
 .dob-group,
 .select-group {
-  flex: 1; 
+  flex: 1;
 }
 
 .label,
