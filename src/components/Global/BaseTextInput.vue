@@ -134,8 +134,8 @@ export default {
   pointer-events: none;
   transition: all 0.2s ease;
   background-color: white;
-  padding-left: 0.4rem;
-  padding-right: 0.4rem;
+  padding: 0 0.4rem;
+
   z-index: 1000;
 
   &--red {
@@ -149,7 +149,7 @@ export default {
 
 .input-box:focus + .input-label,
 .input-box:not(:placeholder-shown) + .input-label {
-  top: 0rem;
+  top: 0;
   font-size: 0.8em;
   transform: translateY(-50%);
 }
