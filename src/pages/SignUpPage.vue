@@ -112,7 +112,9 @@
     <p class="or-text">OR</p>
     <GoogleLogin :callback="googleSignUp" popup-type="TOKEN">
       <BaseFormButton variant="red" width="25rem" type="button">
+      <BaseFormButton variant="red" width="25rem" type="button">
         <v-icon name="fc-google" scale="1.2"></v-icon>
+        CONTINUE WITH GOOGLE</BaseFormButton
         CONTINUE WITH GOOGLE</BaseFormButton
       >
     </GoogleLogin>

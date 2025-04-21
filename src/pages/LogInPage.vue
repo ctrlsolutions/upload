@@ -18,30 +18,16 @@
       />
       <p v-if="errors.email" class="error-message">{{ errors.email }}</p>
 
-      <div class="password-container">
-        <BaseTextInput
-          id="password"
-          :type="isPasswordVisible ? 'text' : 'password'"
-          placeholder="Password"
-          variant="green"
-          width="100%"
-          v-model="form.password"
-          @blur="onBlur('password')"
-          @input="clearError('password')"
-        />
-        <BiEyeSlashFill
-          v-if="isPasswordVisible"
-          class="password-icon"
-          @click="togglePasswordVisibility"
-          aria-label="Hide password"
-        />
-        <BiEye
-          v-if="!isPasswordVisible"
-          class="password-icon"
-          @click="togglePasswordVisibility"
-          aria-label="Show password"
-        />
-      </div>
+      <BaseTextInput
+        id="password"
+        type="password"
+        placeholder="Password"
+        variant="green"
+        width="100%"
+        v-model="form.password"
+        @blur="onBlur('password')"
+        @input="clearError('password')"
+      />
       <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
 
       <a href="#" class="forgot-password">Forgot Password?</a>
@@ -79,7 +65,6 @@ import {
 import { login, googleLogin, logout } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
-import { BiEyeSlashFill, BiEye } from 'oh-vue-icons/icons'
 
 const router = useRouter()
 
@@ -95,12 +80,6 @@ const errors = reactive<ErrorState>({
   password: '',
 })
 
-const isPasswordVisible = ref(false)
-
-const togglePasswordVisibility = () => {
-  isPasswordVisible.value = !isPasswordVisible.value
-}
-
 const onBlur = (field: keyof LoginData) => {
   clearError(field)
   errors[field] = validateFieldFn(form, field) || ''
@@ -115,6 +94,10 @@ const validateForm = async () => {
 
   errors.email = validationErrors.email || ''
   errors.password = validationErrors.password || ''
+
+  if (!errors.email && !errors.password) {
+    await submitForm()
+  }
 }
 
 const submitForm = async () => {
@@ -292,23 +275,5 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   margin-top: -0.75rem;
-}
-
-.password-container {
-  position: relative;
-}
-
-.password-icon {
-  position: absolute;
-  top: 50%;
-  right: 0.6rem;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #999;
-
-  &:hover {
-    color: #333;
-  }
 }
 </style>
