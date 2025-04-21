@@ -23,7 +23,7 @@
           />
           <span class="icon-label">Submit Report</span>
         </router-link>
-        <router-link to="/" class="nav-link">
+        <router-link to="/report" class="nav-link">
           <img
             src="@/assets/navbar/report_history.png"
             alt="report-history"
