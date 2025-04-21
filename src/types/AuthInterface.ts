@@ -6,6 +6,7 @@ export interface LoginData {
 export interface ErrorState {
   email: string
   password: string
+  reEnterPassword?: string
 }
 
 export interface SignupData {
