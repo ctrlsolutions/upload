@@ -1,18 +1,16 @@
 <template>
-  <div class="input-container">
-    <input
-      :id="id"
-      :type="type"
-      :class="['input-box', variantClass]"
-      :style="boxStyle"
-      :placeholder="placeholder"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      v-bind="$attrs"
-    />
-    <label :for="id" class="input-label">{{ placeholder }}</label>
-  </div>
+  <input
+    :id="id"
+    :type="type"
+    class="input-box"
+    :style="boxStyle"
+    :placeholder="placeholder"
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+    v-bind="$attrs"
+  />
 </template>
+
 
 <script>
 export default {
@@ -29,38 +27,41 @@ export default {
       type: String,
       default: 'Placeholder',
     },
-    variant: {
-      type: String,
-      default: 'red',
-    },
     width: {
       type: String,
-      default: 'null',
+      default: null,
     },
     height: {
       type: String,
-      default: 'null',
+      default: null,
     },
     modelValue: {
       type: String,
       default: '',
     },
+    textColor: {
+      type: String,
+      default: 'inherit',
+    },
+    borderColor: {
+      type: String,
+      default: 'inherit',
+    },
   },
   computed: {
-    variantClass() {
-      return `input-box--${this.variant}`
-    },
     boxStyle() {
-      const styles = { height: this.height }
-      if (this.width) {
-        styles.width = this.width
-      }
-      return styles
+      return {
+        width: this.width || 'auto',
+        height: this.height || 'auto',
+        color: this.textColor,
+        borderColor: this.borderColor,
+        borderStyle: 'solid',
+        '--placeholder-color': this.textColor,
+      };
     },
-  },
+  }
 }
 </script>
-
 
 <style lang="scss" scoped>
 .input-container {
@@ -73,6 +74,7 @@ export default {
   font-family: 'Inter', serif;
   height: fit-content;
   border-radius: 0.6rem;
+
   @include sm {
     width: 15rem;
     padding: 0.6rem 0.6rem;
@@ -90,62 +92,8 @@ export default {
   }
 
   &::placeholder {
-    color: #999;
+    color: var(--placeholder-color, #999); // Use the variable for dynamic color
     opacity: 0.7;
   }
-
-  &--red {
-    font-size: 0.9rem;
-    border: 0.15px $red;
-    border-style: solid;
-    outline: none;
-    font-weight: 850;
-    color: $red;
-
-    &::placeholder {
-      color: transparent;
-    }
-  }
-
-  &--green {
-    border: 0.15px $green;
-    border-style: solid;
-    outline: none;
-    font-weight: bold;
-    color: $green;
-
-    &::placeholder {
-      color: transparent;
-    }
-  }
-}
-
-.input-label {
-  position: absolute;
-  top: 50%;
-  left: 0.6rem;
-  transform: translateY(-50%);
-  font-size: 1em;
-  color: #999;
-  pointer-events: none;
-  transition: all 0.2s ease;
-  background-color: white;
-  padding: 0 0.4rem;
-  z-index: 1000;
-
-  &--red {
-    color: $red;
-  }
-
-  &--green {
-    color: $green;
-  }
-}
-
-.input-box:focus + .input-label,
-.input-box:not(:placeholder-shown) + .input-label {
-  top: 0;
-  font-size: 0.8em;
-  transform: translateY(-50%);
 }
 </style>

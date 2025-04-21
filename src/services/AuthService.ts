@@ -9,6 +9,28 @@ import {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
+export const getCurrentUser = async () => {
+  try {
+    const username = sessionStorage.getItem('username');
+    if (!username) {
+      throw new Error('No username stored');
+    }
+
+    const response = await api.get(`/user/status/?username=${username}`, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    // Assuming the response includes the role id along with the username
+    return {
+      username: response.data.username,
+      roleId: response.data.role_id,  // Add this line if role_id is part of the response
+    };
+  } catch (error) {
+    return { success: false, error: 'User not authenticated' };
+  }
+};
+
+
 export const login = async (form: LoginData): Promise<ApiResponse> => {
   try {
     await setCSRFToken()

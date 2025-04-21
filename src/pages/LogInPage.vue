@@ -61,7 +61,7 @@ import { onMounted } from 'vue'
 import {
   validateField as validateFieldFn,
   validateForm as validateFormFn,
-} from '@/validators/AuthValidators'
+} from '@/utils/AuthValidators'
 import { login, googleLogin, logout } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
