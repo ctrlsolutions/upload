@@ -2,7 +2,7 @@
   <div class="input-container">
     <input
       :id="id"
-      :type="isPasswordVisible ? 'text' : type"
+      :type="type"
       :class="['input-box', variantClass]"
       :style="boxStyle"
       :placeholder="placeholder"
@@ -11,29 +11,11 @@
       v-bind="$attrs"
     />
     <label :for="id" class="input-label">{{ placeholder }}</label>
-    <BiEyeSlashFill
-      v-if="type === 'password' && isPasswordVisible"
-      class="password-icon"
-      @click="togglePasswordVisibility"
-      aria-label="Hide password"
-    />
-    <BiEye
-      v-if="type === 'password' && !isPasswordVisible"
-      class="password-icon"
-      @click="togglePasswordVisibility"
-      aria-label="Show password"
-    />
   </div>
 </template>
 
 <script>
-import { BiEyeSlashFill, BiEye } from "oh-vue-icons/icons";
-
 export default {
-  components: {
-    BiEyeSlashFill,
-    BiEye,
-  },
   props: {
     id: {
       type: String,
@@ -64,11 +46,6 @@ export default {
       default: "",
     },
   },
-  data() {
-    return {
-      isPasswordVisible: false,
-    };
-  },
   computed: {
     variantClass() {
       return `input-box--${this.variant}`;
@@ -79,11 +56,6 @@ export default {
         styles.width = this.width;
       }
       return styles;
-    },
-  },
-  methods: {
-    togglePasswordVisibility() {
-      this.isPasswordVisible = !this.isPasswordVisible;
     },
   },
 };
