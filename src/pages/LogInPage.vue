@@ -32,18 +32,18 @@
 
       <a href="#" class="forgot-password">Forgot Password?</a>
 
-      <FormButton variant="green" width="100%" @click.prevent="validateForm">
+      <BaseFormButton variant="green" width="100%" @click.prevent="validateForm">
         LOG IN
-      </FormButton>
+      </BaseFormButton>
     </form>
 
     <p class="or-text">OR</p>
 
     <div class="input-group" id="google-login">
       <GoogleLogin :callback="handleGoogleLogin">
-        <FormButton variant="red" width="100%" type="button">
+        <BaseFormButton variant="red" width="100%" type="button">
           CONTINUE WITH GOOGLE
-        </FormButton>
+        </BaseFormButton>
       </GoogleLogin>
     </div>
   </div>
@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import FormButton from '@/components/Global/BaseFormButton.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
@@ -95,9 +95,9 @@ const validateForm = async () => {
   errors.email = validationErrors.email || ''
   errors.password = validationErrors.password || ''
 
-  // if (!errors.email && !errors.password) {
-  //   await submitForm()
-  // }
+  if (!errors.email && !errors.password) {
+    await submitForm()
+  }
 }
 
 const submitForm = async () => {
@@ -147,7 +147,7 @@ onMounted(async () => {
 .error-message {
   color: $red;
   font-size: 0.75rem;
-  margin: -0.9rem;
+  margin: -0.9rem 0;
 }
 
 .login-container {
@@ -239,8 +239,8 @@ onMounted(async () => {
 }
 
 .forgot-password {
-  width: 100%;
-  text-align: right;
+  width: 9rem;
+  margin-left: auto;
   margin-top: -0.5rem;
   padding-right: 1rem;
 
@@ -258,13 +258,9 @@ onMounted(async () => {
     padding-right: 1rem;
     margin-bottom: 0.3rem;
   }
-}
-
-.forgotp {
-  color: $green;
-  text-decoration: none;
 
   &:hover {
+    color: $green;
     text-decoration: underline;
     background-color: transparent;
   }
