@@ -51,19 +51,23 @@
             <div class="info-group">
               <p class="info-type">First Name</p>
               <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
+              <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Last Name</p>
               <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
+              <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
               <p class="info-type">Bio</p>
+              <p class="info">{{ formattedRole }}</p>
               <p class="info">{{ formattedRole }}</p>
             </div>
           </div>
           <div class="info-container" id="right-info">
             <div class="info-group">
               <p class="info-type">Middle Name</p>
+              <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
               <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
             </div>
             <div class="info-group">
@@ -76,6 +80,7 @@
     </CardComponent>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import CardComponent from '@/components/Global/CardComponent.vue'

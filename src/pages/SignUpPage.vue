@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { validatePasswordMatch } from '@/validators/AuthValidators'
+import { validatePasswordMatch } from '@/utils/AuthValidators'
 import { signupUser, googleSignup } from '@/services/AuthService'
 import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
 import FormButton from '@/components/Global/BaseFormButton.vue'

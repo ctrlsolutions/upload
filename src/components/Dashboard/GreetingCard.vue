@@ -52,7 +52,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Ensure the gradient is on the outer div */
 .greeting-card {
   width: 100vw;
   height: 22vh;
