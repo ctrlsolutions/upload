@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="folder-container">
-            <div class="header">
+            <div class="folder-tab">
                 <div class="title-container">Generate Report Summary</div>
             </div>
             <div class="options-container">
@@ -9,7 +9,6 @@
                 <BaseSelectInput
                     class="scope-select"
                     placeholder="Summary scope"
-                    v-model="scope"
                     :options="[
                         { value: 'department', label: 'Department'},
                         { value: 'college', label: 'College' },
@@ -20,7 +19,8 @@
                 <BaseSelectInput
                     class="timeframe-select"
                     placeholder="Summary timeframe"
-                    v-model="timeframe" :options="[
+                    v-model="timeframe"
+                    :options="[
                         { value: 'monthly', label: 'Monthly' },
                         { value: 'quarterly', label: 'Quarterly' },
                         { value: 'annual', label: 'Annual' },
@@ -30,7 +30,6 @@
                 <p class="generation-label">Save option:</p>
                 <BaseFormRadio
                     class="pdf-radio"
-                    v-model="option1"
                     name="saveOption" value="pdf" id="pdf-option"
                     label="Save as .pdf"
                 />
@@ -58,6 +57,8 @@
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import BaseFormRadio from "@/components/Global/BaseFormRadio.vue";
     import BaseFormButton from "@/components/Global/BaseFormButton.vue";
+
+    const timeframe = ref('');
 </script>
 
 <style lang="scss" scoped>
@@ -75,7 +76,6 @@
     width: 86vw;
     height: 92vh;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     position: relative;
     padding: 1.2rem 2rem;
 
@@ -83,10 +83,26 @@
     flex-direction: column;
 }
 
-.title-container {
-    font-size: 1rem;
+.folder-tab {
+    position: absolute;
+    top: -5vh;
+    left: 0%;
+    background: url(../assets/tab.png) no-repeat left center;
+    background-size: 100% 80%;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+    color: darkgreen;  
+    height: 10vh;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-container {
+    // font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    margin-left: -1rem;
 }
 
 .options-container {
