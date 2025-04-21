@@ -18,32 +18,46 @@
       />
       <p v-if="errors.email" class="error-message">{{ errors.email }}</p>
 
-      <BaseTextInput
-        id="password"
-        type="password"
-        placeholder="Password"
-        variant="green"
-        width="100%"
-        v-model="form.password"
-        @blur="onBlur('password')"
-        @input="clearError('password')"
-      />
+      <div class="password-container">
+        <BaseTextInput
+          id="password"
+          :type="isPasswordVisible ? 'text' : 'password'"
+          placeholder="Password"
+          variant="green"
+          width="100%"
+          v-model="form.password"
+          @blur="onBlur('password')"
+          @input="clearError('password')"
+        />
+        <BiEyeSlashFill
+          v-if="isPasswordVisible"
+          class="password-icon"
+          @click="togglePasswordVisibility"
+          aria-label="Hide password"
+        />
+        <BiEye
+          v-if="!isPasswordVisible"
+          class="password-icon"
+          @click="togglePasswordVisibility"
+          aria-label="Show password"
+        />
+      </div>
       <p v-if="errors.password" class="error-message">{{ errors.password }}</p>
 
       <a href="#" class="forgot-password">Forgot Password?</a>
 
-      <FormButton variant="green" width="100%" @click.prevent="validateForm">
+      <BaseFormButton variant="green" width="100%" @click.prevent="validateForm">
         LOG IN
-      </FormButton>
+      </BaseFormButton>
     </form>
 
     <p class="or-text">OR</p>
 
     <div class="input-group" id="google-login">
       <GoogleLogin :callback="handleGoogleLogin">
-        <FormButton variant="red" width="100%" type="button">
+        <BaseFormButton variant="red" width="100%" type="button">
           CONTINUE WITH GOOGLE
-        </FormButton>
+        </BaseFormButton>
       </GoogleLogin>
     </div>
   </div>
@@ -54,7 +68,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import FormButton from '@/components/Global/BaseFormButton.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
@@ -65,6 +79,7 @@ import {
 import { login, googleLogin, logout } from '@/services/AuthService'
 
 import Toast from '@/components/Global/Toast.vue'
+import { BiEyeSlashFill, BiEye } from 'oh-vue-icons/icons'
 
 const router = useRouter()
 
@@ -80,6 +95,12 @@ const errors = reactive<ErrorState>({
   password: '',
 })
 
+const isPasswordVisible = ref(false)
+
+const togglePasswordVisibility = () => {
+  isPasswordVisible.value = !isPasswordVisible.value
+}
+
 const onBlur = (field: keyof LoginData) => {
   clearError(field)
   errors[field] = validateFieldFn(form, field) || ''
@@ -94,10 +115,6 @@ const validateForm = async () => {
 
   errors.email = validationErrors.email || ''
   errors.password = validationErrors.password || ''
-
-  // if (!errors.email && !errors.password) {
-  //   await submitForm()
-  // }
 }
 
 const submitForm = async () => {
@@ -275,5 +292,23 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   margin-top: -0.75rem;
+}
+
+.password-container {
+  position: relative;
+}
+
+.password-icon {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2em;
+  color: #999;
+
+  &:hover {
+    color: #333;
+  }
 }
 </style>
