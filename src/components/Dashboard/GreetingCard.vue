@@ -52,7 +52,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* Ensure the gradient is on the outer div */
 .greeting-card {
   background: linear-gradient(to right, #1a3d21, #2f6035);
   border-radius: 15px;

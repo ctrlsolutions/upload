@@ -67,6 +67,7 @@
   </div>
 </template>
 
+
 <script lang="ts" setup>
 import CardComponent from '@/components/Global/CardComponent.vue'
 import { ref, computed, onMounted } from 'vue'
