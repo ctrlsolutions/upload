@@ -10,7 +10,7 @@
         @input="$emit('update:modelValue', $event.target.value)"
       />
       <div class="dropdown-toggle">
-        <v-icon name="bi-calendar" class="dropdown-toggle" @click="openDatePicker"/>
+        <v-icon name="bi-calendar" class="dropdown-toggle" @click="openDatePicker" />
       </div>
     </div>
   </div>
@@ -30,12 +30,20 @@ const props = defineProps({
 })
 
 defineEmits(['update:modelValue'])
+
+const openDatePicker = () => {
+  if (inputRef.value?.showPicker) {
+    inputRef.value.showPicker()
+  } else {
+    inputRef.value.click()
+  }
+}
 </script>
 
 <style lang="scss" scoped>
 .date-picker {
   margin: 0 auto;
-
+  padding: 0.9375rem;
 }
 
 .input-wrapper {
@@ -56,7 +64,7 @@ defineEmits(['update:modelValue'])
   cursor: text;
   border-radius: 0.6rem;
   padding-left: 2.7rem;
-  color: $red;
+  color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
   -moz-appearance: none;  
   appearance: none;
@@ -69,7 +77,12 @@ defineEmits(['update:modelValue'])
 }
 
 .date-input::-webkit-calendar-picker-indicator {
-  display: none;
+  opacity: 0;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  width: 20%;
+  height: 100%;
 }
 
 .date-input::-moz-calendar-picker-indicator {
