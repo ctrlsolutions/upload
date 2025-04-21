@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { validatePasswordMatch } from '@/validators/AuthValidators'
+import { validatePasswordMatch } from '@/utils/AuthValidators'
 import { signupUser, googleSignup } from '@/services/AuthService'
 import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
 import FormButton from '@/components/Global/BaseFormButton.vue'
