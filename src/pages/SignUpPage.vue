@@ -28,13 +28,6 @@ const sexOptions = [
   { value: 'F', label: 'Female' },
 ]
 
-const roleOptions = [
-  { value: 'faculty', label: 'Faculty' },
-  { value: 'faculty_member', label: 'Faculty Member' },
-  { value: 'department_head', label: 'Department Head' },
-  { value: 'chancellor', label: 'Chancellor' },
-]
-
 const collegeOptions = [
   { value: 'cos', label: 'College of Science' },
   { value: 'css', label: 'College of Social Science' },
@@ -204,8 +197,8 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
             width="100%"
             v-model="userData.last_name"
           />
-          <div class="select-group">
-            <div class="select-item">
+          <div class="dob-sex-group">
+            <div class="select-group">
               <BaseSelectInput
                 v-model="userData.sex"
                 :options="sexOptions"
@@ -214,27 +207,18 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
                 class="small-select"
               />
             </div>
-            <div class="select-item">
-              <BaseSelectInput
-                v-model="userData.role"
-                :options="roleOptions"
-                placeholder="Role"
-                width="100%"
-                class="small-select"
+            <div class="dob-group">
+              <label class="label">Date of Birth</label>
+              <BaseDateInput
+                v-model="userData.birthdate"
+                width="11rem"
+                :min="'2000-01-01'" 
+                :max="'2020-12-31'"
               />
             </div>
           </div>
-          <div class="dob-group">
-            <label class="label">Date of Birth</label>
-            <BaseDateInput
-              v-model="userData.birthdate"
-              width="15rem"
-              :min="'2000-01-01'"
-              :max="'2020-12-31'"
-            />
-          </div>
           <div class="select-group1">
-            <div class="select-item">
+            <div class="select-item1">
               <BaseSelectInput
                 v-model="userData.college"
                 :options="collegeOptions"
@@ -300,12 +284,30 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   margin-left: 100rem;
 }
 
+.dob-sex-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center; 
+  justify-content: space-between;
+}
+
+.dob-group,
+.select-group {
+  flex: 1; 
+}
+
+.label,
+.label1 {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: small;
+  text-align: left;
+}
+
 .select-group {
   display: flex;
-  gap: 1rem;
-  margin: 1rem 0;
-  margin-top: -0.1rem;
-  margin-bottom: -0.2rem;
+  align-items: center;
+  gap: 0.1rem;
 }
 
 .select-group1 {
@@ -315,7 +317,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   margin-bottom: 0.5rem;
 }
 
-.select-item {
+.select-item1 {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -397,6 +399,12 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 }
 
 .label {
+  margin: 0;
+  font-weight: bold;
+  color: #6f6f6f;
+}
+
+.label1 {
   text-align: left;
   margin: 0.5rem 1rem;
   color: #6f6f6f;
