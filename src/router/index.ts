@@ -51,9 +51,12 @@ const router = createRouter({
         },
         {
           path: ':username',
-          component: ProfilePage,
+          component: DashboardPage,
           meta: { layout: 'main', requiresAuth: true },
-          children: [{ path: 'settings', component: SettingsPage }],
+          children: [
+            { path: 'profile', component: ProfilePage },
+            { path: 'settings', component: SettingsPage },
+          ],
         },
       ],
     },

@@ -61,7 +61,6 @@ export default {
 }
 </script>
 
-
 <style lang="scss" scoped>
 .input-container {
   position: relative;
@@ -140,6 +139,10 @@ export default {
   &--green {
     color: $green;
   }
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: $red !important;
 }
 
 input:-webkit-autofill {
