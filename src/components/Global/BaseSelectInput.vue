@@ -2,36 +2,26 @@
   <div class="dropdown-container">
     <label v-if="label" class="dropdown-label">{{ label }}</label>
     <select v-model="selectedValue" class="dropdown" :style="dropdownStyle">
-      <option value="" disabled class="placeholder">{{ placeholder }}</option>
-      <option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-        class="dropdown-option"
-      >
-        {{ option.label }}
-      </option>
+      <slot></slot>
     </select>
     <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
-    <slot />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue';
+import { ref, defineProps, computed } from 'vue'
 
 const props = defineProps<{
-  options: { value: string; label: string }[];
-  placeholder?: string;
-  width?: string | null;
-  label?: string; // Add a label prop
-}>();
+  placeholder?: string
+  width?: string | null
+  label?: string
+}>()
 
-const selectedValue = ref('');
+const selectedValue = ref('')
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
-}));
+}))
 </script>
 
 <style lang="scss" scoped>
@@ -47,7 +37,7 @@ const dropdownStyle = computed(() => ({
   color: #6f6f6f;
   display: block;
   text-align: left;
-  margin-bottom: 0.3rem; /* Match the styling from SignUpPage.vue */
+  margin-bottom: 0.3rem;
 }
 
 .dropdown {
@@ -91,7 +81,7 @@ const dropdownStyle = computed(() => ({
 .dropdown-icon {
   position: absolute;
   right: 0.5rem;
-  top:72%;
+  top: 72%;
   transform: translateY(-50%);
   font-size: 1.25rem;
   fill: $red;
