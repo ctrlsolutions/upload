@@ -8,48 +8,39 @@
       </div>
       <div class="sidebar-mid-group">
         <router-link :to="dashboardRoute" class="nav-link">
-          <img
-            src="@/assets/navbar/dashboard.png"
-            alt="dashboard"
-            class="icon"
-          />
+          <v-icon name="md-spacedashboard-round" class="icon" scale="3"/>
           <span class="icon-label">Dashboard</span>
         </router-link>
         <router-link to="/" class="nav-link">
-          <img
-            src="@/assets/navbar/submit_report.png"
-            alt="submit-report"
-            class="icon"
-          />
+          <v-icon name="fa-folder-open" class="icon"/>
           <span class="icon-label">Submit Report</span>
         </router-link>
         <router-link to="/" class="nav-link">
-          <img
-            src="@/assets/navbar/report_history.png"
-            alt="report-history"
-            class="icon"
-          />
+          <v-icon name="fa-history" class="icon" />
           <span class="icon-label">Report History</span>
         </router-link>
         <router-link to="/" class="nav-link">
-          <img src="@/assets/navbar/members.png" alt="members" class="icon" />
+          <v-icon name="io-people" class="icon" />
           <span class="icon-label">Members</span>
         </router-link>
         <router-link to="/" class="nav-link">
-          <img
-            src="@/assets/navbar/report_summary.png"
-            alt="report-summary"
-            class="icon"
-          />
+          <v-icon name="fa-clipboard-list" class="icon" />
           <span class="icon-label">Report Summary</span>
+        </router-link>
+        <router-link to="/" class="nav-link">
+          <v-icon name="md-adminpanelsettings-round" class="icon" />
+          <span class="icon-label">Admin Pannel</span>
         </router-link>
       </div>
       <div class="sidebar-bottom-group">
         <router-link :to="profileRoute" class="profile-link">
-          <img src="@/assets/navbar/profile.png" alt="profile" class="icon" />
+          <v-icon name="io-person" class="icon" />
         </router-link>
         <router-link :to="settingsRoute" class="settings-link">
-          <img src="@/assets/navbar/settings.png" alt="settings" class="icon" />
+          <v-icon name="bi-gear-fill" class="icon" />
+        </router-link>
+        <router-link :to="settingsRoute" class="settings-link">
+          <v-icon name="fa-sign-out-alt" class="icon" />
         </router-link>
       </div>
     </nav>

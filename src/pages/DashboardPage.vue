@@ -57,7 +57,7 @@ onMounted(async () => {
   grid-area: left-section;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 0.6fr 1fr 1fr;
+  grid-template-rows: 0.8fr 1fr 1fr;
   grid-auto-columns: 1fr;
   gap: 2% 0%;
   grid-auto-flow: row;
