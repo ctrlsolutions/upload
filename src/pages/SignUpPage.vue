@@ -202,17 +202,18 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
               <BaseSelectInput
                 v-model="userData.sex"
                 :options="sexOptions"
-                placeholder="Sex"
+                placeholder="Select Sex"
                 width="100%"
                 class="small-select"
+                label="Sex"
               />
             </div>
             <div class="dob-group">
-              <label class="label">Date of Birth</label>
+              <label class="label1">Date of Birth</label>
               <BaseDateInput
                 v-model="userData.birthdate"
-                width="11rem"
-                :min="'2000-01-01'" 
+                width="100%"
+                :min="'2000-01-01'"
                 :max="'2020-12-31'"
               />
             </div>
@@ -222,21 +223,23 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
               <BaseSelectInput
                 v-model="userData.college"
                 :options="collegeOptions"
-                placeholder="College"
+                placeholder="Select College"
                 width="100%"
                 class="small-select"
+                label="College"
               />
             </div>
             <div class="select-item">
-            <BaseSelectInput
-              v-model="userData.dept"
-              :options="filteredDepartmentOptions"
-              placeholder="Department"
-              width="100%"
-              class="small-select"
-              :disabled="!userData.college"
-            />
-          </div>
+              <BaseSelectInput
+                v-model="userData.dept"
+                :options="filteredDepartmentOptions"
+                placeholder="Select Department"
+                width="100%"
+                class="small-select"
+                :disabled="!userData.college"
+                label="Department"
+              />
+            </div>
           </div>
           <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
             {{ signupSuccess }}
@@ -280,40 +283,27 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   margin-top: -0.5rem;
   margin-right: 2rem;
 }
-.BaseDateInput {
-  margin-left: 100rem;
-}
 
 .dob-sex-group {
   display: flex;
-  gap: 0.5rem;
-  align-items: center; 
-  justify-content: space-between;
+  align-items: center;
 }
 
-.dob-group,
-.select-group {
+.select-group,
+.dob-group {
   flex: 1; 
-}
-
-.label,
-.label1 {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: small;
-  text-align: left;
+  display: flex;
+  flex-direction: column; 
 }
 
 .select-group {
   display: flex;
-  align-items: center;
-  gap: 0.1rem;
+  align-items: flex-start;
 }
 
 .select-group1 {
   display: flex;
-  gap: 1rem;
-  margin: 0.5rem 0;
+  gap: 0.7rem;
   margin-bottom: 0.5rem;
 }
 
@@ -399,16 +389,22 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 }
 
 .label {
-  margin: 0;
+  font-size: small;
   font-weight: bold;
   color: #6f6f6f;
+  display: block;
+  text-align: left;
+  margin-bottom: 0.3rem;
 }
 
 .label1 {
-  text-align: left;
-  margin: 0.5rem 1rem;
-  color: #6f6f6f;
+  font-size: small;
   font-weight: bold;
+  color: #6f6f6f;
+  display: block;
+  text-align: left;
+  margin-bottom: 0.3rem;
+  margin-left: 0.7rem;
 }
 
 .separator {
@@ -426,10 +422,10 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 }
 
 .dob-group {
+  flex: 1;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: -1rem 0;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .button-group {
