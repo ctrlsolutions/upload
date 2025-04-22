@@ -16,7 +16,9 @@ export interface SignupData {
   middle_name?: string
   last_name: string
   sex: string
-  birthdate: string
+  birth_date: string
+  college_id?: number
+  department_id?: number
 }
 
 export interface ApiResponse {

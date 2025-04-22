@@ -1,7 +1,7 @@
 <template>
   <div class="dropdown-container">
     <label v-if="label" class="dropdown-label">{{ label }}</label>
-    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle">
+    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
       <slot></slot>
     </select>
     <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
@@ -11,6 +11,8 @@
 <script setup lang="ts">
 import { ref, defineProps, computed } from 'vue'
 
+const emit = defineEmits(['update:modelValue'])
+
 const props = defineProps<{
   placeholder?: string
   width?: string | null
@@ -18,6 +20,11 @@ const props = defineProps<{
 }>()
 
 const selectedValue = ref('')
+
+function handleChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value
+  emit('update:modelValue', value)
+}
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),

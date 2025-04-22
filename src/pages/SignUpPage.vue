@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { validatePasswordMatch } from '@/validators/AuthValidators'
 import { signupUser, googleSignup } from '@/services/AuthService'
 import { SignupData, GoogleSignupData } from '@/types/AuthInterface'
@@ -8,6 +8,9 @@ import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 import InputField from '@/components/Global/BaseTextInput.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import Toast from '@/components/Global/Toast.vue'
+import { getCollegeDepartments } from '@/services/ProfileService'
+import { useUserStore } from '@/stores/UserStore'
+import { College, Department } from '@/types/ProfileInterface'
 
 const userData = ref<SignupData>({
   email: '',
@@ -17,60 +20,10 @@ const userData = ref<SignupData>({
   middle_name: '',
   last_name: '',
   sex: '',
-  birthdate: '',
-  college: '',
-  dept: '',
-  role: '',
+  birth_date: '',
+  college_id: NaN,
+  department_id: NaN,
 })
-
-const sexOptions = [
-  { value: 'M', label: 'Male' },
-  { value: 'F', label: 'Female' },
-]
-
-const collegeOptions = [
-  { value: 'cos', label: 'College of Science' },
-  { value: 'css', label: 'College of Social Science' },
-  { value: 'som', label: 'School of Management' },
-  { value: 'ccad', label: 'College of Communication, Arts, and Design' },
-]
-
-const departmentMap = {
-  cos: [
-    { value: 'cs', label: 'Computer Science' },
-    { value: 'math', label: 'Mathematics' },
-    { value: 'bio', label: 'Biology' },
-    { value: 'sts', label: 'Statistics' },
-  ],
-  css: [
-    { value: 'psy', label: 'Psychology' },
-    { value: 'com', label: 'Communication' },
-  ],
-  som: [
-    { value: 'mktg', label: 'Marketing' },
-  ],
-  ccad: [
-    { value: 'art', label: 'Arts' },
-    { value: 'design', label: 'Design' },
-  ],
-} as const
-
-type CollegeKeys = keyof typeof departmentMap;
-
-const filteredDepartmentOptions = computed(() => {
-  return userData.value.college
-    ? departmentMap[userData.value.college as CollegeKeys] || []
-    : [];
-});
-
-watch(
-  () => userData.value.college,
-  (newCollege) => {
-    if (newCollege !== userData.value.college) {
-      userData.value.dept = '';
-    }
-  }
-);
 
 const passwordError = ref<string | null>(null)
 const signupSuccess = ref<string>('')
@@ -79,15 +32,13 @@ const toast = ref<InstanceType<typeof Toast> | null>(null)
 const accessToken = ref<string | null>(null)
 const showModal = ref<boolean>(false)
 const googleProfile = ref<Record<string, any> | null>(null)
+const collegeOptions = ref<College[]>([])
 
 const submitForm = async () => {
   signupSuccess.value = ''
   signupError.value = ''
 
-  passwordError.value = validatePasswordMatch(
-    userData.value.password,
-    userData.value.password2,
-  )
+  passwordError.value = validatePasswordMatch(userData.value.password, userData.value.password2)
   if (passwordError.value) return
 
   const response = await signupUser(userData.value)
@@ -101,10 +52,9 @@ const submitForm = async () => {
       middle_name: '',
       last_name: '',
       sex: '',
-      birthdate: '',
-      college: '',
-      dept: '',
-      role: '',
+      birth_date: '',
+      college_id: NaN,
+      department_id: NaN,
     }
 
     setTimeout(() => (window.location.href = '/login'), 2000)
@@ -135,6 +85,20 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
     toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
   }
 }
+
+onMounted(async () => {
+  try {
+    const response = await getCollegeDepartments()
+    collegeOptions.value = response.data
+  } catch (error: any) {
+    console.log('ERROR:', error?.value)
+  }
+})
+
+const filteredDepartments = computed(() => {
+  const college = collegeOptions.value.find(c => c.college_id == userData.value.college_id)
+  return college ? college.departments : []
+})
 </script>
 
 <template>
@@ -199,46 +163,47 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
           />
           <div class="dob-sex-group">
             <div class="select-group">
-              <BaseSelectInput
-                v-model="userData.sex"
-                :options="sexOptions"
-                placeholder="Select Sex"
-                width="100%"
-                class="small-select"
-                label="Sex"
-              />
+              <BaseSelectInput v-model="userData.sex" width="100%" class="small-select" label="Sex"
+                ><option value="" disabled>Select</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="O">Other / Prefer not to say</option>
+              </BaseSelectInput>
             </div>
             <div class="dob-group">
-              <label class="label1">Date of Birth</label>
-              <BaseDateInput
-                v-model="userData.birthdate"
-                width="100%"
-                :min="'2000-01-01'"
-                :max="'2020-12-31'"
-              />
+              <label class="label">Date of Birth</label>
+              <BaseDateInput v-model="userData.birth_date" width="100%" :min="'2000-01-01'" :max="'2020-12-31'" />
             </div>
           </div>
           <div class="select-group1">
             <div class="select-item1">
               <BaseSelectInput
-                v-model="userData.college"
-                :options="collegeOptions"
+                v-model="userData.college_id"
                 placeholder="Select College"
                 width="100%"
                 class="small-select"
                 label="College"
-              />
+              >
+                <option value="" disabled>Select</option>
+                <option v-for="college in collegeOptions" :key="college.college_id" :value="college.college_id">
+                  {{ college.name }}
+                </option>
+              </BaseSelectInput>
             </div>
             <div class="select-item">
               <BaseSelectInput
-                v-model="userData.dept"
-                :options="filteredDepartmentOptions"
+                v-model="userData.department_id"
                 placeholder="Select Department"
                 width="100%"
                 class="small-select"
-                :disabled="!userData.college"
+                :disabled="!userData.college_id"
                 label="Department"
-              />
+              >
+                <option value="" disabled>Select</option>
+                <option v-for="dept in filteredDepartments" :key="dept.department_id" :value="dept.department_id">
+                  {{ dept.name }}
+                </option>
+              </BaseSelectInput>
             </div>
           </div>
           <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
@@ -259,12 +224,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
       >
     </GoogleLogin>
   </div>
-  <ExtraInfoModal
-    v-if="showModal"
-    :profile="googleProfile"
-    @submit="submitToBackend"
-    @close="showModal = false"
-  />
+  <ExtraInfoModal v-if="showModal" :profile="googleProfile" @submit="submitToBackend" @close="showModal = false" />
   <Toast ref="toast" />
 </template>
 
@@ -291,9 +251,9 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
 
 .select-group,
 .dob-group {
-  flex: 1; 
+  flex: 1;
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
 }
 
 .select-group {
@@ -311,6 +271,7 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 50%;
 }
 
 .small-select {
