@@ -1,15 +1,15 @@
 <template>
   <div class="dropdown-container">
     <select
-      :value="modelValue"
+      :key="computedValue"
+      :value="computedValue"
       @change="$emit('update:modelValue', $event.target.value)"
       class="dropdown"
       :style="dropdownStyle"
     >
-      <option value="" disabled class="placeholder">{{ placeholder }}</option>
       <option
-        v-for="option in options"
-        :key="option.value"
+        v-for="(option, index) in formattedOptions"
+        :key="index"
         :value="option.value"
         class="dropdown-option"
       >
@@ -21,21 +21,42 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from 'vue'
+  import { defineProps, defineEmits, computed, watch } from 'vue'
 
-const props = defineProps<{
-  modelValue: string
-  options: { value: string; label: string }[]
-  placeholder?: string
-  width?: string | null
-}>()
+  const props = defineProps<{
+    modelValue: string
+    options: { value: string; label: string }[] | string[]
+    width?: string | null
+  }>()
 
-const emit = defineEmits(['update:modelValue'])
+  const emit = defineEmits(['update:modelValue'])
 
-const dropdownStyle = computed(() => ({
-  ...(props.width ? { width: props.width } : {}),
-}))
+  const dropdownStyle = computed(() => ({
+    ...(props.width ? { width: props.width } : {}),
+  }))
+
+  // Normalize options
+  const formattedOptions = computed(() => {
+    if (Array.isArray(props.options) && typeof props.options[0] === 'string') {
+      return props.options.map(option => ({ value: option, label: option }))
+    }
+    return props.options
+  })
+
+  // Emit first value if modelValue is empty
+  watch(() => props.options, () => {
+    if (!props.modelValue && formattedOptions.value.length > 0) {
+      emit('update:modelValue', String(formattedOptions.value[0].value))
+    }
+  }, { immediate: true })
+
+  // Compute currently selected value
+  const computedValue = computed(() => {
+    return props.modelValue || (formattedOptions.value.length > 0 ? formattedOptions.value[0].value : '')
+  })
 </script>
+
+
 
 <style lang="scss" scoped>
 .dropdown-container {
