@@ -10,53 +10,50 @@ import AdminPanelPage from '@/pages/AdminPanelPage.vue'
 import ReportHistoryPage from '@/pages/ReportHistoryPage.vue'
 import GenerateReportPage from '@/pages/GenerateReportPage.vue'
 import SubmitReportPage from '@/pages/SubmitReportPage.vue'
+import AuthPagesLayout from '@/layouts/AuthPagesLayout.vue'
+import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      name: 'landing',
+      component: LandingPage,
+    },
+    {
+      path: '/',
+      name: 'auth',
+      component: AuthPagesLayout,
+      redirect: '/landing',
       children: [
+        { path: 'signup', component: SignUpPage },
+        { path: 'login', component: LogInPage },
+      ],
+    },
+    {
+      path: '/',
+      name: 'authenticated',
+      component: AuthenticatedPagesLayout,
+      redirect: '/landing',
+      meta: { requiresAuth: true },
+      children: [
+        { path: 'report', component: ReportHistoryPage },
+        { path: 'generate', component: GenerateReportPage },
+        { path: 'submit', component: SubmitReportPage },
+        { path: 'report/:id', component: ReportHistoryPage },
+        { path: ':username/admin', component: AdminPanelPage },
         {
-          path: '',
-          name: 'landing',
-          component: LandingPage,
-          meta: { layout: 'landing' },
+          path: ':username/profile',
+          component: ProfilePage,
         },
         {
-          path: 'signup',
-          component: SignUpPage,
-          meta: { layout: 'auth', requiresGuest: true, title: 'Sign Up' },
-        },
-        {
-          path: 'login',
-          component: LogInPage,
-          meta: { layout: 'auth', requiresGuest: true, title: 'Log In' },
-        },
-        {
-          path: 'reports',
-          component: ReportHistoryPage,
-          meta: { layout: 'main', requiresAuth: true },
-          children: [
-            { path: 'history', component: ReportHistoryPage },
-            { path: 'generate', component: GenerateReportPage },
-            { path: 'submit', component: SubmitReportPage },
-            { path: ':id', component: GenerateReportPage },
-          ],
-        },
-        {
-          path: 'admin',
-          component: AdminPanelPage,
-          meta: { layout: 'main', requiresAuth: true, roles: ['admin'] },
+          path: ':username/settings',
+          component: SettingsPage,
         },
         {
           path: ':username',
           component: DashboardPage,
-          meta: { layout: 'main', requiresAuth: true },
-          children: [
-            { path: 'profile', component: ProfilePage },
-            { path: 'settings', component: SettingsPage },
-          ],
         },
       ],
     },
