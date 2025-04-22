@@ -12,6 +12,7 @@
       </option>
     </select>
     <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
+    <slot />
   </div>
 </template>
 
@@ -25,22 +26,25 @@ const props = defineProps<{
 }>()
 
 const selectedValue = ref('')
+const isDropdownOpen = ref(false);
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
 }))
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value;
+};
 </script>
 
 <style lang="scss" scoped>
 .dropdown-container {
   position: relative;
   display: inline-block;
+  width: 100%;
 }
 
 .dropdown {
-  display: flex;
-  background-color: transparent;
-  text-overflow: ellipsis;
   font-family: 'Inter', serif;
   font-weight: bold;
   appearance: none;
@@ -52,21 +56,9 @@ const dropdownStyle = computed(() => ({
   cursor: pointer;
   color: $red;
   width: 100%;
-
-  @include sm {
-    width: 10rem;
-    font-size: 1em;
-  }
-
-  @include md {
-    width: 15rem;
-    font-size: 1em;
-  }
-
-  @include lg {
-    width: 20rem;
-    font-size: 1.3em;
-  }
+  height: 2.4rem;
+  position: relative;
+  background-color: transparent;
 
   &:not([value='']) {
     color: $red;
@@ -76,13 +68,6 @@ const dropdownStyle = computed(() => ({
 
 .dropdown:focus {
   outline: none;
-}
-
-.placeholder {
-  &:disabled {
-    font-style: italic;
-    color: gray;
-  }
 }
 
 .dropdown option {

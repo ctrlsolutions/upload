@@ -42,8 +42,7 @@ const openDatePicker = () => {
 
 <style lang="scss" scoped>
 .date-picker {
-  margin: 0 auto;
-  padding: 0.9375rem;
+  margin-top: -0.5rem;
 }
 
 .input-wrapper {
@@ -51,7 +50,7 @@ const openDatePicker = () => {
   display: flex;
   align-items: center;
   overflow: visible;
-  justify-content: right;
+  justify-content: space-between;
   margin-top: 0.5rem;
 }
 
@@ -63,12 +62,19 @@ const openDatePicker = () => {
   background: transparent;
   cursor: text;
   border-radius: 0.6rem;
-  padding-left: 2.7rem;
+  text-align: left;
+  padding-left: 2.3rem;
+  padding-right: 0.5rem;
+  margin-right: 0.1rem;
+  margin-left: 0.7rem;
+  font-size: 0.8rem;
+  line-height: 2rem;
   color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
   -moz-appearance: none;  
   appearance: none;
   font-family: 'Inter', sans-serif;
+  
 }
 
 .date-input:focus {
@@ -92,7 +98,7 @@ const openDatePicker = () => {
 .dropdown-toggle {
   position: absolute;
   top: 50%;
-  right: 0.45rem;
+  right: 0.3rem;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
