@@ -4,7 +4,7 @@
     <!-- TODO: deal with nav links -->
     <nav class="sidebar">
       <div class="sidebar-top-group">
-        <img src="@/assets/navbar/logo.png" alt="logo" class="logo" />
+        <img src="@/assets/logo.png" alt="logo" class="logo" />
       </div>
       <div class="sidebar-mid-group">
         <router-link :to="dashboardRoute" class="nav-link">
