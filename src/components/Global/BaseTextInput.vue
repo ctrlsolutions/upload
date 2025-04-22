@@ -142,6 +142,10 @@ export default {
   }
 }
 
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
 .input-box:focus + .input-label,
 .input-box:not(:placeholder-shown) + .input-label {
   top: 0;
