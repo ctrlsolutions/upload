@@ -1,5 +1,6 @@
 <template>
   <div class="dropdown-container">
+    <label v-if="label" class="dropdown-label">{{ label }}</label>
     <select v-model="selectedValue" class="dropdown" :style="dropdownStyle">
       <option value="" disabled class="placeholder">{{ placeholder }}</option>
       <option
@@ -17,24 +18,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, computed } from 'vue'
+import { ref, defineProps, computed } from 'vue';
 
 const props = defineProps<{
-  options: { value: string; label: string }[]
-  placeholder?: string
-  width?: string | null
-}>()
+  options: { value: string; label: string }[];
+  placeholder?: string;
+  width?: string | null;
+  label?: string; // Add a label prop
+}>();
 
-const selectedValue = ref('')
-const isDropdownOpen = ref(false);
+const selectedValue = ref('');
 
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
-}))
-
-const toggleDropdown = () => {
-  isDropdownOpen.value = !isDropdownOpen.value;
-};
+}));
 </script>
 
 <style lang="scss" scoped>
@@ -42,6 +39,15 @@ const toggleDropdown = () => {
   position: relative;
   display: inline-block;
   width: 100%;
+}
+
+.dropdown-label {
+  font-size: small;
+  font-weight: bold;
+  color: #6f6f6f;
+  display: block;
+  text-align: left;
+  margin-bottom: 0.3rem; /* Match the styling from SignUpPage.vue */
 }
 
 .dropdown {
@@ -70,6 +76,13 @@ const toggleDropdown = () => {
   outline: none;
 }
 
+.placeholder {
+  &:disabled {
+    font-style: italic;
+    color: gray;
+  }
+}
+
 .dropdown option {
   color: $red;
   font-family: inherit !important;
@@ -78,7 +91,7 @@ const toggleDropdown = () => {
 .dropdown-icon {
   position: absolute;
   right: 0.5rem;
-  top: 50%;
+  top:72%;
   transform: translateY(-50%);
   font-size: 1.25rem;
   fill: $red;

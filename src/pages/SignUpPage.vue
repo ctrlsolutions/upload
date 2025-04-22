@@ -199,13 +199,13 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
           />
           <div class="dob-sex-group">
             <div class="select-group">
-              <label class="label">Sex</label>
               <BaseSelectInput
                 v-model="userData.sex"
                 :options="sexOptions"
                 placeholder="Select Sex"
                 width="100%"
                 class="small-select"
+                label="Sex"
               />
             </div>
             <div class="dob-group">
@@ -219,27 +219,27 @@ const submitToBackend = async (extraInfo: Record<string, any>) => {
             </div>
           </div>
           <div class="select-group1">
-              <div class="select-item1">
-                <label class="label">College</label>
-                <BaseSelectInput
-                  v-model="userData.college"
-                  :options="collegeOptions"
-                  placeholder="Select College"
-                  width="100%"
-                  class="small-select"
-                />
-              </div>
-              <div class="select-item">
-                <label class="label">Department</label>
-                <BaseSelectInput
-                  v-model="userData.dept"
-                  :options="filteredDepartmentOptions"
-                  placeholder="Select Department"
-                  width="100%"
-                  class="small-select"
-                  :disabled="!userData.college"
-                />
-          </div>
+            <div class="select-item1">
+              <BaseSelectInput
+                v-model="userData.college"
+                :options="collegeOptions"
+                placeholder="Select College"
+                width="100%"
+                class="small-select"
+                label="College"
+              />
+            </div>
+            <div class="select-item">
+              <BaseSelectInput
+                v-model="userData.dept"
+                :options="filteredDepartmentOptions"
+                placeholder="Select Department"
+                width="100%"
+                class="small-select"
+                :disabled="!userData.college"
+                label="Department"
+              />
+            </div>
           </div>
           <p v-if="signupSuccess" class="text-green-600 text-sm mt-2">
             {{ signupSuccess }}
