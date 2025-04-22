@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, computed } from 'vue'
+  import { defineProps, defineEmits, computed, watch } from 'vue'
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -19,7 +19,7 @@ const props = defineProps<{
   label?: string
 }>()
 
-const emit = defineEmits(['update:modelValue'])
+  const emit = defineEmits(['update:modelValue'])
 
 function handleChange(event: Event) {
   const value = (event.target as HTMLSelectElement).value
@@ -30,6 +30,8 @@ const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
 }))
 </script>
+
+
 
 <style lang="scss" scoped>
 .dropdown-container {
