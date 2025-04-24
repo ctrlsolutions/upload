@@ -8,28 +8,28 @@
       </div>
       <div class="sidebar-mid-group">
         <router-link :to="dashboardRoute" class="nav-link">
-          <v-icon name="md-spacedashboard-round" class="icon" scale="3"/>
+          <v-icon name="md-spacedashboard-round" class="icon" scale="3" />
           <span class="icon-label">Dashboard</span>
         </router-link>
-        <router-link to="/" class="nav-link">
-          <v-icon name="fa-folder-open" class="icon"/>
+        <router-link to="/submit" class="nav-link">
+          <v-icon name="fa-folder-open" class="icon" />
           <span class="icon-label">Submit Report</span>
         </router-link>
-        <router-link to="/" class="nav-link">
+        <router-link to="/generate" class="nav-link">
+          <v-icon name="fa-clipboard-list" class="icon" />
+          <span class="icon-label">Generate Report</span>
+        </router-link>
+        <router-link to="/report" class="nav-link">
           <v-icon name="fa-history" class="icon" />
           <span class="icon-label">Report History</span>
         </router-link>
-        <router-link to="/" class="nav-link">
+        <router-link to="/report" class="nav-link">
           <v-icon name="io-people" class="icon" />
           <span class="icon-label">Members</span>
         </router-link>
-        <router-link to="/" class="nav-link">
-          <v-icon name="fa-clipboard-list" class="icon" />
-          <span class="icon-label">Report Summary</span>
-        </router-link>
-        <router-link to="/" class="nav-link">
+        <router-link :to="adminRoute" class="nav-link">
           <v-icon name="md-adminpanelsettings-round" class="icon" />
-          <span class="icon-label">Admin Pannel</span>
+          <span class="icon-label">Admin Panel</span>
         </router-link>
       </div>
       <div class="sidebar-bottom-group">
@@ -58,12 +58,9 @@ import { computed } from 'vue'
 const username = sessionStorage.getItem('username') || ''
 
 const dashboardRoute = computed(() => (username ? `/${username}` : '/login'))
-const profileRoute = computed(() =>
-  username ? `/${username}/profile` : '/login',
-)
-const settingsRoute = computed(() =>
-  username ? `/${username}/settings` : '/login',
-)
+const profileRoute = computed(() => (username ? `/${username}/profile` : '/login'))
+const settingsRoute = computed(() => (username ? `/${username}/settings` : '/login'))
+const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
 </script>
 
 <style scoped lang="scss">
@@ -146,7 +143,7 @@ const settingsRoute = computed(() =>
   background-color: #a04747;
 }
 .content {
-  grid-area: main;
+  grid-area: 'main';
   width: 100%;
   z-index: 0;
   justify-content: start;
