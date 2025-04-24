@@ -81,6 +81,13 @@
 </template>
   
 <script setup>
+
+    // TODO: Organize this shit
+    // TODO: Handle if is Active
+    // TODO: Handle dates
+    // TODO: Handle regex
+
+
     import { ref, onMounted, computed, watch } from "vue";
 
     import UploadModal from "@/components/SubmitReport/UploadModal.vue";
@@ -91,7 +98,6 @@
     // import axios from "axios" use this for progressbar support
 
     const selectedForm = ref(null);
-
     const formComponent = ref(null);
     const infoVisible = ref(false);
 
@@ -354,7 +360,9 @@
             if (!response.ok) throw new Error('Network response was not ok');
 
             forms.value = await response.json()
-            selectedForm.value = forms.value[0].id
+
+            if(forms.value[0])
+                selectedForm.value = forms.value[0].id
         } catch (error) {
             console.error('There was an error fetching the data:', error);
         }
