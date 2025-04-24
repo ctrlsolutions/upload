@@ -14,32 +14,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { getProfileData } from '@/services/ProfileService'
+import { computed } from 'vue'
 import GreetingCard from '@/components/Dashboard/GreetingCard.vue'
 import SearchBar from '@/components/Dashboard/SearchBar.vue'
 import StatisticReport from '@/components/Dashboard/StatisticReport.vue'
 import LastReport from '@/components/Dashboard/LastReport.vue'
 import MyProfile from '@/components/Dashboard/MyProfile.vue'
 import MyCalendar from '@/components/Dashboard/MyCalendar.vue'
+import { useUserStore } from '@/stores/UserStore'
 
-interface User {
-  last_name?: string
-}
-
-const user = ref<User | null>(null)
-
-onMounted(async () => {
-  try {
-    const username = sessionStorage.getItem('username')
-    const response = await getProfileData(username)
-    if (response && response.data.user) {
-      user.value = response.data.user
-    }
-  } catch (error) {
-    console.error('Error fetching user data:', error)
-  }
-})
+const userStore = useUserStore()
+const user = computed(() => userStore.getUserProfile)
 </script>
 
 <style lang="scss" scoped>
