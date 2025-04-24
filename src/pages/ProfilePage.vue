@@ -49,25 +49,25 @@
               </div>
               <div class="info-group">
                 <p class="info-type">Role</p>
-                <p class="info">{{ formattedRole }}</p>
+                <p class="info">{{ formattedRole || 'N/A'}}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">College</p>
-                <p class="info">{{ formattedRole }}</p>
+                <p class="info">{{ formattedcollege || 'N/A'}}</p>
               </div>
             </div>
             <div class="info-container" id="right-info">
               <div class="info-group">
                 <p class="info-type">Middle Name</p>
-                <p class="info">{{ dashboardData?.user.middle_name || 'N/A' }}</p>
+                <p class="info" :class="{ italic: dashboardData?.user.middle_name === 'N/A' }"> {{ dashboardData?.user.middle_name || 'N/A' }} </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Email</p>
-                <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
+                <p class="info" :class="{ italic: dashboardData?.user.email === 'N/A' }"> {{ dashboardData?.user.email || 'N/A' }} </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Department</p>
-                <p class="info">{{ dashboardData?.user.email || 'N/A' }}</p>
+                <p class="info">{{ formatteddept || 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -118,6 +118,10 @@ const formattedRole = computed(() => {
     "upper-area"
     "lower-area"; 
   overflow: hidden;
+}
+
+.italic {
+  font-style: italic;
 }
 
 .upper-area {
@@ -269,7 +273,7 @@ const formattedRole = computed(() => {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); 
   gap: 2rem;
   margin-top: -1.5rem;
   padding: 1rem;
@@ -279,7 +283,7 @@ const formattedRole = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  justify-content: center;
+  justify-content: flex-start; 
   align-items: flex-start;
 
   .info-group {
