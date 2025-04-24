@@ -49,8 +49,11 @@ onMounted(async () => {
   grid-template-rows: 1fr;
   gap: 0px 1%;
   grid-template-areas: 'left-section right-section';
-  width: 92vw;
+  width: 100%;
   height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .left-section {

@@ -27,7 +27,7 @@ import College from '@/components/AdminPanel/College.vue'
   grid-template-areas:
     "greetings-card greetings-card"
     "statistics roles";
-  width: 92vw;
+  width: 100%;
   height: 100%;
 }
 
