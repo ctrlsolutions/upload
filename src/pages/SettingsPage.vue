@@ -221,7 +221,7 @@ const submitForm = async () => {
 .settings-container {
   box-sizing: border-box;
   background: white;
-  width: 100%;
+  width: 92vw;
   height: 100%;
   margin: 0 auto;
   border-radius: 25px;

@@ -86,7 +86,7 @@
   }
   
   .greeting-text h2 {
-    padding: 0.6rem 0rem 0.1rem 0.25rem;
+    padding: 0.8rem 0rem 0.1rem 0.25rem;
     margin: 1rem 0 0rem;
     font-size: 39px;
     font-weight: bold;
@@ -96,7 +96,7 @@
   }
   
   .greeting-text p {
-    font-size: 1rem;
+    font-size: 0.85rem;
     margin: 0;
     position: absolute;
     left: 1.3rem;

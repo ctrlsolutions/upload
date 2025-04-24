@@ -105,7 +105,7 @@ const formattedRole = computed(() => {
 <style lang="scss" scoped>
 .profile_container {
   padding: 0;
-  width: 100%;
+  width: 92vw;
   height: 100%;
   box-sizing: border-box;
   margin: 0;
