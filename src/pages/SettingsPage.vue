@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
-    <h1 class="title">Account Settings</h1>
+  <div class="settings-container">
+    <!-- <h1 class="title">Account Settings</h1> -->
     <div class="inner-cont">
-      <CardComponent title="My Profile" height="100%" width="100%" :header="true">
+      <CardComponent title="Account Settings" height="100%" width="100%" :header="true">
         <div class="user-card">
           <CardComponent width="100%" height="100%">
             <div class="user">
@@ -28,17 +28,16 @@
                 >
               </div>
           </div>
-          </CardComponent>
-        </div>
-
+        </CardComponent>
+        
         <CardComponent width="100%" height="100%" title="Personal Information" :header="true">
           <div class="edit-container">
             <BaseFormButton
-              variant="black"
-              width="6rem"
-              height="2rem"
-              @click="isEditing = true"
-              v-if="!isEditing"
+            variant="black"
+            width="6rem"
+            height="2rem"
+            @click="isEditing = true"
+            v-if="!isEditing"
             >
               Edit
             </BaseFormButton>
@@ -49,25 +48,25 @@
               height="2rem"
               @click="submitForm"
             >
-              Save
+            Save
             </BaseFormButton>
           </div>
           <div class="info-grid">
             <div class="input-group">
-              <label>First Name</label>
               <BaseTextInput
+                placeholder="First Name"
                 id="firstName"
                 :model-value="userProfile.first_name"
                 variant="red"
                 :disabled="!isEditing"
                 @update:model-value="
                   value => handleInputChange('first_name', value)
-                "
+                  "
               />
             </div>
             <div class="input-group">
-              <label>Middle Name</label>
               <BaseTextInput
+                placeholder="Middle Name"
                 id="middleName"
                 :model-value="userProfile.middle_name"
                 variant="red"
@@ -78,8 +77,8 @@
               />
             </div>
             <div class="input-group">
-              <label>Last Name</label>
               <BaseTextInput
+              placeholder="Last Name"
                 id="lastName"
                 :model-value="userProfile.last_name"
                 variant="red"
@@ -90,20 +89,40 @@
               />
             </div>
             <div class="input-group">
-              <label>Email</label>
               <BaseTextInput
+              placeholder="Email"
                 id="email"
                 :model-value="userProfile.email"
                 type="email"
                 variant="red"
                 :disabled="!isEditing"
                 @update:model-value="value => handleInputChange('email', value)"
+                />
+            </div>
+            <div class="input-group">
+              <BaseTextInput
+                placeholder="Role"
+                id="role"
+                :model-value="userProfile.role"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="value => handleInputChange('role', value)"
               />
             </div>
             <div class="input-group">
-              <label>Bio</label>
               <BaseTextInput
-                id="bio"
+                placeholder="College"
+                id="role"
+                :model-value="userProfile.role"
+                variant="red"
+                :disabled="!isEditing"
+                @update:model-value="value => handleInputChange('role', value)"
+              />
+            </div>
+            <div class="input-group">
+              <BaseTextInput
+                placeholder="Department"
+                id="role"
                 :model-value="userProfile.role"
                 variant="red"
                 :disabled="!isEditing"
@@ -112,6 +131,7 @@
             </div>
           </div>
         </CardComponent>
+      </div>
       </CardComponent>
     </div>
   </div>
@@ -198,7 +218,7 @@ const submitForm = async () => {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.settings-container {
   box-sizing: border-box;
   background: white;
   width: 100%;
@@ -209,16 +229,22 @@ const submitForm = async () => {
   flex-direction: column;
   padding-left: 3rem;
   padding-right: 3rem;
-  padding-bottom: 2rem;
+  // padding-bottom: 2rem;
+  justify-content: center;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: bold;
   margin-left: 1rem;
-  margin-bottom: 0.5rem;
-  margin-top: 0.5rem;
+  margin: 0.2rem;
 
+}
+
+.inner-cont {
+  display: flex;
+  height: 95%;
+  gap: 1rem;
 }
 
 .header {
@@ -239,17 +265,20 @@ const submitForm = async () => {
 }
 
 .user-card {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  margin-bottom: 1.2rem;
+  gap: 1rem;
+  // margin-bottom: 1.2rem;
 }
 
 .user {
   background: transparent;
-  padding: 1.5rem;
+  padding: 0.5rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
-  margin: 1rem;
+  margin: 0.5rem;
   grid-template-areas: 'user-profile button';
   // justify-content: space-between;
 
@@ -311,14 +340,14 @@ const submitForm = async () => {
 .info-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 3rem;
-  margin-bottom: 1rem;
+  gap: 2rem;
+  margin-bottom: 0.7rem;
   margin-left: 2rem;
 
   .input-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.1rem;
 
     label {
       font-size: 0.9rem;
