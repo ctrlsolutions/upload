@@ -1,129 +1,137 @@
 <template>
   <div class="form">
-    <div class="form-group" v-for="(field, index) in fields" :key="index">
+    <div class="form-group" v-for="(field, index) in fields" :key="field.id">
       <label>{{ field.label }}</label>
 
       <!-- Text Input -->
       <input
-        v-if="field.component === 'text'"
+        v-if="field.type === 'text'"
         type="text"
-        v-model="form[field.model]"
+        v-model="fieldResponse[field.id]"
         :placeholder="field.placeholder || ''"
       />
 
       <!-- Number Input -->
       <input
-        v-else-if="field.component === 'number'"
+        v-else-if="field.type === 'number'"
         type="number"
-        v-model.number="form[field.model]"
+        v-model.number="fieldResponse[field.id]"
         :placeholder="field.placeholder || ''"
       />
 
       <!-- Date Input -->
       <BaseDateInput
-        v-else-if="field.component === 'date'"
-        v-model="form[field.model]"
+        v-else-if="field.type === 'date'"
+        v-model="fieldResponse[field.id]"
         :width="'100%'"
         style="font-weight: 400;"
       />
 
       <!-- Select Input -->
       <BaseSelectInput
-        v-else-if="field.component === 'select'"
-        v-model="form[field.model]"
+        v-else-if="field.type === 'select'"
+        v-model="fieldResponse[field.id]"
         :options="field.options ?? []"
         style="width: 100%; height: 38px"
       />
 
       <!-- Error Message -->
-      <span v-if="errors[field.model]" class="error">{{ errors[field.model] }}</span>
+      <span v-if="errors[field.id]" class="error">{{ errors[field.id] }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { reactive } from 'vue'
-  import BaseDateInput from '@/components/Global/BaseDateInput.vue'
-  import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import { reactive } from 'vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
-  // 1. Define field type
-  type Field = {
-    model: string
-    label: string
-    isRequired: boolean
-    component: string
-    placeholder: string
-    options?: { value: string, label: string }[]
+type Option = string | { value: string; label: string }
+
+type Field = {
+  id: string | number // Now using field.id
+  label: string
+  type: string // corresponds to "text", "number", etc.
+  required: boolean
+  regex_validation?: string | null
+  placeholder?: string | null
+  options?: Option[]
+}
+
+// Props
+const props = defineProps<{
+  fields: Field[]
+}>()
+
+const fieldResponse = reactive<Record<string | number, any>>({})
+const errors = reactive<Record<string | number, string>>({})
+
+// Normalize and initialize
+props.fields.forEach((field) => {
+  fieldResponse[field.id] = ''
+  errors[field.id] = ''
+
+  // Normalize options for select
+  if (field.type === 'select' && Array.isArray(field.options)) {
+    field.options = field.options.map(opt =>
+      typeof opt === 'string' ? { value: opt, label: opt } : opt
+    )
   }
+})
 
-  // 2. Use defineProps with type
-  const props = defineProps<{
-    fields: Field[]
-  }>()
+function validateForm() {
+  let valid = true
 
-  const form = reactive<Record<string, any>>({})
-  const errors = reactive<Record<string, string>>({})
-
-  // 3. Initialize form and error states
   props.fields.forEach(field => {
-    form[field.model] = ''
-    errors[field.model] = ''
+    const value = fieldResponse[field.id]
+
+    if (field.required && (value === '' || value === null || value === undefined)) {
+      errors[field.id] = `${field.label} is required.`
+      valid = false
+    } else if (field.type === 'number' && isNaN(value)) {
+      errors[field.id] = `${field.label} must be a valid number.`
+      valid = false
+    } else if (
+      field.type === 'number' &&
+      field.id === 'months' &&
+      (value <= 0 || isNaN(value))
+    ) {
+      errors[field.id] = 'Valid number of months is required.'
+      valid = false
+    } else if (field.regex_validation && !new RegExp(field.regex_validation).test(value)) {
+      errors[field.id] = `${field.label} is not in valid format.`
+      valid = false
+    } else {
+      errors[field.id] = ''
+    }
   })
 
-  // 4. Validation logic
-  function validateForm() {
-    let valid = true
-
-    props.fields.forEach(field => {
-      const value = form[field.model]
-
-      if (field.isRequired && (value === '' || value === null || value === undefined)) {
-        errors[field.model] = `${field.label} is required.`
-        valid = false
-      } else if (field.component === 'number' && isNaN(value)) {
-        errors[field.model] = `${field.label} must be a valid number.`
-        valid = false
-      } else if (
-        field.component === 'number' &&
-        field.model === 'months' &&
-        (value <= 0 || isNaN(value))
-      ) {
-        errors[field.model] = 'Valid number of months is required.'
-        valid = false
-      } else {
-        errors[field.model] = ''
-      }
-    })
-
-    // Additional cross-field validation
-    const start = form.startDate
-    const end = form.endDate
-    if (start && end && new Date(end) < new Date(start)) {
-      errors.endDate = 'End date must be after start date.'
-      valid = false
-    }
-
-    return valid
+  const start = fieldResponse.startDate
+  const end = fieldResponse.endDate
+  if (start && end && new Date(end) < new Date(start)) {
+    errors.endDate = 'End date must be after start date.'
+    valid = false
   }
 
-  // 5. Expose form result
-  function exposeForm() {
-    if (!validateForm()) {
-      console.warn('Validation failed')
-      return null
-    }
+  return valid
+}
 
-    const result: Record<string, any> = {}
-
-    props.fields.forEach(field => {
-      result[field.model] = form[field.model]
-    })
-
-    return result
+function exposeForm() {
+  if (!validateForm()) {
+    console.warn('Validation failed')
+    return null
   }
 
-  defineExpose({ exposeForm })
+  const result: Record<string | number, any> = {}
+  props.fields.forEach(field => {
+    result[field.id] = fieldResponse[field.id]
+  })
+  return result
+}
+
+defineExpose({ exposeForm })
 </script>
+
 
 <style lang="scss" scoped> 
 

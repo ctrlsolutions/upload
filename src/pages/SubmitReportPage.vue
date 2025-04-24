@@ -10,35 +10,25 @@
             <div class="folder-head">
                 <BaseSelectInput
                     width="90%"
-                    v-model="reportType"
-                    :options="[
-                        { value: 'abstract', label: 'abstarct'},
-                        { value: 'research', label: 'Research' },
-                        { value: 'publication', label: 'Publication as a Research Output' },
-                        { value: 'paper_presentation', label: 'Paper Presentation as a Research Output' },
-                        { value: 'patent', label: 'Patent as a Research Output' },
-                        { value: 'other_research', label: 'Other Research Output' },
-                        { value: 'training', label: 'Training Course and/or Advisory Service' },
-                        { value: 'extension', label: 'Extension Program' },
-                        { value: 'partnership', label: 'Partnership with Stakeholder' },
-                        { value: 'others', label: 'Other' }
-                    ]"
+                    v-model="selectedForm"
+                    :options="formTitles"
                 />
+ 
                 <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo" />
             </div>
 
             <div class="info-container" v-if="infoVisible"> 
                 <v-icon name="bi-book" scale="2" />
                 <div class="info-text">
-                    {{ formInformation[reportType] }}
+                    {{ formInformation[selectedForm] }}
                 </div>
             </div>
 
             <!-- Report Form -->
             <div class="form-container">
-                <component :key="componentKey" :is="AbstractForm" ref="formComponent" :fields = fields[reportType] />
+                <component :key="componentKey" :is="AbstractForm" ref="formComponent" :fields=formFields />
+                 <!-- TODO: format this -->
             </div>
-
             <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
         </div>
 
@@ -91,7 +81,7 @@
 </template>
   
 <script setup>
-    import { ref } from "vue";
+    import { ref, onMounted, computed, watch } from "vue";
 
     import UploadModal from "@/components/SubmitReport/UploadModal.vue";
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
@@ -100,10 +90,12 @@
     // import ProgressBar from 'primevue/progressbar'; TODO: later
     // import axios from "axios" use this for progressbar support
 
-    const reportType = ref('research');
+    const selectedForm = ref(null);
+
     const formComponent = ref(null);
     const infoVisible = ref(false);
 
+    const forms = ref(null);
     const submissionData = new FormData();
 
     // File upload logic
@@ -114,10 +106,7 @@
     const componentKey = ref(0)
 
     // models define the key of json POST
-    const fields = {
-        abstract: [
-            { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true }
-        ],
+    const locfields = {
         research: [
             { label: 'Title', model: 'title', component: 'text', placeholder: 'Title', isRequired: true },
             { 
@@ -340,6 +329,38 @@
 
     }
 
+    const formTitles = computed(() => {
+        if (!forms.value) return [];
+        return forms.value.map(form => ({
+            value: form.id,
+            label: form.title
+        }));
+    });
+
+    const formFields = ref([]);
+    watch(() => selectedForm.value, async (newSelectedForm) => {
+        if (newSelectedForm) {
+            const fieldsResponse = await fetch(`http://127.0.0.1:8000/api/fields/?form_id=${newSelectedForm}`);
+            const formFieldsData = await fieldsResponse.json();
+            formFields.value = formFieldsData;
+        }
+    }, { immediate: true }); 
+
+    onMounted(async () => { 
+        console.log('Component has been mounted!');
+        
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/forms');
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            forms.value = await response.json()
+            selectedForm.value = forms.value[0].id
+        } catch (error) {
+            console.error('There was an error fetching the data:', error);
+        }
+    });
+
+
     const toggleInfo = () => {
         infoVisible.value = !infoVisible.value;
     };
@@ -387,31 +408,41 @@
 
     const handleSubmit = async () => {
         const formValues = formComponent.value.exposeForm();
+        console.log(formValues);
 
-        if(!formValues){
-            alert('Form is not ready.')
-            return
+        if (!formValues) {
+            alert('Form is not ready.');
+            return;
         }
-        selectedFiles.value.forEach(file => {
-            submissionData.append('supporting_document',file);
+
+        const submissionData = new FormData();
+
+        // ✅ Use 'form' as the key to match backend expectation
+        submissionData.append('form', selectedForm.value);
+
+        // ✅ Append response as a JSON string
+        const responseJson = JSON.stringify(formValues);
+        submissionData.append('response', responseJson);
+
+        // ✅ Append each file as 'document_0', 'document_1', ...
+        selectedFiles.value.forEach((file, index) => {
+            submissionData.append(`document_${index}`, file);
         });
-        for (const [key, value] of submissionData.entries()) {
-            console.log(key, value);
-        }
-        for (let key in formValues){
-            submissionData.append(key,formValues[key]);
-        }
-        try {  
-            const response = await fetch(`http://localhost:8000/api/report/${reportType.value}/`, {
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/responses/', {
                 method: 'POST',
                 body: submissionData,
             });
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            alert("Report submitted successfully!");
-            console.log(response)
 
+            alert("Report submitted successfully!");
+            console.log(await response.json());
+
+            // Reset form and files
             selectedFiles.value = [];
             componentKey.value += 1;
             formComponent.value.reset?.();
@@ -420,6 +451,8 @@
             alert("Submission failed. Please try again.");
         }
     };
+
+
 </script>
   
 
