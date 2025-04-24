@@ -217,7 +217,7 @@ const formattedRole = computed(() => {
   .role {
     font-size: 1.1rem;
     color: #666;
-    margin: 0.5rem 0;
+    margin: 0.5rem 0rem 0rem 1rem;
     font-weight: normal;
   }
 

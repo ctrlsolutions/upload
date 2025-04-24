@@ -68,7 +68,7 @@ const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
   display: grid;
   grid-template-columns: 0.5fr 4.5fr;
   grid-template-rows: 1fr;
-  padding: 0.5em;
+  padding: 0.5em 0em;
   grid-template-areas: 'sidebar main';
   width: 100vw;
   height: 100vh;
@@ -148,6 +148,6 @@ const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
   z-index: 0;
   justify-content: start;
   align-items: start;
-  margin-left: -3rem;
+  margin-left: -2rem;
 }
 </style>

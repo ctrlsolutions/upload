@@ -112,21 +112,21 @@
             <div class="input-group">
               <BaseTextInput
                 placeholder="College"
-                id="role"
+                id="college"
                 :model-value="userProfile.role"
                 variant="red"
                 :disabled="!isEditing"
-                @update:model-value="value => handleInputChange('role', value)"
+                @update:model-value="value => handleInputChange('college', value)"
               />
             </div>
             <div class="input-group">
               <BaseTextInput
                 placeholder="Department"
-                id="role"
+                id="dept"
                 :model-value="userProfile.role"
                 variant="red"
                 :disabled="!isEditing"
-                @update:model-value="value => handleInputChange('role', value)"
+                @update:model-value="value => handleInputChange('department', value)"
               />
             </div>
           </div>
@@ -305,7 +305,7 @@ const submitForm = async () => {
     flex-grow: 1;
 
     .name {
-      font-size: 1.2rem;
+      font-size: 2rem;
       font-weight: bold;
       margin: 0;
       padding-left: 3rem;
