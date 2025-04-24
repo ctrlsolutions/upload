@@ -114,11 +114,14 @@
     // computed
     const formTitles = computed(() => {
         if (!forms.value) return []
-        return forms.value.map(form => ({
-            value: form.id,
-            label: form.title
-        }))
+        return forms.value
+            .filter(form => form.active !== false)
+            .map(form => ({
+                value: form.id,
+                label: form.title
+            }))
     })
+
 
     // watchers
     watch(() => selectedForm.value, async (newSelectedForm) => {
