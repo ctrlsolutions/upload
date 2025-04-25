@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { UserProfile } from '@/types/ProfileInterface'
-import { getProfileData } from '@/services/ProfileService'
+import { getProfileData, updateProfile } from '@/services/ProfileService'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -14,12 +14,29 @@ export const useUserStore = defineStore('user', {
       this.isLoading = true
       this.error = null
       try {
+        console.log()
         const username = sessionStorage.getItem('username')
         const response = await getProfileData(username)
         this.profile = response.data.user
         this.initialized = true
       } catch (error: any) {
         this.error = error.message || 'Failed to fetch profile'
+      } finally {
+        this.isLoading = false
+      }
+    },
+    async updateUserProfile(profileData: Partial<UserProfile>) {
+      this.isLoading = true
+      this.error = null
+
+      try {
+        const response = await updateProfile(profileData)
+        console.log(response.data)
+        // Assuming the response includes the updated user profile
+        this.profile = response.data.user
+      } catch (error: any) {
+        this.error = error.message || 'Failed to update profile'
+        throw error // Rethrow so the component can catch it too
       } finally {
         this.isLoading = false
       }

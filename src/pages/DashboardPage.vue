@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import GreetingCard from '@/components/Dashboard/GreetingCard.vue'
 import SearchBar from '@/components/Dashboard/SearchBar.vue'
 import StatisticReport from '@/components/Dashboard/StatisticReport.vue'
@@ -22,9 +22,18 @@ import LastReport from '@/components/Dashboard/LastReport.vue'
 import MyProfile from '@/components/Dashboard/MyProfile.vue'
 import MyCalendar from '@/components/Dashboard/MyCalendar.vue'
 import { useUserStore } from '@/stores/UserStore'
+import { UserProfile } from '@/types/ProfileInterface'
 
 const userStore = useUserStore()
-const user = computed(() => userStore.getUserProfile)
+const user = ref<UserProfile | null>(null)
+
+onMounted(async () => {
+  if (!userStore.profile) {
+    await userStore.fetchUserProfile()
+  }
+
+  user.value = userStore.getUserProfile
+})
 </script>
 
 <style lang="scss" scoped>

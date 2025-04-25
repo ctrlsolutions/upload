@@ -6,7 +6,7 @@
           <div class="profile-image-container">
             <img
               :src="
-                dashboardData?.user.profile_picture ||
+                dashboardData?.profile_picture ||
                 'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'
               "
               alt="Profile Picture"
@@ -15,11 +15,11 @@
           </div>
           <div class="profile-container">
             <h4 class="name">
-              {{ dashboardData?.user.first_name }}
-              {{ dashboardData?.user.middle_name || '' }}
-              {{ dashboardData?.user.last_name }}
+              {{ dashboardData?.first_name }}
+              {{ dashboardData?.middle_name || '' }}
+              {{ dashboardData?.last_name }}
             </h4>
-            <h6 class="role">{{ dashboardData?.user.role || 'N/A' }}</h6>
+            <h6 class="role">{{ dashboardData?.role }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
@@ -41,43 +41,37 @@
             <div class="info-container" id="left-info">
               <div class="info-group">
                 <p class="info-type">First Name</p>
-                <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.first_name || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">Last Name</p>
-                <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.last_name || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">Role</p>
-                <p class="info" :class="{ italic: dashboardData?.user.role === 'N/A' }">
-                  {{ dashboardData?.user.role || 'N/A' }}
-                </p>
+                <p class="info">{{ dashboardData?.role || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">College</p>
-                <p class="info" :class="{ italic: dashboardData?.user.college?.name === 'N/A' }">
-                  {{ dashboardData?.user.college?.name || 'N/A' }}
-                </p>
+                <p class="info">{{ dashboardData?.college?.name || 'N/A' }}</p>
               </div>
             </div>
             <div class="info-container" id="right-info">
               <div class="info-group">
                 <p class="info-type">Middle Name</p>
-                <p class="info" :class="{ italic: dashboardData?.user.middle_name === 'N/A' }">
-                  {{ dashboardData?.user.middle_name || 'N/A' }}
+                <p class="info" :class="{ italic: dashboardData?.middle_name === 'N/A' }">
+                  {{ dashboardData?.middle_name || 'N/A' }}
                 </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Email</p>
-                <p class="info" :class="{ italic: dashboardData?.user.email === 'N/A' }">
-                  {{ dashboardData?.user.email || 'N/A' }}
+                <p class="info" :class="{ italic: dashboardData?.email === 'N/A' }">
+                  {{ dashboardData?.email || 'N/A' }}
                 </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Department</p>
-                <p class="info" :class="{ italic: dashboardData?.user.department?.name === 'N/A' }">
-                  {{ dashboardData?.user.department?.name || 'N/A' }}
-                </p>
+                <p class="info">{{ dashboardData?.department?.name || 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -91,14 +85,16 @@
 import CardComponent from '@/components/Global/CardComponent.vue'
 import { ref, computed, onMounted } from 'vue'
 import { getProfileData } from '@/services/ProfileService'
-import { ProfileData } from '@/types/ProfileInterface'
+import { UserProfile } from '@/types/ProfileInterface'
+import { useUserStore } from '@/stores/UserStore'
 
-const dashboardData = ref<ProfileData | null>(null)
+const userStore = useUserStore()
+const dashboardData = computed(() => userStore.getUserProfile)
 
 onMounted(async () => {
-  const username = sessionStorage.getItem('username')
-  const response = await getProfileData(username)
-  dashboardData.value = response.data
+  if (!userStore.profile) {
+    await userStore.fetchUserProfile()
+  }
 })
 </script>
 

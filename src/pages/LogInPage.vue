@@ -107,7 +107,11 @@ const submitForm = async () => {
     const res = await getProfileData(username)
     if (res && res.data.user) {
       user.value = res.data.user
+      if (user.value) {
+        userStore.setUserProfile(user.value)
+      }
       console.log('LOG IN USER DATA', user.value)
+      console.log('USER STORE PROFILE', userStore.profile)
     }
     toast.value?.showToast('Login successful!', 'success')
 
