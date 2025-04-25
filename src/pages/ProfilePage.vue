@@ -124,7 +124,7 @@ onMounted(async () => {
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 3.5fr 3fr;
-  gap: 0px 1em;
+  gap: 0.5em;
   grid-area: upper-area;
 }
 
