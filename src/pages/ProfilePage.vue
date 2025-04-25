@@ -19,7 +19,7 @@
               {{ dashboardData?.user.middle_name || '' }}
               {{ dashboardData?.user.last_name }}
             </h4>
-            <h6 class="role">{{ formattedRole }}</h6>
+            <h6 class="role">{{ dashboardData?.user.role || 'N/A' }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
@@ -49,25 +49,35 @@
               </div>
               <div class="info-group">
                 <p class="info-type">Role</p>
-                <p class="info">{{ formattedRole || 'N/A'}}</p>
+                <p class="info" :class="{ italic: dashboardData?.user.role === 'N/A' }">
+                  {{ dashboardData?.user.role || 'N/A' }}
+                </p>
               </div>
               <div class="info-group">
                 <p class="info-type">College</p>
-                <p class="info">{{ formattedcollege || 'N/A'}}</p>
+                <p class="info" :class="{ italic: dashboardData?.user.college?.name === 'N/A' }">
+                  {{ dashboardData?.user.college?.name || 'N/A' }}
+                </p>
               </div>
             </div>
             <div class="info-container" id="right-info">
               <div class="info-group">
                 <p class="info-type">Middle Name</p>
-                <p class="info" :class="{ italic: dashboardData?.user.middle_name === 'N/A' }"> {{ dashboardData?.user.middle_name || 'N/A' }} </p>
+                <p class="info" :class="{ italic: dashboardData?.user.middle_name === 'N/A' }">
+                  {{ dashboardData?.user.middle_name || 'N/A' }}
+                </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Email</p>
-                <p class="info" :class="{ italic: dashboardData?.user.email === 'N/A' }"> {{ dashboardData?.user.email || 'N/A' }} </p>
+                <p class="info" :class="{ italic: dashboardData?.user.email === 'N/A' }">
+                  {{ dashboardData?.user.email || 'N/A' }}
+                </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Department</p>
-                <p class="info">{{ formatteddept || 'N/A' }}</p>
+                <p class="info" :class="{ italic: dashboardData?.user.department?.name === 'N/A' }">
+                  {{ dashboardData?.user.department?.name || 'N/A' }}
+                </p>
               </div>
             </div>
           </div>
@@ -90,16 +100,6 @@ onMounted(async () => {
   const response = await getProfileData(username)
   dashboardData.value = response.data
 })
-
-const formattedRole = computed(() => {
-  if (!dashboardData.value?.user.role) return ''
-  const role = dashboardData.value.user.role.toLowerCase()
-  if (role === 'cd') return 'College Dean'
-  if (role === 'f') return 'Faculty'
-  if (role === 'c') return 'Chancellor'
-  if (role === 'dc') return 'Department Chair'
-  return dashboardData.value.user.role
-})
 </script>
 
 <style lang="scss" scoped>
@@ -109,14 +109,14 @@ const formattedRole = computed(() => {
   height: 100%;
   box-sizing: border-box;
   margin: 0;
-  display: grid; 
-  grid-auto-columns: 1fr; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr 1fr; 
-  gap: 1% 1%; 
-  grid-template-areas: 
-    "upper-area"
-    "lower-area"; 
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1% 1%;
+  grid-template-areas:
+    'upper-area'
+    'lower-area';
   overflow: hidden;
 }
 
@@ -134,11 +134,10 @@ const formattedRole = computed(() => {
 
 .lower-area {
   height: 37vh;
-  display: grid; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr; 
-  grid-template-areas: 
-    "."; 
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas: '.';
   grid-area: lower-area;
   overflow-y: auto;
   padding: 1rem;
@@ -149,8 +148,8 @@ const formattedRole = computed(() => {
 }
 
 .lower-area::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2); 
-  border-radius: 0.5rem; 
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
 }
 
 .lower-area::-webkit-scrollbar-track {
@@ -169,10 +168,10 @@ const formattedRole = computed(() => {
     text-align: center;
   }
 
-    .profile-image-container {
+  .profile-image-container {
     display: flex;
     justify-content: center;
-    
+
     .profile-image {
       width: 11rem;
       height: 11rem;
@@ -181,16 +180,16 @@ const formattedRole = computed(() => {
       border: 3px solid #014421;
       transition: transform 0.3s ease;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      
+
       &:hover {
         transform: scale(1.05);
       }
-      
+
       @media (max-width: 992px) {
         width: 9rem;
         height: 9rem;
       }
-      
+
       @media (max-width: 576px) {
         width: 8rem;
         height: 8rem;
@@ -201,11 +200,11 @@ const formattedRole = computed(() => {
 
 .profile-container {
   margin-left: 2.5rem;
-  display: grid; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr; 
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
   gap: 0% 0px;
-  grid-area: lower-area; 
+  grid-area: lower-area;
 
   .name {
     font-size: 2rem;
@@ -273,7 +272,7 @@ const formattedRole = computed(() => {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
   margin-top: -1.5rem;
   padding: 1rem;
@@ -283,7 +282,7 @@ const formattedRole = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: flex-start;
 
   .info-group {
@@ -292,7 +291,7 @@ const formattedRole = computed(() => {
     transition: transform 0.2s ease;
     width: 100%;
     gap: 0.5rem;
-    
+
     &:hover {
       transform: translateX(5px);
     }
