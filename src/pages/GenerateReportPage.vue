@@ -71,6 +71,8 @@
 
     const myTabs = ref([
         { id: 'generate', title: 'Generate Summary' },
+        { id: 'addRole', title: 'Add Role' },
+        { id: 'addCollege', title: 'Add College' },
     ]);
 
     const currentTab = ref('generate');
@@ -84,31 +86,9 @@
 <style lang="scss" scoped>
 .container {
     width: 100%;
-    height: 100vh;
     display: flex;
-    justify-content: flex-start;
-    align-items: end;
-    padding: 2vw;
-}
-
-.folder-tab {
-    position: absolute;
-    top: -4.5vh;
-    left: -0.005%;
-    width: 300px;
-    height: 50px;
-    background: white;
-    border-radius: 15px 0 0 0;
-    clip-path: path('M 0 0 L 250 0 C 275 4, 265 16, 350 100 L 0 50 z');
-
-    padding: 0.5rem 1rem 0.5rem 2.5rem;
-}
-
-.title-container {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    margin-left: -1rem;
+    justify-content: center;
+    margin: 0;
 }
 
 .options-container {
@@ -196,7 +176,7 @@
 }
 
 .update-button:hover {
-    background: $dark-red;
+    background: $red;
 }
 
 .generate-button {
@@ -214,7 +194,7 @@
 }
 
 .generate-button:hover {
-    background: $dark-red;
+    background: $red;
 }
 
 .preview-icon {
