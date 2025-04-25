@@ -9,7 +9,6 @@ import InputField from '@/components/Global/BaseTextInput.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import Toast from '@/components/Global/Toast.vue'
 import { getCollegeDepartments } from '@/services/ProfileService'
-import { useUserStore } from '@/stores/UserStore'
 import { College, Department } from '@/types/ProfileInterface'
 
 const userData = ref<SignupData>({
@@ -21,8 +20,8 @@ const userData = ref<SignupData>({
   last_name: '',
   sex: '',
   birth_date: '',
-  college_id: NaN,
-  department_id: NaN,
+  college: NaN,
+  department: NaN,
 })
 
 const passwordError = ref<string | null>(null)
@@ -53,8 +52,8 @@ const submitForm = async () => {
       last_name: '',
       sex: '',
       birth_date: '',
-      college_id: NaN,
-      department_id: NaN,
+      college: NaN,
+      department: NaN,
     }
 
     setTimeout(() => (window.location.href = '/login'), 2000)
@@ -96,7 +95,7 @@ onMounted(async () => {
 })
 
 const filteredDepartments = computed(() => {
-  const college = collegeOptions.value.find(c => c.college_id == userData.value.college_id)
+  const college = collegeOptions.value.find(c => c.college_id == userData.value.college)
   return college ? college.departments : []
 })
 </script>
@@ -178,7 +177,7 @@ const filteredDepartments = computed(() => {
           <div class="select-group1">
             <div class="select-item1">
               <BaseSelectInput
-                v-model="userData.college_id"
+                v-model="userData.college"
                 placeholder="Select College"
                 width="100%"
                 class="small-select"
@@ -192,11 +191,11 @@ const filteredDepartments = computed(() => {
             </div>
             <div class="select-item">
               <BaseSelectInput
-                v-model="userData.department_id"
+                v-model="userData.department"
                 placeholder="Select Department"
                 width="100%"
                 class="small-select"
-                :disabled="!userData.college_id"
+                :disabled="!userData.college"
                 label="Department"
               >
                 <option value="" disabled>Select</option>

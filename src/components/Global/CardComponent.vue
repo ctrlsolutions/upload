@@ -34,7 +34,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .card-header {
-  padding: .75rem 1rem;
+  padding: 0.7rem 1rem;
   background: #014421;
   color: white;
   font-size: .8rem;
@@ -42,13 +42,15 @@ defineProps({
   border-radius: 15px 15px 0px 0px;
   width: 100%;  
   box-sizing: border-box;
-  height: 5rem;
+  height: fit-content;
+  justify-content: center;
 }
 
 .card-title {
   margin-left: 1rem;
-  margin-top: 1rem;
   font-weight: bold;
+  height: 100%;
+  font-size: medium;
 }
 
 .card-content {
