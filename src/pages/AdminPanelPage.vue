@@ -41,14 +41,20 @@ import College from '@/components/AdminPanel/College.vue'
   grid-template-areas:
     ".";
   grid-area: greetings-card;
+  width: 100%;
+  height: 100%;
 }
 
 .statistics{ 
     grid-area: statistics; 
+    width: 100%;
+    height: 100%;
 }
 
 .roles{ 
     grid-area: roles;
+    hwidth: 100%;
+    height: 100%;
 }
 
 </style>

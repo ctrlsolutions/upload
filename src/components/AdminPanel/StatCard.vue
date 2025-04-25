@@ -13,5 +13,6 @@
 .stat-istics {
     height: 100%;
     width: 100%;
+    min-width: 100%;
   }
 </style>

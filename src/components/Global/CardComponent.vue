@@ -7,6 +7,7 @@
       backgroundColor: bgColor,
       boxShadow: '0 8px 16px rgba(0, 0, 0, 0.1)',
       borderRadius: '25px',
+      overflow: 'hidden',
     }"
     class="card-container"
   >
