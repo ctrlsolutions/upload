@@ -81,9 +81,7 @@
 </template>
   
 <script setup>
-    // TODO: Handle if is Active
     // TODO: Handle dates
-    // TODO: Handle regex
     // TODO: handle case of while submitting
     // TODO: add modal
 
@@ -94,7 +92,6 @@
     import AbstractForm from "@/components/SubmitReport/Forms/AbstractForm.vue"
 
     // reactives
-
     // forms as fetched
     const forms = ref(null)
     const selectedForm = ref(null)
