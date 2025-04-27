@@ -1,46 +1,45 @@
 <template>
-  <div class="form">
+  <div class="abstract-form">
     <div class="form-group" v-for="(field, index) in fields" :key="field.id">
-      <label>{{ field.label }}</label>
 
       <!-- Text Input -->
       <BaseTextInput
         v-if="field.type === 'text'"
         type="text"
         variant="red"
+        width="100%"
+        :placeholder="field.label"
         :model-value="fieldResponse[field.id]"
       ></BaseTextInput>
-      <input
-        v-if="field.type === 'text'"
-        type="text"
-        v-model="fieldResponse[field.id]"
-        :placeholder="field.placeholder || ''"
-      />
 
+      
       <!-- Number Input -->
-      <input
-        v-else-if="field.type === 'number'"
+      <BaseTextInput
+        v-if="field.type === 'number'"
         type="number"
-        v-model.number="fieldResponse[field.id]"
-        :placeholder="field.placeholder || ''"
-      />
-
+        variant="red"
+        width="100%"
+        :placeholder="field.label"
+        :model-value="fieldResponse[field.id]"
+      ></BaseTextInput>
+      
       <!-- Date Input -->
       <BaseDateInput
         v-else-if="field.type === 'date'"
         v-model="fieldResponse[field.id]"
         :width="'100%'"
+        :placeholder="`${field.label}`"
         style="font-weight: 400"
       />
 
       <!-- Select Input -->
-      <BaseSelectInput
-        v-else-if="field.type === 'select'"
-        v-model="fieldResponse[field.id]"
-        :options="field.options ?? []"
-        style="width: 100%; height: 38px"
-      />
 
+      <BaseSelectInput v-else-if="field.type === 'select'" v-model="fieldResponse[field.id]">
+        <option disabled value="">Select {{ field.label }}</option>
+          <option v-for="option in field.options" :key="option.value" :value="option.value">
+            {{ option.label }}
+          </option>
+      </BaseSelectInput>
       <!-- Error Message -->
       <span v-if="errors[field.id]" class="error">{{ errors[field.id] }}</span>
     </div>
@@ -54,7 +53,7 @@ import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 import { Field } from '@/types/ReportInterface'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 
-type Option = string | { value: string; label: string }
+// type Option = string | { value: string; label: string }
 
 // Props
 const props = defineProps<{
@@ -130,12 +129,12 @@ defineExpose({ exposeForm })
   font-size: 0.8rem;
 }
 
-.form {
-  flex-grow: 1;
+.abstract-form {
+  // flex-grow: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
-  margin-top: 2rem;
+  // overflow-y: scroll;
+  // height: 100%;
 
   border-radius: 10px;
   background: #fcfcfc;

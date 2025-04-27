@@ -29,8 +29,8 @@
 import { ref, watch, onMounted, nextTick } from 'vue';
 
 const props = defineProps({
-  width: { type: String, default: '86vw' },
-  height: { type: String, default: '92vh' },
+  width: { type: String, default: '100%' },
+  height: { type: String, default: '100%' },
   tabs: { 
     type: Array as () => Array<{ id: string, title: string }>, 
     default: () => [] 
@@ -86,7 +86,6 @@ watch(() => props.tabFontSize, () => {
 </script>
 
 <style lang="scss" scoped>
-$content-bg: white; 
 $radius: 10px; 
 
 .folder-container {
@@ -95,6 +94,7 @@ $radius: 10px;
   height: v-bind(height); 
   position: relative;
   padding-top: 50px; 
+  margin: 0;
 }
 
 .folder-tabs-container {
@@ -150,15 +150,14 @@ $radius: 10px;
 }
 
 .folder-content-area {
-  background: $content-bg; 
+  background: white; 
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 0px $radius $radius $radius; 
-  padding: 2rem; 
-  padding-top: 2.5rem; 
+  padding: 2.5rem 2rem; 
   position: relative; 
   z-index: 1; 
   box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-  overflow: auto; 
+  overflow: hidden; 
 }
 </style>

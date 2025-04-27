@@ -1,28 +1,43 @@
 <template>
-  <div class="container">
-    <div class="folder-container">
-      <!-- Header -->
-      <div class="folder-tab">
-        <div class="title-container">Submit Report</div>
-      </div>
+  <div class="submit-container">
+    <FolderComponent 
+      class="folder-component"
+      :tabs="myTabs" 
+      :initialActiveTabId="currentTab"
+      @update:activeTabId="handleTabChange" 
+      width="100%"
+      height="100%"
+    >
+      <template v-slot="{ activeTabId }">
+        <div class="left-container" v-if="activeTabId === 'submit'">
+          <div class="select">
+            <BaseSelectInput v-model="selectedForm">
+              <option disabled value="">Select a Report Type</option>
+              <option v-for="option in formOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </BaseSelectInput>
+      
+            <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo" />
+          </div>
+      
+          <div class="form">
+            <component :key="componentKey" :is="AbstractForm" ref="formComponent" :fields="selectedFormObject?.fields" />
+          </div>
 
-      <!-- Report Type Selector -->
-      <div class="folder-head">
-        <BaseSelectInput v-model="selectedForm">
-          <option v-for="option in formOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </BaseSelectInput>
-
-        <!-- <v-icon name="hi-information-circle" class="info-icon" scale="1.2" @click="toggleInfo" /> -->
-      </div>
-
-      <!-- Report Form -->
-      <div class="form-container">
-        <component :key="componentKey" :is="AbstractForm" ref="formComponent" :fields="selectedFormObject?.fields" />
-      </div>
-      <button class="submit-btn" @click="handleSubmit">SUBMIT</button>
-    </div>
+          <div class="button">
+            <BaseFormButton
+            class="submit-btn"
+            width="100%"
+            variant="red"
+            @click="handleSubmit"
+            >
+            SUBMIT
+            </BaseFormButton>
+          </div>
+        </div>
+      </template>
+    </FolderComponent>
 
     <!-- Supporting Evidence/s -->
     <div class="file-drop-area-container">
@@ -33,42 +48,55 @@
         Officials.
       </div>
 
-      <!-- <div class="drop-area" @dragover.prevent @drop.prevent="handleDrop"> -->
-      <!-- <div v-if="selectedFiles.length" v-for="(file, index) in selectedFiles" :key="index">
+      <!-- <div class="drop-area" @dragover.prevent @drop.prevent="handleDrop">
+      <div v-if="selectedFiles.length" v-for="(file, index) in selectedFiles" :key="index">
           <div class="file-icon-container" @click="deleteFile(index)">
             <v-icon name="bi-file-earmark-medical" scale="3.5" class="file-icon" />
             <p class="file-name">{{ file.name }}</p>
           </div>
-        </div> -->
-      <!-- <div class="drag-area-divs">DRAG FILES HERE</div> -->
-      <!-- <div style="opacity: 0.5">or</div> -->
-      <!-- <button class="choose-file-button" @click="triggerFileInput">Choose Files</button> -->
-      <!-- <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileChange" /> -->
-      <!-- </div> -->
-      <!-- <button class="file-upload-button" @click="uploadFiles">
-
-            <UploadModal
-                v-if="isModalVisible"
-                :initial-files="selectedFiles"
-                @close="closeModal"
-                @files-selected="handleFilesFromModal"
-            />
-
-            <button class="file-upload-button" @click="uploadFiles">
-                <img src="../assets/oble_icon.png" alt="" style="margin-right: auto; margin-bottom: 0;" />
-                <span style="margin: 0 auto;">UPLOAD</span>
-            </button> -->
+      </div>
+      <div class="drag-area-divs">DRAG FILES HERE</div>
+      <div style="opacity: 0.5">or</div>
+      <button class="choose-file-button" @click="triggerFileInput">Choose Files</button>
+      <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
+      </div> -->
+      <BaseFormButton 
+      class="file-upload-button" 
+      width="100%"
+      variant="red"
+      @click="uploadFiles"
+      >
+        <UploadModal
+            v-if="isModalVisible"
+            :initial-files="selectedFiles"
+            @close="closeModal"
+            @files-selected="handleFilesFromModal"
+        />
+        UPLOAD
+      </BaseFormButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-
+import FolderComponent from '@/components/Global/FolderComponent.vue'
 import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import AbstractForm from '@/components/SubmitReport/Forms/AbstractForm.vue'
 import { useReportTemplatesStore } from '@/stores/ReportStore'
 import type { ReportTemplate, Form } from '@/types/ReportInterface'
+
+const myTabs = ref([
+    { id: 'submit', title: 'Submit Report' },
+]);
+
+const currentTab = ref('submit');
+
+function handleTabChange(newTabId: string) {
+    console.log("Tab changed to:", newTabId);
+    currentTab.value = newTabId;
+}
 
 const reportTemplatesStore = useReportTemplatesStore()
 
@@ -189,51 +217,46 @@ const formOptions = computed(() => reportTemplatesStore.formOptions)
   color: rgb(191, 0, 0);
 }
 
-.container {
+.submit-container {
   width: 100%;
-  height: 100vh;
-  display: flex;
-  justify-content: flex-start;
-  align-items: end;
-  padding: 2vw;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-template-areas:
+  "left right";
+  gap: 1rem;
 }
 
-.folder-container {
-  flex-shrink: 0;
-  background: white;
-  width: 650px;
-  height: 87vh;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-  padding: 2rem;
-
-  display: flex;
-  flex-direction: column;
+.folder-component {
+  grid-area: left;
+  height: auto;
+  overflow: hidden;
 }
 
-.folder-tab {
-  position: absolute;
-  top: -7vh;
-  left: 0%;
-  background: url(@/assets/tab.png) no-repeat left center;
-  background-size: 100% 80%;
-  font-weight: bold;
-  color: darkgreen;
-  height: 12vh;
-  width: 45%;
-  padding-left: 5%;
-  padding-top: 4%;
+.left-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  gap: 1% 1%;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "select"
+    "form"
+    "button";
+    height: 100%;
+    max-height: 100%;
+  
 }
 
 .file-drop-area-container {
-  height: 87vh;
+  grid-area: right;
+  height: 100%;
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   padding: 2rem;
-  margin-left: 2vw;
-  margin-right: 2vw;
   flex-grow: 1;
 
   display: flex;
@@ -279,16 +302,16 @@ const formOptions = computed(() => reportTemplatesStore.formOptions)
   border-radius: 5px;
 }
 
-.file-upload-button {
-  margin-top: auto;
-  width: 80%;
-  height: 40px;
-  background-color: $red;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  align-self: center;
-}
+// .file-upload-button {
+//   margin-top: auto;
+//   width: 80%;
+//   height: 40px;
+//   background-color: $red;
+//   color: white;
+//   border: none;
+//   border-radius: 10px;
+//   align-self: center;
+// }
 
 .title-container {
   font-weight: bold;
@@ -318,25 +341,34 @@ const formOptions = computed(() => reportTemplatesStore.formOptions)
   display: flex;
 }
 
-.form-container {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+.form { 
+  grid-area: form; 
   overflow-y: auto;
-  margin-bottom: 2rem;
 }
 
-.submit-btn {
-  width: 100%;
-  background: $red;
-  color: white;
-  padding: 10px;
-  font-weight: bold;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: auto;
+.select {
+  grid-area: select;
+  display: flex;
+  flex-direction: row;
+ }
+
+.button { 
+  grid-area: button; 
+  margin: 0%; 
 }
+
+
+// .submit-btn {
+//   width: 100%;
+//   background: $red;
+//   color: white;
+//   padding: 10px;
+//   font-weight: bold;
+//   border: none;
+//   border-radius: 5px;
+//   cursor: pointer;
+//   // margin-top: auto;
+// }
 
 .drag-area-divs {
   opacity: 50%;
