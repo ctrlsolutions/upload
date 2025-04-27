@@ -4,6 +4,12 @@
       <label>{{ field.label }}</label>
 
       <!-- Text Input -->
+      <BaseTextInput
+        v-if="field.type === 'text'"
+        type="text"
+        variant="red"
+        :model-value="fieldResponse[field.id]"
+      ></BaseTextInput>
       <input
         v-if="field.type === 'text'"
         type="text"
@@ -24,7 +30,7 @@
         v-else-if="field.type === 'date'"
         v-model="fieldResponse[field.id]"
         :width="'100%'"
-        style="font-weight: 400;"
+        style="font-weight: 400"
       />
 
       <!-- Select Input -->
@@ -45,44 +51,34 @@
 import { reactive } from 'vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import { Field } from '@/types/ReportInterface'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 
 type Option = string | { value: string; label: string }
 
-type Field = {
-  id: string | number // Now using field.id
-  label: string
-  type: string // corresponds to "text", "number", etc.
-  required: boolean
-  regex_validation?: string | null
-  placeholder?: string | null
-  options?: Option[]
-}
-
 // Props
 const props = defineProps<{
-  fields: Field[]
+  fields: Field[] | undefined
 }>()
 
 const fieldResponse = reactive<Record<string | number, any>>({})
 const errors = reactive<Record<string | number, string>>({})
 
 // Normalize and initialize
-props.fields.forEach((field) => {
+props.fields?.forEach(field => {
   fieldResponse[field.id] = ''
   errors[field.id] = ''
 
   // Normalize options for select
   if (field.type === 'select' && Array.isArray(field.options)) {
-    field.options = field.options.map(opt =>
-      typeof opt === 'string' ? { value: opt, label: opt } : opt
-    )
+    field.options = field.options.map(opt => (typeof opt === 'string' ? { value: opt, label: opt } : opt))
   }
 })
 
 function validateForm() {
   let valid = true
 
-  props.fields.forEach(field => {
+  props.fields?.forEach(field => {
     const value = fieldResponse[field.id]
 
     if (field.required && (value === '' || value === null || value === undefined)) {
@@ -91,11 +87,7 @@ function validateForm() {
     } else if (field.type === 'number' && isNaN(value)) {
       errors[field.id] = `${field.label} must be a valid number.`
       valid = false
-    } else if (
-      field.type === 'number' &&
-      field.id === 'months' &&
-      (value <= 0 || isNaN(value))
-    ) {
+    } else if (field.type === 'number' && field.id === 'months' && (value <= 0 || isNaN(value))) {
       errors[field.id] = 'Valid number of months is required.'
       valid = false
     } else if (field.regex_validation && !new RegExp(field.regex_validation).test(value)) {
@@ -132,9 +124,7 @@ function exposeForm() {
 defineExpose({ exposeForm })
 </script>
 
-
-<style lang="scss" scoped> 
-
+<style lang="scss" scoped>
 .error {
   color: red;
   font-size: 0.8rem;
@@ -148,7 +138,7 @@ defineExpose({ exposeForm })
   margin-top: 2rem;
 
   border-radius: 10px;
-  background: #FCFCFC;
+  background: #fcfcfc;
   box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
   padding: 1.5rem;
   padding-left: 2rem;
