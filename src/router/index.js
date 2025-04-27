@@ -8,6 +8,7 @@ import AuthenticatedPagesLayout from '@/layouts/AuthenticatedPagesLayout.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
 import { isAuthenticated } from '@/services/AuthService'
 import SettingsPage from '@/pages/SettingsPage.vue'
+import ReportHistoryPage from '@/pages/ReportHistoryPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +36,11 @@ const router = createRouter({
       redirect: '/landing',
       children: [
         { path: 'report', component: LogInPage },
+        {
+          path: ':username/report-history',
+          component: ReportHistoryPage,
+          meta: { requiresAuth: true }
+        },
         {
           path: ':username/profile',
           component: ProfilePage,
