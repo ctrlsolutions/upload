@@ -93,8 +93,7 @@ $radius: 10px;
   background: transparent; 
   width: v-bind(width);   
   height: v-bind(height); 
-  position: relative;
-  padding-top: 50px; 
+  position: relative; 
 }
 
 .folder-tabs-container {
@@ -118,7 +117,7 @@ $radius: 10px;
     calc(-1*var(--r)) 100%/100% var(--r) repeat-x,
     conic-gradient(#000 0 0) padding-box;
   
-  background: $red; 
+  background: #014421; 
   color: white;
   cursor: pointer;
   position: absolute;
