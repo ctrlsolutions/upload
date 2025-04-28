@@ -28,90 +28,100 @@
             </div>
           </CardComponent>
 
-          <CardComponent width="100%" height="100%" title="Personal Information" :header="true">
-            <div class="edit-container">
-              <BaseFormButton variant="black" width="6rem" height="2rem" @click="isEditing = true" v-if="!isEditing">
-                Edit
-              </BaseFormButton>
-              <BaseFormButton v-if="isEditing" variant="black" width="6rem" height="2rem" @click="submitForm">
-                Save
-              </BaseFormButton>
-            </div>
-            <div class="info-grid">
-              <div class="input-group">
-                <BaseTextInput
-                  placeholder="First Name"
-                  id="firstName"
-                  :model-value="userProfile?.first_name"
-                  variant="red"
-                  :disabled="!isEditing"
-                  @update:model-value="value => handleInputChange('first_name', value)"
-                />
+          <FolderComponent :tabs="myTabs" :initialActiveTabId="currentTab" @update:activeTabId="handleTabChange" 
+            height="100%"
+            width="100%"
+            tab-font-size="1rem"
+          >
+            <template v-slot="{ activeTabId }">
+              <div v-if="activeTabId === 'personal'">
+                <div class="edit-container" >
+                  <BaseFormButton variant="black" width="6rem" height="2rem" @click="isEditing = true" v-if="!isEditing">
+                    Edit
+                  </BaseFormButton>
+                  <BaseFormButton v-if="isEditing" variant="black" width="6rem" height="2rem" @click="submitForm">
+                    Save
+                  </BaseFormButton>
+                </div>
+                <div class="info-grid">
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="First Name"
+                      id="firstName"
+                      :model-value="userProfile?.first_name"
+                      variant="red"
+                      :disabled="!isEditing"
+                      @update:model-value="value => handleInputChange('first_name', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="Middle Name"
+                      id="middleName"
+                      :model-value="userProfile?.middle_name"
+                      variant="red"
+                      :disabled="!isEditing"
+                      @update:model-value="value => handleInputChange('middle_name', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="Last Name"
+                      id="lastName"
+                      :model-value="userProfile?.last_name"
+                      variant="red"
+                      :disabled="!isEditing"
+                      @update:model-value="value => handleInputChange('last_name', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="Email"
+                      id="email"
+                      :model-value="userProfile?.email"
+                      type="email"
+                      variant="red"
+                      :disabled="!isEditing"
+                      @update:model-value="value => handleInputChange('email', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="Role"
+                      id="role"
+                      :model-value="userProfile.role"
+                      variant="red"
+                      :disabled="true"
+                      @update:model-value="value => handleInputChange('role', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="College"
+                      id="college"
+                      :model-value="userProfile.role"
+                      variant="red"
+                      :disabled="true"
+                      @update:model-value="value => handleInputChange('college', value)"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <BaseTextInput
+                      placeholder="Department"
+                      id="dept"
+                      :model-value="userProfile.role"
+                      variant="red"
+                      :disabled="true"
+                      @update:model-value="value => handleInputChange('department', value)"
+                    />
+                  </div>
+                </div>
               </div>
-              <div class="input-group">
-                <BaseTextInput
-                  placeholder="Middle Name"
-                  id="middleName"
-                  :model-value="userProfile?.middle_name"
-                  variant="red"
-                  :disabled="!isEditing"
-                  @update:model-value="value => handleInputChange('middle_name', value)"
-                />
-              </div>
-              <div class="input-group">
-                <BaseTextInput
-                  placeholder="Last Name"
-                  id="lastName"
-                  :model-value="userProfile?.last_name"
-                  variant="red"
-                  :disabled="!isEditing"
-                  @update:model-value="value => handleInputChange('last_name', value)"
-                />
-              </div>
-              <div class="input-group">
-                <BaseTextInput
-                  placeholder="Email"
-                  id="email"
-                  :model-value="userProfile?.email"
-                  type="email"
-                  variant="red"
-                  :disabled="!isEditing"
-                  @update:model-value="value => handleInputChange('email', value)"
-                />
-            </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="Role"
-                id="role"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('role', value)"
-              />
-            </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="College"
-                id="college"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('college', value)"
-              />
-            </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="Department"
-                id="dept"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('department', value)"
-              />
-            </div>
-          </div>
-        </CardComponent>
-      </div>
+              <div v-if="activeTabId === 'security'">Add Role Content...</div>
+              <div v-if="activeTabId === 'request'">Add College Content...</div>
+            </template>
+          </FolderComponent>   
+        </div>
       </CardComponent>
     </div>
   </div>
@@ -128,6 +138,7 @@ import { useRouter } from 'vue-router'
 import { logout } from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
 import { UserProfile } from '@/types/ProfileInterface'
+import FolderComponent from '@/components/Global/FolderComponent.vue'
 
 const router = useRouter()
 
@@ -186,6 +197,19 @@ const submitForm = async () => {
     console.error('Error updating profile:', error)
   }
 }
+
+const myTabs = ref([
+        { id: 'personal', title: 'Personal Information' },
+        { id: 'security', title: 'Security' },
+        { id: 'request', title: 'Request' },
+    ]);
+
+    const currentTab = ref('personal');
+
+    function handleTabChange(newTabId: string) {
+        console.log("Tab changed to:", newTabId);
+        currentTab.value = newTabId;
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -301,7 +325,7 @@ const submitForm = async () => {
 .edit-container {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.5em;
 }
 
 .info-grid {

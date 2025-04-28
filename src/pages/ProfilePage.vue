@@ -87,6 +87,7 @@ import { ref, computed, onMounted } from 'vue'
 import { getProfileData } from '@/services/ProfileService'
 import { UserProfile } from '@/types/ProfileInterface'
 import { useUserStore } from '@/stores/UserStore'
+import FolderComponent from '@/components/Global/FolderComponent.vue'
 
 const userStore = useUserStore()
 const dashboardData = computed(() => userStore.getUserProfile)

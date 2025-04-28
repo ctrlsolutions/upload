@@ -355,15 +355,6 @@ const filteredDepartments = computed(() => {
   display: block;
   text-align: left;
   margin-bottom: 0.3rem;
-}
-
-.label1 {
-  font-size: small;
-  font-weight: bold;
-  color: #6f6f6f;
-  display: block;
-  text-align: left;
-  margin-bottom: 0.3rem;
   margin-left: 0.7rem;
 }
 
