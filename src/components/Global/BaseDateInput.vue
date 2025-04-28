@@ -1,10 +1,10 @@
 <template>
   <div class="date-picker" :style="{ width: width }">
-    <div class="input-wrapper" :data-placeholder="placeholder">
+    <div class="input-wrapper">
       <input
         ref="inputRef"
         type="date"
-        :class="['date-input', { 'is-empty': !modelValue }]"
+        class="date-input"
         placeholder=""
         v-bind="$attrs"
         :value="modelValue"
@@ -28,10 +28,7 @@ const props = defineProps({
     default: '12.5rem'
   },
   modelValue: String,
-  placeholder: {
-    type: String,
-    default: 'Select a date' 
-  }
+  placeholder: String // Placeholder prop defined but not used by input type="date"
 })
 
 defineEmits(['update:modelValue'])
@@ -46,6 +43,9 @@ const openDatePicker = () => {
 </script>
 
 <style lang="scss" scoped>
+/* Assuming $red is defined globally or replace with a specific color value */
+$red: #e53e3e; // Example definition
+
 .date-picker {
   margin-top: -0.5rem;
 }
@@ -57,29 +57,6 @@ const openDatePicker = () => {
   overflow: visible;
   justify-content: space-between;
   margin-top: 0.5rem;
-
-  &::before {
-    content: attr(data-placeholder); /* Display text from the data-placeholder attribute */
-    position: absolute;
-    left: 0.8rem; /* Align with input's left padding */
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.8rem; /* Match input font size */
-    font-weight: 400; /* Lighter weight for placeholder */
-    color: rgba(117, 17, 19, 0.5); /* Placeholder text color */
-    pointer-events: none; /* Allow clicks to go through to the input */
-    z-index: 1; /* Position above the input's native text */
-    opacity: 0; /* Hide by default */
-    transition: opacity 0.2s ease-in-out; /* Smooth fade */
-    font-family: 'Inter', sans-serif; /* Ensure font matches */
-    line-height: 2rem; /* Match input line-height */
-  }
-
-  /* Show the pseudo-placeholder when the input inside has the 'is-empty' class */
-  /* Requires browser support for :has() */
-  &:has(.date-input.is-empty)::before {
-    opacity: 1;
-  }
 }
 
 .date-input {
@@ -92,62 +69,35 @@ const openDatePicker = () => {
   border-radius: 0.6rem;
   text-align: left;
   padding-left: 0.8rem;
-  padding-right: 0.5rem;
+  padding-right: 2.5rem; /* Adjusted padding for icon */
   margin-right: 0.1rem;
-  // margin-left: 0.7rem;
   font-size: 0.8rem;
   line-height: 2rem;
   color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
-  -moz-appearance: none;  
+  -moz-appearance: none;
   appearance: none;
   font-family: 'Inter', sans-serif;
-  
-  /* When the input is empty, hide the browser's default date format text */
-  &.is-empty {
-    color: transparent !important; /* Make native text invisible */
-  }
-
-  /* When focused AND empty, keep the native text transparent but show the caret */
-  &.is-empty:focus {
-     color: transparent !important;
-     caret-color: rgba(117, 17, 19, 0.7); /* Set cursor color explicitly */
-  }
-
-  /* Style the native date picker indicator to be invisible but clickable */
-  &::-webkit-calendar-picker-indicator {
-    opacity: 0; /* Make it invisible */
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%; /* Cover the input area */
-    height: 100%;
-    cursor: pointer;
-    background: transparent;
-    border: none;
-    z-index: 2; /* Ensure it's above the pseudo-element */
-  }
-
-  /* Hide the default date picker indicator in Firefox */
-  &::-moz-calendar-picker-indicator {
-    display: none;
-  }
 }
 
 .date-input:focus {
   outline: none;
-  border-color: $red;
+  border-color: $red; /* Consider darkening on focus: darken($red, 10%) */
 }
 
+/* Hide the default webkit calendar picker */
 .date-input::-webkit-calendar-picker-indicator {
   opacity: 0;
   cursor: pointer;
   position: absolute;
   right: 0;
-  width: 20%;
+  width: 100%; /* Make the whole input clickable for the picker */
   height: 100%;
+  background: transparent; /* Ensure it's truly invisible */
+  border: none;
 }
 
+/* Hide the default moz calendar picker */
 .date-input::-moz-calendar-picker-indicator {
   display: none;
 }
@@ -155,12 +105,12 @@ const openDatePicker = () => {
 .dropdown-toggle {
   position: absolute;
   top: 50%;
-  right: 0.3rem;
+  right: 0.5rem; /* Adjusted position */
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  pointer-events: auto;
-  z-index: 100;
+  pointer-events: auto; /* Allow clicks on the icon */
+  z-index: 1; /* Position above input */
   cursor: pointer;
   opacity: 0.8;
   transition: opacity 0.3s ease;
@@ -171,6 +121,8 @@ const openDatePicker = () => {
   opacity: 1;
 }
 
+/* Original @supports blocks - may conflict with appearance:none and custom icon */
+/*
 @supports (-moz-appearance: none) {
   .dropdown-toggle {
     display: none;
@@ -190,6 +142,8 @@ const openDatePicker = () => {
     width: 2rem;
     pointer-events: auto;
     cursor: pointer;
+    // display: block; // This would show the native Firefox picker if not hidden above
   }
 }
+*/
 </style>
