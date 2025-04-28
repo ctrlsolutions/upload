@@ -16,6 +16,7 @@ import {
   MdSpacedashboardRound,
   FaInfoCircle,
   BiFileEarmarkMedicalFill,
+  BiFileEarmarkExcelFill,
 } from 'oh-vue-icons/icons'
 import vue3GoogleLogin from 'vue3-google-login'
 
@@ -41,6 +42,7 @@ addIcons(
   MdSpacedashboardRound,
   FaInfoCircle,
   BiFileEarmarkMedicalFill,
+  BiFileEarmarkExcelFill,
 )
 
 const pinia = createPinia()

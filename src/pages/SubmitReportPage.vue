@@ -57,8 +57,14 @@
 
       <div class="drop-area" @dragover.prevent @drop.prevent="handleDrop">
         <div v-if="selectedFiles.length" v-for="(file, index) in selectedFiles" :key="index">
-          <div class="file-icon-container" @click="deleteFile(index)">
-            <v-icon name="bi-file-earmark-medical-fill" scale="3.5" class="file-icon" />
+          <div
+            class="file-icon-container"
+            @click="deleteFile(index)"
+            @mouseenter="isHover = true"
+            @mouseleave="isHover = false"
+          >
+            <v-icon v-if="isHover" name="bi-file-earmark-excel-fill" scale="3.5" class="file-icon file-icon-hover" />
+            <v-icon v-else name="bi-file-earmark-medical-fill" scale="3.5" class="file-icon" />
             <p class="file-name">{{ file.name }}</p>
           </div>
         </div>
@@ -66,7 +72,7 @@
           <div class="drag-area-divs">DRAG FILES HERE</div>
           <div>or</div>
           <!-- <button class="choose-file-button" @click="triggerFileInput">Choose Files</button> -->
-          <BaseFormButton @click="triggerFileInput" variant="red" width="100%">CHOOSE FILES</BaseFormButton>
+          <BaseFormButton @click="triggerFileInput" variant="green" width="100%">CHOOSE FILES</BaseFormButton>
         </div>
         <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
       </div>
@@ -74,12 +80,13 @@
         v-if="selectedFiles.length"
         class="file-upload-button"
         width="100%"
-        variant="red"
+        variant="green"
         @click="triggerFileInput"
       >
-        UPLOAD
+        ADD MORE FILES
       </BaseFormButton>
     </div>
+    <Toast ref="toast" />
   </div>
 </template>
 
@@ -92,8 +99,13 @@ import AbstractForm from '@/components/SubmitReport/Forms/AbstractForm.vue'
 import { useReportTemplatesStore } from '@/stores/ReportStore'
 import type { ReportTemplate, Form } from '@/types/ReportInterface'
 import { submitReport } from '@/services/ReportService'
+import Toast from '@/components/Global/Toast.vue'
+
+const toast = ref<InstanceType<typeof Toast> | null>(null)
 
 const reportTemplatesStore = useReportTemplatesStore()
+
+const isHover = ref(false)
 
 // DESC TOOLTIP
 const infoVisible = ref(false)
@@ -223,6 +235,7 @@ const handleSubmit = async () => {
     // selectedFiles.value = []
     // componentKey.value += 1
     // // formComponent.value.reset?.()
+    toast.value?.showToast('Submit report successful!', 'success')
   } catch (err) {
     console.error('Form submission failed:', err)
     alert('Submission failed. Please try again.')
@@ -327,6 +340,7 @@ const handleSubmit = async () => {
 
 .drop-area-head {
   color: $red;
+  padding-bottom: 0.5rem;
 }
 
 .drop-area {
@@ -356,6 +370,7 @@ const handleSubmit = async () => {
 .drop-area-desc {
   width: 100%;
   font-size: smaller;
+  padding-bottom: 0.7rem;
 }
 
 .title-container {
@@ -393,6 +408,10 @@ const handleSubmit = async () => {
   margin: 0.5rem;
 
   z-index: 100;
+}
+
+.file-icon-hover {
+  color: red;
 }
 
 .file-name {
