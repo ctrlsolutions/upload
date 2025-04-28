@@ -5,7 +5,6 @@
         ref="inputRef"
         type="date"
         class="date-input"
-        placeholder=""
         v-bind="$attrs"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
@@ -27,8 +26,7 @@ const props = defineProps({
     type: String,
     default: '12.5rem'
   },
-  modelValue: String,
-  placeholder: String // Placeholder prop defined but not used by input type="date"
+  modelValue: String
 })
 
 defineEmits(['update:modelValue'])
@@ -43,9 +41,6 @@ const openDatePicker = () => {
 </script>
 
 <style lang="scss" scoped>
-/* Assuming $red is defined globally or replace with a specific color value */
-$red: #e53e3e; // Example definition
-
 .date-picker {
   margin-top: -0.5rem;
 }
@@ -68,36 +63,34 @@ $red: #e53e3e; // Example definition
   cursor: text;
   border-radius: 0.6rem;
   text-align: left;
-  padding-left: 0.8rem;
-  padding-right: 2.5rem; /* Adjusted padding for icon */
+  padding-left: 2.3rem;
+  padding-right: 0.5rem;
   margin-right: 0.1rem;
+  margin-left: 0.7rem;
   font-size: 0.8rem;
   line-height: 2rem;
   color: rgba(117, 17, 19, 0.7);
   -webkit-appearance: none;
-  -moz-appearance: none;
+  -moz-appearance: none;  
   appearance: none;
   font-family: 'Inter', sans-serif;
+  
 }
 
 .date-input:focus {
   outline: none;
-  border-color: $red; /* Consider darkening on focus: darken($red, 10%) */
+  border-color: $red;
 }
 
-/* Hide the default webkit calendar picker */
 .date-input::-webkit-calendar-picker-indicator {
   opacity: 0;
   cursor: pointer;
   position: absolute;
   right: 0;
-  width: 100%; /* Make the whole input clickable for the picker */
+  width: 20%;
   height: 100%;
-  background: transparent; /* Ensure it's truly invisible */
-  border: none;
 }
 
-/* Hide the default moz calendar picker */
 .date-input::-moz-calendar-picker-indicator {
   display: none;
 }
@@ -105,12 +98,12 @@ $red: #e53e3e; // Example definition
 .dropdown-toggle {
   position: absolute;
   top: 50%;
-  right: 0.5rem; /* Adjusted position */
+  right: 0.3rem;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
-  pointer-events: auto; /* Allow clicks on the icon */
-  z-index: 1; /* Position above input */
+  pointer-events: auto;
+  z-index: 100;
   cursor: pointer;
   opacity: 0.8;
   transition: opacity 0.3s ease;
@@ -121,8 +114,6 @@ $red: #e53e3e; // Example definition
   opacity: 1;
 }
 
-/* Original @supports blocks - may conflict with appearance:none and custom icon */
-/*
 @supports (-moz-appearance: none) {
   .dropdown-toggle {
     display: none;
@@ -142,8 +133,6 @@ $red: #e53e3e; // Example definition
     width: 2rem;
     pointer-events: auto;
     cursor: pointer;
-    // display: block; // This would show the native Firefox picker if not hidden above
   }
 }
-*/
 </style>
