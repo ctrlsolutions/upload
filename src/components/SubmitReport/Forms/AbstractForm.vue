@@ -1,28 +1,28 @@
 <template>
   <div class="abstract-form">
     <div class="form-group" v-for="(field, index) in fields" :key="field.id">
-
       <!-- Text Input -->
       <BaseTextInput
         v-if="field.type === 'text'"
+        id="form-input"
         type="text"
         variant="red"
         width="100%"
         :placeholder="field.label"
-        :model-value="fieldResponse[field.id]"
+        v-model="fieldResponse[field.id]"
       ></BaseTextInput>
 
-      
       <!-- Number Input -->
       <BaseTextInput
         v-if="field.type === 'number'"
+        id="form-num-input"
         type="number"
         variant="red"
         width="100%"
         :placeholder="field.label"
-        :model-value="fieldResponse[field.id]"
+        v-model="fieldResponse[field.id]"
       ></BaseTextInput>
-      
+
       <!-- Date Input -->
       <BaseDateInput
         v-else-if="field.type === 'date'"
@@ -36,9 +36,9 @@
 
       <BaseSelectInput v-else-if="field.type === 'select'" v-model="fieldResponse[field.id]">
         <option disabled value="">Select {{ field.label }}</option>
-          <option v-for="option in field.options" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
+        <option v-for="option in field.options" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
       </BaseSelectInput>
       <!-- Error Message -->
       <span v-if="errors[field.id]" class="error">{{ errors[field.id] }}</span>
@@ -52,8 +52,6 @@ import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 import { Field } from '@/types/ReportInterface'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-
-// type Option = string | { value: string; label: string }
 
 // Props
 const props = defineProps<{
@@ -86,7 +84,7 @@ function validateForm() {
     } else if (field.type === 'number' && isNaN(value)) {
       errors[field.id] = `${field.label} must be a valid number.`
       valid = false
-    } else if (field.type === 'number' && field.id === 'months' && (value <= 0 || isNaN(value))) {
+    } else if (field.type === 'number' && (value <= 0 || isNaN(value))) {
       errors[field.id] = 'Valid number of months is required.'
       valid = false
     } else if (field.regex_validation && !new RegExp(field.regex_validation).test(value)) {
@@ -114,7 +112,7 @@ function exposeForm() {
   }
 
   const result: Record<string | number, any> = {}
-  props.fields.forEach(field => {
+  props?.fields?.forEach(field => {
     result[field.id] = fieldResponse[field.id]
   })
   return result
@@ -130,18 +128,11 @@ defineExpose({ exposeForm })
 }
 
 .abstract-form {
-  // flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  // overflow-y: scroll;
-  // height: 100%;
+  overflow-y: auto;
 
   border-radius: 10px;
-  background: #fcfcfc;
-  box-shadow: 0px 3px 8px 0px rgba(0, 0, 0, 0.25) inset;
-  padding: 1.5rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
+  background: white;
+  padding-top: 1.5rem;
 }
 
 .form-group {

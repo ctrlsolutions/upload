@@ -78,40 +78,40 @@
                   :disabled="!isEditing"
                   @update:model-value="value => handleInputChange('email', value)"
                 />
+              </div>
+              <div class="input-group">
+                <BaseTextInput
+                  placeholder="Role"
+                  id="role"
+                  :model-value="userProfile?.role"
+                  variant="red"
+                  :disabled="true"
+                  @update:model-value="value => handleInputChange('role', value)"
+                />
+              </div>
+              <div class="input-group">
+                <BaseTextInput
+                  placeholder="College"
+                  id="college"
+                  :model-value="userProfile?.role"
+                  variant="red"
+                  :disabled="true"
+                  @update:model-value="value => handleInputChange('college', value)"
+                />
+              </div>
+              <div class="input-group">
+                <BaseTextInput
+                  placeholder="Department"
+                  id="dept"
+                  :model-value="userProfile?.role"
+                  variant="red"
+                  :disabled="true"
+                  @update:model-value="value => handleInputChange('department', value)"
+                />
+              </div>
             </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="Role"
-                id="role"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('role', value)"
-              />
-            </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="College"
-                id="college"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('college', value)"
-              />
-            </div>
-            <div class="input-group">
-              <BaseTextInput
-                placeholder="Department"
-                id="dept"
-                :model-value="userProfile.role"
-                variant="red"
-                :disabled="true"
-                @update:model-value="value => handleInputChange('department', value)"
-              />
-            </div>
-          </div>
-        </CardComponent>
-      </div>
+          </CardComponent>
+        </div>
       </CardComponent>
     </div>
   </div>
