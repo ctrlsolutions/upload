@@ -33,7 +33,7 @@
                             <option disabled>Select a timeframe</option>
                             <option value="SM">6 Months</option>
                             <option value="YR">Year</option>
-                            <option value="CS">Custom / Prefer not to say</option>
+                            <option value="CS">Custom</option>
                         </BaseSelectInput>
 
                         <p class="generation-label">Save option:</p>
