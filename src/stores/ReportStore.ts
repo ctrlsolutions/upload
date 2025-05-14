@@ -1,34 +1,34 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import axios from 'axios'
-import { ReportTemplate } from '@/types/ReportInterface'
-import { getFormTemplates } from '@/services/ReportService'
+import { Form } from '@/types/ReportInterface'
+import { getForms } from '@/services/ReportService'
 
-export const useReportTemplatesStore = defineStore('report-templates', {
+export const useReportFormStore = defineStore('report-form', {
   state: () => ({
-    reportTemplates: [] as ReportTemplate[],
+    forms: [] as Form[],
   }),
   getters: {
     getFormByReportType: state => {
       return (reportType: string) => {
-        const template = state.reportTemplates.find(t => t.report_type === reportType)
-        return template ? template.form : null
+        const template = state.forms.find(t => t.code === reportType)
+        return template ? template : null
       }
     },
     firstReport: state => {
-      return state.reportTemplates.length > 0 ? state.reportTemplates[0].form : null
+      return state.forms.length > 0 ? state.forms[0] : null
     },
     formOptions: state => {
-      return state.reportTemplates.map(t => ({
-        label: t.form.title,
-        value: t.form.id,
+      return state.forms.map(t => ({
+        label: t.name,
+        value: t.id,
       }))
     },
     getFormById: state => {
       return (formId: string | number) => {
-        for (const template of state.reportTemplates) {
-          if (template.form.id.toString() === formId.toString()) {
-            return template.form
+        for (const form of state.forms) {
+          if (form.id.toString() === formId.toString()) {
+            return form
           }
         }
         return null
@@ -36,10 +36,10 @@ export const useReportTemplatesStore = defineStore('report-templates', {
     },
   },
   actions: {
-    async fetchTemplates() {
-      const { data } = await getFormTemplates()
-      console.log('Fetched templates:', data)
-      this.reportTemplates = data
+    async fetchForms() {
+      const { data } = await getForms()
+      console.log('Fetched forms:', data)
+      this.forms = data
     },
   },
 })
