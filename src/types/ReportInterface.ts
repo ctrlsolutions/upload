@@ -11,13 +11,9 @@ export interface Field {
 
 export interface Form {
   id: number
-  title: string
+  name: string
+  code: string
   description: string | null
   active: boolean
   fields: Field[]
-}
-
-export interface ReportTemplate {
-  report_type: string
-  form: Form
 }

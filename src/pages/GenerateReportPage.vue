@@ -1,12 +1,14 @@
 <template>
-    <div class="container">
+    <div class="generate-container">
         <FolderComponent 
+            width="100%"
             :tabs="myTabs" 
             :initialActiveTabId="currentTab"
             @update:activeTabId="handleTabChange" 
+            class="folder-component"
         >
             <template v-slot="{ activeTabId }"> 
-                <div v-if="activeTabId === 'generate'">
+                <div v-if="activeTabId === 'generate'" class="content-area">
                     <div class="options-container">
                         <p class="scope-label">Select a scope:</p>
                         <BaseSelectInput
@@ -17,18 +19,22 @@
                                 { value: 'college', label: 'College' },
                                 { value: 'university', label: 'University' },
                             ]"
-                        />
+                        >
+                            <option disabled>Select a scope</option>
+                            <option value="DEPT">Department</option>
+                            <option value="COLG">College</option>
+                            <option value="UNIV">University / Prefer not to say</option>
+                        </BaseSelectInput>
                         <p class="timeframe-label">Select a timeframe:</p>
                         <BaseSelectInput
                             class="timeframe-select"
-                            placeholder="Summary timeframe"
                             v-model="timeframe"
-                            :options="[
-                                { value: 'monthly', label: 'Monthly' },
-                                { value: 'quarterly', label: 'Quarterly' },
-                                { value: 'annual', label: 'Annual' },
-                            ]"
-                        />
+                        >
+                            <option disabled>Select a timeframe</option>
+                            <option value="SM">6 Months</option>
+                            <option value="YR">Year</option>
+                            <option value="CS">Custom</option>
+                        </BaseSelectInput>
 
                         <p class="generation-label">Save option:</p>
                         <BaseFormRadio
@@ -41,20 +47,20 @@
                         </BaseFormButton>
                     </div>
 
-                    <div class="line"></div>
-
-                    <div class="preview-title">Generate Summary Document Preview</div>
+                    
+                    <div class="preview-title">
+                        <div class="line"></div>
+                        Generate Summary Document Preview
+                    </div>
 
                     <div class="preview-container">
-                        <v-icon name="bi-file-earmark-text" class="preview-icon" scale="2" />
+                        <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" />
                     </div>
 
                     <BaseFormButton variant="red" width="100%" type="button">
                         Generate
                     </BaseFormButton>
                 </div>
-                <div v-if="activeTabId === 'addRole'">Add Role Content...</div>
-                <div v-if="activeTabId === 'addCollege'">Add College Content...</div>
             </template>
         </FolderComponent>
     </div>
@@ -71,8 +77,6 @@
 
     const myTabs = ref([
         { id: 'generate', title: 'Generate Summary' },
-        { id: 'addRole', title: 'Add Role' },
-        { id: 'addCollege', title: 'Add College' },
     ]);
 
     const currentTab = ref('generate');
@@ -86,9 +90,30 @@
 <style lang="scss" scoped>
 .container {
     width: 100%;
-    display: flex;
-    justify-content: center;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    box-sizing: border-box;
     margin: 0;
+    justify-content: center;
+    align-items: end;
+}
+
+.folder-component {
+    height: 100%;
+    overflow: hidden;
+}
+
+.content-area {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: 1fr 0.5fr 2fr 1fr 0.2fr;
+    gap: 1rem;
+    box-sizing: border-box;
 }
 
 .options-container {
@@ -154,7 +179,6 @@
 }
 
 .preview-container {
-    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -162,6 +186,7 @@
     border-radius: 10px;
     padding: 2rem;
     margin-bottom: 0.5rem;
+    grid-row: span 2 / span 2;
 }
 
 .update-button {
