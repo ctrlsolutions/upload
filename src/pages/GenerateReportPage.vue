@@ -10,21 +10,25 @@
             <template v-slot="{ activeTabId }"> 
                 <div v-if="activeTabId === 'generate'" class="content-area">
                     <div class="options-container">
-                        <p class="scope-label">Select a scope:</p>
-                        <BaseSelectInput
-                            class="scope-select"
-                            placeholder="Summary scope"
-                            :options="[
-                                { value: 'department', label: 'Department'},
-                                { value: 'college', label: 'College' },
-                                { value: 'university', label: 'University' },
-                            ]"
-                        >
-                            <option disabled>Select a scope</option>
-                            <option value="DEPT">Department</option>
-                            <option value="COLG">College</option>
-                            <option value="UNIV">University / Prefer not to say</option>
-                        </BaseSelectInput>
+                        <div v-if="isHead">
+                            <p class="scope-label">Select a scope:</p>
+                            <BaseSelectInput
+                                class="scope-select"
+                                placeholder="Summary scope"
+                                :options="[
+                                    { value: 'department', label: 'Department'},
+                                    { value: 'college', label: 'College' },
+                                    { value: 'university', label: 'University' },
+                                ]"
+                            >
+                                <option disabled>Select a scope</option>
+                                <option value="SELF">Self</option>
+                                <option value="DEPT">Department</option>
+                                <option value="COLG">College</option>
+                                <option value="UNIV">University</option>
+                            </BaseSelectInput>
+                        </div>
+
                         <p class="timeframe-label">Select a timeframe:</p>
                         <BaseSelectInput
                             class="timeframe-select"
@@ -67,12 +71,15 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref } from "vue";
+    import { ref, computed, onMounted } from "vue";
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import BaseFormRadio from "@/components/Global/BaseFormRadio.vue";
     import BaseFormButton from "@/components/Global/BaseFormButton.vue";
     import FolderComponent from "@/components/Global/FolderComponent.vue";
+    import { useUserStore } from '@/stores/UserStore';
 
+
+    const userStore = useUserStore();
     const timeframe = ref('');
 
     const myTabs = ref([
@@ -81,10 +88,25 @@
 
     const currentTab = ref('generate');
 
+    const isHead = computed(() => {
+        const role = userStore.profile?.role?.toLowerCase();
+        return role === 'department_head' || 
+            role === 'college_dean' || 
+            role === 'chancellor';
+    });
+
+    onMounted(async () => {
+        if (!userStore.initialized) {
+            await userStore.fetchUserProfile();
+        }
+    });
+
     function handleTabChange(newTabId: string) {
         console.log("Tab changed to:", newTabId);
         currentTab.value = newTabId;
     }
+
+
 </script>
 
 <style lang="scss" scoped>
