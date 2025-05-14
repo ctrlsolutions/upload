@@ -14,12 +14,7 @@
                             <p class="scope-label">Select a scope:</p>
                             <BaseSelectInput
                                 class="scope-select"
-                                placeholder="Summary scope"
-                                :options="[
-                                    { value: 'department', label: 'Department'},
-                                    { value: 'college', label: 'College' },
-                                    { value: 'university', label: 'University' },
-                                ]"
+                                v-model="scope"
                             >
                                 <option disabled>Select a scope</option>
                                 <option value="SELF">Self</option>
@@ -46,8 +41,14 @@
                             name="saveOption" value="pdf" id="pdf-option"
                             label="Save as .pdf"
                         />
-                        <BaseFormButton variant="red" height="100%" width="100%" type="button">
-                            Update Preview
+                        <BaseFormButton 
+                            variant="red" 
+                            height="100%" 
+                            width="100%" 
+                            type="button"
+                            @click="updatePreview"
+                        >
+                            {{ isLoadingPreview ? 'Loading...' : 'Update Preview' }}
                         </BaseFormButton>
                     </div>
 
@@ -58,11 +59,25 @@
                     </div>
 
                     <div class="preview-container">
-                        <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" />
+                        <template v-if="isLoadingPreview">
+                            <span>Loading preview...</span>
+                        </template>
+                        <template v-else-if="previewData">
+                            <pre>{{ previewData }}</pre>
+                        </template>
+                        <template v-else>
+                            <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" />
+                        </template>
                     </div>
 
-                    <BaseFormButton variant="red" width="100%" type="button">
-                        Generate
+                    <BaseFormButton 
+                        variant="red" 
+                        width="100%" 
+                        type="button"
+                        @click="generateReport"
+                        :disabled="isGenerating || isLoadingPreview"
+                    >
+                        {{ isGenerating ? 'Generating...' : 'Generate' }}
                     </BaseFormButton>
                 </div>
             </template>
@@ -72,6 +87,7 @@
 
 <script lang="ts" setup>
     import { ref, computed, onMounted } from "vue";
+    import axios from "axios";
     import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
     import BaseFormRadio from "@/components/Global/BaseFormRadio.vue";
     import BaseFormButton from "@/components/Global/BaseFormButton.vue";
@@ -81,6 +97,12 @@
 
     const userStore = useUserStore();
     const timeframe = ref('');
+    const scope = ref('');
+    const previewData = ref<string | null>(null);
+
+    const isLoadingPreview = ref(false);
+    const isGenerating = ref(false); 
+    const saveOption = ref('pdf'); 
 
     const myTabs = ref([
         { id: 'generate', title: 'Generate Summary' },
@@ -106,7 +128,37 @@
         currentTab.value = newTabId;
     }
 
+    function updatePreview() {
+        isLoadingPreview.value = true;
+        previewData.value = null;
+        
+        // Simulate fetching preview
+        setTimeout(() => {
+            previewData.value = `Mock preview data for scope: ${scope.value || 'Self'}, timeframe: ${timeframe.value}`;
+            isLoadingPreview.value = false;
+        }, 1000); // 1 second delay to simulate loading
+    }
 
+    function generateReport() {
+        isGenerating.value = true;
+
+        const payload = {
+            scope: scope.value || 'SELF',
+            timeframe: timeframe.value || '',
+            saveOption: saveOption.value || 'pdf',
+        };
+
+        axios.post('/api/report/generate-pdf', payload)
+
+            .then(response => {
+                console.log('Report generated:', response.data);
+                isGenerating.value = false;
+            })
+            .catch(error => {
+                console.error('Error generating report:', error);
+                isGenerating.value = false;
+            });
+    }
 </script>
 
 <style lang="scss" scoped>
