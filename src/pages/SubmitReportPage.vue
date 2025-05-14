@@ -96,14 +96,14 @@ import FolderComponent from '@/components/Global/FolderComponent.vue'
 import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import AbstractForm from '@/components/SubmitReport/Forms/AbstractForm.vue'
-import { useReportTemplatesStore } from '@/stores/ReportStore'
-import type { ReportTemplate, Form } from '@/types/ReportInterface'
+import { useReportFormStore } from '@/stores/ReportStore'
+import type { Form } from '@/types/ReportInterface'
 import { submitReport } from '@/services/ReportService'
 import Toast from '@/components/Global/Toast.vue'
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
-const reportTemplatesStore = useReportTemplatesStore()
+const reportFormStore = useReportFormStore()
 
 const isHover = ref(false)
 
@@ -151,7 +151,7 @@ function handleFileChange(event: Event) {
 const selectedForm = ref<string | undefined>(undefined)
 const selectedFormObject = computed(() => {
   if (!selectedForm.value) return null
-  return reportTemplatesStore.getFormById(selectedForm.value)
+  return reportFormStore.getFormById(selectedForm.value)
 })
 
 const formComponent = ref<{
@@ -165,7 +165,7 @@ const formComponent = ref<{
 const componentKey = ref(0)
 
 // function onSelectChange(selectedId: number) {
-//   const selectedTemplate = reportTemplatesStore.reportTemplates.find(template => template.form.id === selectedId)
+//   const selectedTemplate = reportFormStore.reportTemplates.find(template => template.form.id === selectedId)
 //   selectedForm.value = selectedTemplate ? selectedTemplate.form : null
 // }
 
@@ -173,13 +173,13 @@ onMounted(async () => {
   console.log('Component has been mounted!')
 
   try {
-    await reportTemplatesStore.fetchTemplates()
+    await reportFormStore.fetchForms()
   } catch (error) {
     console.error('There was an error fetching the data:', error)
   }
 })
 
-const formOptions = computed(() => reportTemplatesStore.formOptions)
+const formOptions = computed(() => reportFormStore.formOptions)
 
 function handleDrop(event: DragEvent) {
   const files = event.dataTransfer?.files
@@ -219,28 +219,14 @@ const handleSubmit = async () => {
       console.log(pair[0] + ': ' + pair[1])
     }
     const response = await submitReport(submissionData)
-    // const response = await fetch('http://127.0.0.1:8000/api/responses/', {
-    //   method: 'POST',
-    //   body: submissionData,
-    // })
-
-    // if (!response.ok) {
-    //   throw new Error(`HTTP error! status: ${response.status}`)
-    // }
-
-    // alert('Report submitted successfully!')
-    // console.log(await response.json())
-
-    // // Reset form and files
-    // selectedFiles.value = []
-    // componentKey.value += 1
-    // // formComponent.value.reset?.()
     toast.value?.showToast('Submit report successful!', 'success')
   } catch (err) {
     console.error('Form submission failed:', err)
     alert('Submission failed. Please try again.')
   }
 }
+
+// TODO: clean up code. make fields required (and supporting evidence)
 </script>
 
 <style lang="scss" scoped>
