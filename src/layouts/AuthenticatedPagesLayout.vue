@@ -4,52 +4,43 @@
     <!-- TODO: deal with nav links -->
     <nav class="sidebar">
       <div class="sidebar-top-group">
-        <img src="@/assets/navbar/logo.png" alt="logo" class="logo" />
+        <img src="@/assets/logo.png" alt="logo" class="logo" />
       </div>
       <div class="sidebar-mid-group">
         <router-link :to="dashboardRoute" class="nav-link">
-          <img
-            src="@/assets/navbar/dashboard.png"
-            alt="dashboard"
-            class="icon"
-          />
+          <v-icon name="md-spacedashboard-round" class="icon" scale="3" />
           <span class="icon-label">Dashboard</span>
         </router-link>
-        <router-link to="/" class="nav-link">
-          <img
-            src="@/assets/navbar/submit_report.png"
-            alt="submit-report"
-            class="icon"
-          />
+        <router-link to="/submit" class="nav-link">
+          <v-icon name="fa-folder-open" class="icon" />
           <span class="icon-label">Submit Report</span>
         </router-link>
+        <router-link to="/generate" class="nav-link">
+          <v-icon name="fa-clipboard-list" class="icon" />
+          <span class="icon-label">Generate Report</span>
+        </router-link>
         <router-link to="/report" class="nav-link">
-          <img
-            src="@/assets/navbar/report_history.png"
-            alt="report-history"
-            class="icon"
-          />
+          <v-icon name="fa-history" class="icon" />
           <span class="icon-label">Report History</span>
         </router-link>
-        <router-link to="/" class="nav-link">
-          <img src="@/assets/navbar/members.png" alt="members" class="icon" />
+        <router-link to="/report" class="nav-link">
+          <v-icon name="io-people" class="icon" />
           <span class="icon-label">Members</span>
         </router-link>
-        <router-link to="/" class="nav-link">
-          <img
-            src="@/assets/navbar/report_summary.png"
-            alt="report-summary"
-            class="icon"
-          />
-          <span class="icon-label">Report Summary</span>
+        <router-link :to="adminRoute" class="nav-link">
+          <v-icon name="md-adminpanelsettings-round" class="icon" />
+          <span class="icon-label">Admin Panel</span>
         </router-link>
       </div>
       <div class="sidebar-bottom-group">
         <router-link :to="profileRoute" class="profile-link">
-          <img src="@/assets/navbar/profile.png" alt="profile" class="icon" />
+          <v-icon name="io-person" class="icon" />
         </router-link>
         <router-link :to="settingsRoute" class="settings-link">
-          <img src="@/assets/navbar/settings.png" alt="settings" class="icon" />
+          <v-icon name="bi-gear-fill" class="icon" />
+        </router-link>
+        <router-link :to="settingsRoute" class="settings-link">
+          <v-icon name="fa-sign-out-alt" class="icon" />
         </router-link>
       </div>
     </nav>
@@ -67,20 +58,17 @@ import { computed } from 'vue'
 const username = sessionStorage.getItem('username') || ''
 
 const dashboardRoute = computed(() => (username ? `/${username}` : '/login'))
-const profileRoute = computed(() =>
-  username ? `/${username}/profile` : '/login',
-)
-const settingsRoute = computed(() =>
-  username ? `/${username}/settings` : '/login',
-)
+const profileRoute = computed(() => (username ? `/${username}/profile` : '/login'))
+const settingsRoute = computed(() => (username ? `/${username}/settings` : '/login'))
+const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
 </script>
 
 <style scoped lang="scss">
 .container {
   display: grid;
-  grid-template-columns: 0.5fr 4.5fr;
+  grid-template-columns: 0.1fr 4.5fr;
   grid-template-rows: 1fr;
-  padding: 0.5em;
+  padding: 0.75em;
   grid-template-areas: 'sidebar main';
   width: 100vw;
   height: 100vh;
@@ -95,8 +83,8 @@ const settingsRoute = computed(() =>
   grid-area: sidebar;
   width: 5em;
   background-color: $red;
-  padding: 2em;
-  margin: 1em;
+  padding: 1em;
+  margin: 0.5em 0.5em 0.5em 0em;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -155,11 +143,11 @@ const settingsRoute = computed(() =>
   background-color: #a04747;
 }
 .content {
-  grid-area: main;
+  grid-area: 'main';
   width: 100%;
   z-index: 0;
   justify-content: start;
   align-items: start;
-  margin-left: -3rem;
+  // margin-left: -2rem;
 }
 </style>

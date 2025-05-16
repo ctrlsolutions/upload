@@ -1,47 +1,33 @@
 <template>
+  <label v-if="label" class="dropdown-label">{{ label }}</label>
   <div class="dropdown-container">
-    <select
-      :value="props.modelValue"
-      @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
-      class="dropdown"
-      :style="dropdownStyle"
-    >
-      <option value="" disabled class="placeholder">{{ placeholder }}</option>
-      <option
-        v-for="option in options"
-        :key="option.value"
-        :value="option.value"
-        class="dropdown-option"
-      >
-        {{ option.label }}
-      </option>
+    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
+      <slot></slot>
     </select>
-    <v-icon name="bi-caret-down-fill" class="dropdown-icon" :style="iconStyle" />
+    <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits, computed } from 'vue'
-
-const props = defineProps<{
-  options: { value: string; label: string }[]
-  placeholder?: string
-  width?: string | null
-  textColor?: string
-  borderColor?: string
-  modelValue: string // Add this for two-way binding
-}>()
+import { ref, defineProps, computed } from 'vue'
 
 const emit = defineEmits(['update:modelValue'])
 
+const props = defineProps<{
+  placeholder?: string
+  width?: string | null
+  label?: string
+}>()
+
+const selectedValue = ref('')
+
+function handleChange(event: Event) {
+  const value = (event.target as HTMLSelectElement).value
+  emit('update:modelValue', value)
+}
+
 const dropdownStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
-  color: props.textColor || 'inherit',
-  borderColor: props.borderColor || 'inherit',
-}))
-
-const iconStyle = computed(() => ({
-  fill: props.textColor || 'inherit',
 }))
 </script>
 
@@ -49,12 +35,19 @@ const iconStyle = computed(() => ({
 .dropdown-container {
   position: relative;
   display: inline-block;
+  width: 100%;
+}
+
+.dropdown-label {
+  font-size: small;
+  font-weight: bold;
+  color: #6f6f6f;
+  display: block;
+  text-align: left;
+  margin-bottom: 0.3rem;
 }
 
 .dropdown {
-  display: flex;
-  background-color: transparent;
-  text-overflow: ellipsis;
   font-family: 'Inter', serif;
   font-weight: bold;
   appearance: none;
@@ -66,21 +59,9 @@ const iconStyle = computed(() => ({
   cursor: pointer;
   color: $red;
   width: 100%;
-
-  @include sm {
-    width: 10rem;
-    font-size: 1em;
-  }
-
-  @include md {
-    width: 15rem;
-    font-size: 1em;
-  }
-
-  @include lg {
-    width: 20rem;
-    font-size: 1.3em;
-  }
+  height: 2.4rem;
+  position: relative;
+  background-color: transparent;
 
   &:not([value='']) {
     color: $red;

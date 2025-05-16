@@ -32,18 +32,14 @@
 
       <a href="#" class="forgot-password">Forgot Password?</a>
 
-      <FormButton variant="green" width="100%" @click.prevent="validateForm">
-        LOG IN
-      </FormButton>
+      <FormButton variant="green" width="100%" @click.prevent="validateForm"> LOG IN </FormButton>
     </form>
 
     <p class="or-text">OR</p>
 
     <div class="input-group" id="google-login">
       <GoogleLogin :callback="handleGoogleLogin">
-        <FormButton variant="red" width="100%" type="button">
-          CONTINUE WITH GOOGLE
-        </FormButton>
+        <FormButton variant="red" width="100%" type="button"> CONTINUE WITH GOOGLE </FormButton>
       </GoogleLogin>
     </div>
   </div>
@@ -58,13 +54,15 @@ import FormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginData, ErrorState } from '@/types/AuthInterface'
 import { useRouter } from 'vue-router'
 import { onMounted } from 'vue'
-import {
-  validateField as validateFieldFn,
-  validateForm as validateFormFn,
-} from '@/utils/AuthValidators'
+import { validateField as validateFieldFn, validateForm as validateFormFn } from '@/validators/AuthValidators'
 import { login, googleLogin, logout } from '@/services/AuthService'
+import { useUserStore } from '@/stores/UserStore'
+import { UserProfile } from '@/types/ProfileInterface'
+import { getProfileData } from '@/services/ProfileService'
 
 import Toast from '@/components/Global/Toast.vue'
+
+const userStore = useUserStore()
 
 const router = useRouter()
 
@@ -100,18 +98,28 @@ const validateForm = async () => {
   // }
 }
 
+const user = ref<UserProfile | null>(null)
+
 const submitForm = async () => {
   try {
     const response = await login(form)
     const username = response.data.username
+    const res = await getProfileData(username)
+    if (res && res.data.user) {
+      user.value = res.data.user
+      if (user.value) {
+        userStore.setUserProfile(user.value)
+      }
+      console.log('LOG IN USER DATA', user.value)
+      console.log('USER STORE PROFILE', userStore.profile)
+    }
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {
       router.push(`/${username}`)
     }, 2000)
   } catch (error: any) {
-    const errorMessage =
-      error.response?.data?.error || 'An unexpected error occurred'
+    const errorMessage = error.response?.data?.error || 'An unexpected error occurred'
     toast.value?.showToast(`Error submitting form: ${errorMessage}`, 'error')
   }
 }
@@ -127,14 +135,12 @@ const handleGoogleLogin = async (googleResponse: any) => {
 }
 
 onMounted(async () => {
-  console.log('HERE')
-
   const storedUsername = sessionStorage.getItem('username')
 
   if (storedUsername) {
     try {
       await logout()
-      sessionStorage.removeItem('username') // Clear stored session data
+      sessionStorage.removeItem('username')
       router.push('/login')
     } catch (error) {
       console.error('Logout failed', error)
