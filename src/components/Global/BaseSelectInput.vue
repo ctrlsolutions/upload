@@ -1,6 +1,6 @@
 <template>
+  <label v-if="label" class="dropdown-label">{{ label }}</label>
   <div class="dropdown-container">
-    <label v-if="label" class="dropdown-label">{{ label }}</label>
     <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
       <slot></slot>
     </select>
@@ -88,7 +88,7 @@ const dropdownStyle = computed(() => ({
 .dropdown-icon {
   position: absolute;
   right: 0.5rem;
-  top: 72%;
+  top: 50%;
   transform: translateY(-50%);
   font-size: 1.25rem;
   fill: $red;

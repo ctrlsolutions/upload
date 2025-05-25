@@ -57,6 +57,8 @@ import { onMounted } from 'vue'
 import { validateField as validateFieldFn, validateForm as validateFormFn } from '@/validators/AuthValidators'
 import { login, googleLogin, logout } from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
+import { UserProfile } from '@/types/ProfileInterface'
+import { getProfileData } from '@/services/ProfileService'
 
 import Toast from '@/components/Global/Toast.vue'
 
@@ -96,12 +98,21 @@ const validateForm = async () => {
   // }
 }
 
+const user = ref<UserProfile | null>(null)
+
 const submitForm = async () => {
   try {
     const response = await login(form)
     const username = response.data.username
-    console.log(response.data)
-    const user = response.data
+    const res = await getProfileData(username)
+    if (res && res.data.user) {
+      user.value = res.data.user
+      if (user.value) {
+        userStore.setUserProfile(user.value)
+      }
+      console.log('LOG IN USER DATA', user.value)
+      console.log('USER STORE PROFILE', userStore.profile)
+    }
     toast.value?.showToast('Login successful!', 'success')
 
     setTimeout(() => {

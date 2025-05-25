@@ -1,12 +1,12 @@
 <template>
-  <div class="profile_container">
+  <div class="profile_containers">
     <div class="upper-area">
       <CardComponent class="profile-card" width="100%" height="100%" :header="true" title="My Profile">
         <div class="content">
           <div class="profile-image-container">
             <img
               :src="
-                dashboardData?.user.profile_picture ||
+                dashboardData?.profile_picture ||
                 'https://i.pinimg.com/736x/ba/92/7f/ba927ff34cd961ce2c184d47e8ead9f6.jpg'
               "
               alt="Profile Picture"
@@ -15,11 +15,11 @@
           </div>
           <div class="profile-container">
             <h4 class="name">
-              {{ dashboardData?.user.first_name }}
-              {{ dashboardData?.user.middle_name || '' }}
-              {{ dashboardData?.user.last_name }}
+              {{ dashboardData?.first_name }}
+              {{ dashboardData?.middle_name || '' }}
+              {{ dashboardData?.last_name }}
             </h4>
-            <h6 class="role">{{ formattedRole }}</h6>
+            <h6 class="role">{{ dashboardData?.role }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
@@ -34,46 +34,50 @@
       </CardComponent>
     </div>
 
+    <div class="lower-area">
     <CardComponent width="100%" height="100%" :header="true" title="Personal Information">
-      <div class="lower-area">
         <div class="content">
           <div class="info-grid">
             <div class="info-container" id="left-info">
               <div class="info-group">
                 <p class="info-type">First Name</p>
-                <p class="info">{{ dashboardData?.user.first_name || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.first_name || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">Last Name</p>
-                <p class="info">{{ dashboardData?.user.last_name || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.last_name || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">Role</p>
-                <p class="info">{{ formattedRole || 'N/A'}}</p>
+                <p class="info">{{ dashboardData?.role || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">College</p>
-                <p class="info">{{ formattedcollege || 'N/A'}}</p>
+                <p class="info">{{ dashboardData?.college?.name || 'N/A' }}</p>
               </div>
             </div>
             <div class="info-container" id="right-info">
               <div class="info-group">
                 <p class="info-type">Middle Name</p>
-                <p class="info" :class="{ italic: dashboardData?.user.middle_name === 'N/A' }"> {{ dashboardData?.user.middle_name || 'N/A' }} </p>
+                <p class="info" :class="{ italic: dashboardData?.middle_name === 'N/A' }">
+                  {{ dashboardData?.middle_name || 'N/A' }}
+                </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Email</p>
-                <p class="info" :class="{ italic: dashboardData?.user.email === 'N/A' }"> {{ dashboardData?.user.email || 'N/A' }} </p>
+                <p class="info" :class="{ italic: dashboardData?.email === 'N/A' }">
+                  {{ dashboardData?.email || 'N/A' }}
+                </p>
               </div>
               <div class="info-group">
                 <p class="info-type">Department</p>
-                <p class="info">{{ formatteddept || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.department?.name || 'N/A' }}</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </CardComponent>
+      </CardComponent>
+    </div>
   </div>
 </template>
 
@@ -81,42 +85,33 @@
 import CardComponent from '@/components/Global/CardComponent.vue'
 import { ref, computed, onMounted } from 'vue'
 import { getProfileData } from '@/services/ProfileService'
-import { ProfileData } from '@/types/ProfileInterface'
+import { UserProfile } from '@/types/ProfileInterface'
+import { useUserStore } from '@/stores/UserStore'
 
-const dashboardData = ref<ProfileData | null>(null)
+const userStore = useUserStore()
+const dashboardData = computed(() => userStore.getUserProfile)
 
 onMounted(async () => {
-  const username = sessionStorage.getItem('username')
-  const response = await getProfileData(username)
-  dashboardData.value = response.data
-})
-
-const formattedRole = computed(() => {
-  if (!dashboardData.value?.user.role) return ''
-  const role = dashboardData.value.user.role.toLowerCase()
-  if (role === 'cd') return 'College Dean'
-  if (role === 'f') return 'Faculty'
-  if (role === 'c') return 'Chancellor'
-  if (role === 'dc') return 'Department Chair'
-  return dashboardData.value.user.role
+  if (!userStore.profile) {
+    await userStore.fetchUserProfile()
+  }
 })
 </script>
 
 <style lang="scss" scoped>
-.profile_container {
+.profile_containers {
   padding: 0;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
   margin: 0;
-  display: grid; 
-  grid-auto-columns: 1fr; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr 1fr; 
-  gap: 1% 1%; 
-  grid-template-areas: 
-    "upper-area"
-    "lower-area"; 
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0.3fr 0.4fr;
+  gap: 1%;
+  grid-template-areas:
+    'upper-area'
+    'lower-area';
   overflow: hidden;
 }
 
@@ -128,20 +123,16 @@ const formattedRole = computed(() => {
   display: grid;
   grid-auto-columns: 1fr;
   grid-template-columns: 3.5fr 3fr;
-  gap: 0px 1em;
+  gap: 0.5em;
   grid-area: upper-area;
+  height: 100%;
 }
 
 .lower-area {
-  height: 37vh;
-  display: grid; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr; 
-  grid-template-areas: 
-    "."; 
+  height: 100%;
   grid-area: lower-area;
-  overflow-y: auto;
-  padding: 1rem;
+  // overflow-y: hidden;
+  // padding: 1rem;
 }
 
 .lower-area::-webkit-scrollbar {
@@ -149,8 +140,8 @@ const formattedRole = computed(() => {
 }
 
 .lower-area::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2); 
-  border-radius: 0.5rem; 
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.5rem;
 }
 
 .lower-area::-webkit-scrollbar-track {
@@ -158,42 +149,38 @@ const formattedRole = computed(() => {
 }
 
 .profile-card {
-  height: 50%;
+  height: 100%;
+  background-color: #f4f4f8;
+  opacity: 0.8;
+  background-image: radial-gradient(#a4a4b3 0.5px, #f7f7f7 0.5px);
+  background-size: 10px 10px;
   .content {
-    padding: 3rem;
+    padding: 1rem 1rem;
     justify-self: flex-start;
     display: flex;
     align-items: center;
     gap: 1rem;
     width: 100%;
     text-align: center;
+    height: 100%;
   }
 
-    .profile-image-container {
+  .profile-image-container {
     display: flex;
     justify-content: center;
     
+
     .profile-image {
       width: 11rem;
-      height: 11rem;
+      height: 10.5rem;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid #014421;
       transition: transform 0.3s ease;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      
+
       &:hover {
         transform: scale(1.05);
-      }
-      
-      @media (max-width: 992px) {
-        width: 9rem;
-        height: 9rem;
-      }
-      
-      @media (max-width: 576px) {
-        width: 8rem;
-        height: 8rem;
       }
     }
   }
@@ -201,32 +188,31 @@ const formattedRole = computed(() => {
 
 .profile-container {
   margin-left: 2.5rem;
-  display: grid; 
-  grid-template-columns: 1fr; 
-  grid-template-rows: 1fr; 
-  gap: 0% 0px;
-  grid-area: lower-area; 
-
+  // grid-area: lower-area;
+  
   .name {
     font-size: 2rem;
-    font-weight: 600;
-    margin: 0;
+    font-weight: 700;
+
     color: #333;
   }
 
   .role {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #666;
-    margin: 0.5rem 0rem 0rem 1rem;
-    font-weight: normal;
+    font-weight: bold;
+    text-align: left;
   }
 
   .college {
     font-size: 1rem;
     color: #888;
     margin: 0;
+    text-align: left;
   }
 }
+
+
 
 .green-container {
   background: linear-gradient(135deg, #014421, #036632, #007c3b);
@@ -236,15 +222,16 @@ const formattedRole = computed(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 50%;
+  height: 100%;
 
   .num-reports {
-    font-size: 13rem;
+    font-size: 10rem;
     font-weight: bold;
     margin-bottom: -3.5rem;
     margin-top: -3rem;
     color: rgba(255, 255, 255, 0.7);
     transition: transform 0.3s ease;
+    height: fit-content;
 
     &:hover {
       transform: scale(1.05);
@@ -273,9 +260,9 @@ const formattedRole = computed(() => {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  margin-top: -1.5rem;
+  margin-top: -1rem;
   padding: 1rem;
 }
 
@@ -283,7 +270,7 @@ const formattedRole = computed(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  justify-content: flex-start; 
+  justify-content: flex-start;
   align-items: flex-start;
 
   .info-group {
@@ -292,7 +279,7 @@ const formattedRole = computed(() => {
     transition: transform 0.2s ease;
     width: 100%;
     gap: 0.5rem;
-    
+
     &:hover {
       transform: translateX(5px);
     }

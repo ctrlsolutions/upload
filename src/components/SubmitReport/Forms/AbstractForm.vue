@@ -1,0 +1,169 @@
+<template>
+  <div class="abstract-form">
+    <div class="form-group" v-for="(field, index) in fields" :key="field.id">
+      <!-- Text Input -->
+      <BaseTextInput
+        v-if="field.type === 'text'"
+        id="form-input"
+        type="text"
+        variant="red"
+        width="100%"
+        :placeholder="field.label"
+        v-model="fieldResponse[field.id]"
+      ></BaseTextInput>
+
+      <!-- Number Input -->
+      <BaseTextInput
+        v-if="field.type === 'number'"
+        id="form-num-input"
+        type="number"
+        variant="red"
+        width="100%"
+        :placeholder="field.label"
+        v-model="fieldResponse[field.id]"
+      ></BaseTextInput>
+
+      <!-- Date Input -->
+      <BaseDateInput
+        v-else-if="field.type === 'date'"
+        v-model="fieldResponse[field.id]"
+        :width="'100%'"
+        :placeholder="`${field.label}`"
+        style="font-weight: 400"
+      />
+
+      <!-- Select Input -->
+
+      <BaseSelectInput v-else-if="field.type === 'select'" v-model="fieldResponse[field.id]">
+        <option disabled value="">Select {{ field.label }}</option>
+        <option v-for="option in field.options" :key="option.value" :value="option.value">
+          {{ option.label }}
+        </option>
+      </BaseSelectInput>
+      <!-- Error Message -->
+      <span v-if="errors[field.id]" class="error">{{ errors[field.id] }}</span>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { reactive } from 'vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import { Field } from '@/types/ReportInterface'
+import BaseTextInput from '@/components/Global/BaseTextInput.vue'
+
+// Props
+const props = defineProps<{
+  fields: Field[] | undefined
+}>()
+
+const fieldResponse = reactive<Record<string | number, any>>({})
+const errors = reactive<Record<string | number, string>>({})
+
+// Normalize and initialize
+props.fields?.forEach(field => {
+  fieldResponse[field.id] = ''
+  errors[field.id] = ''
+
+  // Normalize options for select
+  if (field.type === 'select' && Array.isArray(field.options)) {
+    field.options = field.options.map(opt => (typeof opt === 'string' ? { value: opt, label: opt } : opt))
+  }
+})
+
+function validateForm() {
+  let valid = true
+
+  props.fields?.forEach(field => {
+    const value = fieldResponse[field.id]
+
+    if (field.required && (value === '' || value === null || value === undefined)) {
+      errors[field.id] = `${field.label} is required.`
+      valid = false
+    } else if (field.type === 'number' && isNaN(value)) {
+      errors[field.id] = `${field.label} must be a valid number.`
+      valid = false
+    } else if (field.type === 'number' && (value <= 0 || isNaN(value))) {
+      errors[field.id] = 'Valid number of months is required.'
+      valid = false
+    } else if (field.regex_validation && !new RegExp(field.regex_validation).test(value)) {
+      errors[field.id] = `${field.label} is not in valid format.`
+      valid = false
+    } else {
+      errors[field.id] = ''
+    }
+  })
+
+  const start = fieldResponse.startDate
+  const end = fieldResponse.endDate
+  if (start && end && new Date(end) < new Date(start)) {
+    errors.endDate = 'End date must be after start date.'
+    valid = false
+  }
+
+  return valid
+}
+
+function exposeForm() {
+  if (!validateForm()) {
+    console.warn('Validation failed')
+    return null
+  }
+
+  const result: Record<string | number, any> = {}
+  props?.fields?.forEach(field => {
+    result[field.id] = fieldResponse[field.id]
+  })
+  return result
+}
+
+defineExpose({ exposeForm })
+</script>
+
+<style lang="scss" scoped>
+.error {
+  color: red;
+  font-size: 0.8rem;
+}
+
+.abstract-form {
+  overflow-y: auto;
+
+  border-radius: 10px;
+  background: white;
+  padding-top: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 8px;
+  padding-left: 2.7rem;
+  border: 0.15px solid $red;
+  border-radius: 10px;
+  outline: none;
+  color: $red;
+  margin-top: 10px;
+}
+
+.form-group input::placeholder {
+  color: $red;
+  font-weight: 600;
+  opacity: 0.4;
+}
+
+.error {
+  color: red;
+  font-size: 0.8rem;
+}
+</style>
