@@ -127,7 +127,35 @@
                   </div>
                 </div>
                 <div v-if="activeTabId === 'requests'" class="requests-tab">
-                  <p>requests tab</p>
+                  <h3>Role Change Requests</h3>
+                  <div v-if="requests.length === 0">No requests at the moment.</div>
+                  <table v-else class="requests-table">
+                    <thead>
+                      <tr>
+                        <th>Email</th>
+                        <th>Requested Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="req in requests" :key="req.id">
+                        <td>{{ req.email }}</td>
+                        <td>{{ req.requestedRole }}</td>
+                        <td>
+                          <span v-if="req.status === 'approved'" class="approved">Approved</span>
+                          <span v-else-if="req.status === 'rejected'" class="rejected">Rejected</span>
+                          <span v-else>Pending</span>
+                        </td>
+                        <td>
+                          <template v-if="req.status === 'pending'">
+                            <button @click="approveRequest(req.id)" class="approve-btn">✔</button>
+                            <button @click="rejectRequest(req.id)" class="reject-btn">✖</button>
+                          </template>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </template>
             </FolderComponent>
@@ -165,6 +193,21 @@ const adminTabs = ref([
 function handleTabChange(newTabId: string) {
   console.log('Tab changed to:', newTabId)
   currentTab.value = newTabId
+}
+
+const requests = ref([
+  { id: 1, email: 'faculty1@up.edu', requestedRole: 'College Dean', status: 'pending' },
+  { id: 2, email: 'faculty2@up.edu', requestedRole: 'Department Head', status: 'pending' }
+])
+
+function approveRequest(id: number) {
+  const req = requests.value.find(r => r.id === id)
+  if (req) req.status = 'approved'
+}
+
+function rejectRequest(id: number) {
+  const req = requests.value.find(r => r.id === id)
+  if (req) req.status = 'rejected'
 }
 
 const currentDescription = computed(() => {
@@ -223,6 +266,31 @@ const currentDescription = computed(() => {
   flex-direction: column;
   gap: 1rem;
   margin: 1rem 0;
+}
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  th, td {
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    text-align: left;
+  }
+  th {
+    background: #f4f4f4;
+  }
+  .approved { color: green; font-weight: bold; }
+  .rejected { color: red; font-weight: bold; }
+  .approve-btn, .reject-btn {
+    border: none;
+    background: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-right: 0.5rem;
+  }
+  .approve-btn { color: green; }
+  .reject-btn { color: red; }
 }
 
 </style>
