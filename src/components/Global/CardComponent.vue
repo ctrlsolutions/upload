@@ -11,7 +11,7 @@
     class="card-container"
   >
     <header v-if="header" class="card-header" :style="{ background: headerColor }">
-      <div name="header-content">
+      <div class="header-content">
         <slot name="icon"></slot>
         <h2 class="card-title">{{ title }}</h2>
       </div>

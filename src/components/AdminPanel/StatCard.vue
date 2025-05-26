@@ -28,11 +28,24 @@
 </script>
 <style lang="scss" scoped>  
 .stat-istics {
-    height: 100%;
-    width: 100%;
+  height: 100%;
+  width: 100%;
 
-    :deep(.card-content) {
-      padding: 2rem;
-    }
+  :deep(.card-content) {
+    padding: 2rem;
+  }
+
+  // Only target the header content inside this StatCard
+  :deep(.card-header .header-content) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  :deep(.card-header .card-title) {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 }
 </style>

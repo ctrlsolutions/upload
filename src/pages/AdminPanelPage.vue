@@ -186,7 +186,7 @@ const currentDescription = computed(() => {
 <style lang="scss" scoped>
 .dashboard {  
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1.35fr 0.9fr;
   grid-template-rows: 0.5fr 1.5fr;
   grid-auto-columns: 1fr;
   gap: 0.5% 0.5%;
