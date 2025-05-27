@@ -1,13 +1,7 @@
 <template>
   <div class="container">
-    <div
-      class="background red-bg"
-      :style="{ opacity: isSignupRoute ? 1 : 0 }"
-    ></div>
-    <div
-      class="background green-bg"
-      :style="{ opacity: isSignupRoute ? 0 : 1 }"
-    ></div>
+    <div class="background red-bg" :style="{ opacity: isSignupRoute ? 1 : 0 }"></div>
+    <div class="background green-bg" :style="{ opacity: isSignupRoute ? 0 : 1 }"></div>
     <main class="content-container">
       <div class="imageContainer">
         <div class="header">
@@ -21,6 +15,7 @@
               route="/signup"
               :variant="isSignupRoute ? 'red-full' : 'empty'"
               width="7rem"
+              :class="{ 'sm-hidden': isSignupRoute }"
               >Signup</BaseNavButton
             >
             <BaseNavButton
@@ -28,6 +23,7 @@
               route="/login"
               :variant="isSignupRoute ? 'empty' : 'green-full'"
               width="7rem"
+              :class="{ 'sm-hidden': !isSignupRoute }"
               >Login</BaseNavButton
             >
           </div>
@@ -55,7 +51,6 @@ const isSignupRoute = computed(() => route.path === '/signup')
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: $black;
 }
 
 .content-container {
@@ -67,6 +62,14 @@ const isSignupRoute = computed(() => route.path === '/signup')
   background-color: white;
   border-radius: 2.5rem;
   z-index: 2;
+  flex-direction: row;
+  overflow-y: auto;
+
+  @include ratio-portrait {
+    flex-direction: column;
+    width: 90%;
+    height: 95%;
+  }
 }
 
 .imageContainer {
@@ -76,17 +79,28 @@ const isSignupRoute = computed(() => route.path === '/signup')
   align-items: center;
   flex: 1;
   height: 100%;
-  max-width: 40%;
   box-sizing: border-box;
   padding: 1rem;
+  @include lg {
+    height: 100%;
+    max-width: 40%;
+  }
+  @include ratio-portrait {
+    height: 30%;
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .img {
   width: 100%;
   height: 100%;
-  max-height: 90vh;
+  max-height: 100%;
   object-fit: cover;
   border-radius: 2rem;
+  @include ratio-portrait {
+    object-position: 50% 2.5%;
+  }
 }
 
 .header {
@@ -108,8 +122,17 @@ const isSignupRoute = computed(() => route.path === '/signup')
 }
 
 .logo {
-  height: 2.8rem;
+  height: 2em;
   width: auto;
+  @include sm {
+    height: 2.2em;
+  }
+  @include md {
+    height: 2.5em;
+  }
+  @include lg {
+    height: 3.4em;
+  }
 }
 
 .buttonContainer {
@@ -123,7 +146,7 @@ const isSignupRoute = computed(() => route.path === '/signup')
   background-image: url('@/assets/backgroundImages/bgee.png');
   background-blend-mode: multiply;
   background-size: cover;
-  background-position: center;
+  background-position: left center;
   background-repeat: no-repeat;
   background-color: $red;
 }
@@ -132,7 +155,7 @@ const isSignupRoute = computed(() => route.path === '/signup')
   background-image: url('@/assets/backgroundImages/bgee.png');
   background-blend-mode: multiply;
   background-size: cover;
-  background-position: center;
+  background-position: left center;
   background-repeat: no-repeat;
   background-color: $green;
 }
@@ -154,5 +177,14 @@ const isSignupRoute = computed(() => route.path === '/signup')
 .red-bg[style*='opacity: 0'],
 .green-bg[style*='opacity: 0'] {
   visibility: hidden;
+}
+
+.sm-hidden {
+  @include sm {
+    display: none;
+  }
+  @include md {
+    display: inline;
+  }
 }
 </style>

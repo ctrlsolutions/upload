@@ -1,55 +1,45 @@
 <template>
-  <button
-    :class="['nav-button', variantClass]"
-    @click="navigate"
-    :style="buttonStyle"
-  >
+  <button :class="['nav-button', variantClass]" @click="navigate" :style="buttonStyle">
     <slot></slot>
   </button>
 </template>
 
-<script>
-export default {
-  props: {
-    route: {
-      type: String,
-      required: true,
-    },
-    variant: {
-      type: String,
-      default: 'empty',
-    },
-    width: {
-      type: String,
-      default: 'null',
-    },
-    height: {
-      type: String,
-      default: 'auto',
-    },
-  },
-  computed: {
-    variantClass() {
-      return `nav-button--${this.variant}`
-    },
-    buttonStyle() {
-      const styles = {
-        height: this.height,
-      }
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
-      if (this.width) {
-        styles.width = this.width
-      }
+const props = withDefaults(
+  defineProps<{
+    route: string
+    variant?: string
+    width?: string
+    height?: string
+  }>(),
+  {
+    variant: 'empty',
+    width: 'null',
+    height: 'auto',
+  },
+)
 
-      return styles
-    },
-  },
-  methods: {
-    navigate() {
-      this.$router.push(this.route)
-    },
-  },
+const router = useRouter()
+const navigate = () => {
+  router.push(props.route)
 }
+
+const variantClass = computed(() => `nav-button--${props.variant}`)
+
+const buttonStyle = computed(() => {
+  const styles: Record<string, string> = {
+    height: props.height,
+  }
+
+  if (props.width) {
+    styles.width = props.width
+  }
+
+  return styles
+})
 </script>
 
 <style lang="scss" scoped>
@@ -61,21 +51,10 @@ export default {
   white-space: nowrap;
   font-weight: 800;
   justify-content: center;
-  @include sm {
-    width: 5rem;
-    padding: 0.2rem 1.3rem;
-    font-size: 0.8em;
-  }
-  @include md {
-    width: 7rem;
-    padding: 0.3rem 1.5rem;
-    font-size: 1em;
-  }
-  @include lg {
-    width: 9rem;
-    padding: 0.15rem 2rem;
-    font-size: 1.3em;
-  }
+  align-self: center;
+  width: 100%;
+  font-size: 1em;
+  padding: 0.25em 0.5em;
 }
 
 .nav-button--red-full {
