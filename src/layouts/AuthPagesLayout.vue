@@ -82,11 +82,10 @@ const isSignupRoute = computed(() => route.path === '/signup')
   box-sizing: border-box;
   padding: 1rem;
   @include lg {
-    height: 100%;
     max-width: 40%;
   }
   @include ratio-portrait {
-    height: 30%;
+    max-height: 25vh;
     width: 100%;
     max-width: 100%;
   }
