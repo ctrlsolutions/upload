@@ -1,29 +1,49 @@
 @use './_variables' as variables;
 
-// Small devices
 @mixin sm {
   @media (min-width: #{variables.$screen-sm-min}) {
     @content;
   }
 }
 
-// Medium devices
 @mixin md {
   @media (min-width: #{variables.$screen-md-min}) {
     @content;
   }
 }
 
-// Large devices
 @mixin lg {
   @media (min-width: #{variables.$screen-lg-min}) {
     @content;
   }
 }
 
-// Extra large devices
 @mixin xl {
   @media (min-width: #{variables.$screen-xl-min}) {
+    @content;
+  }
+}
+
+@mixin ratio-portrait {
+  @media (max-aspect-ratio: 3/4) {
+    @content;
+  }
+}
+
+@mixin ratio-tablet {
+  @media (max-aspect-ratio: 4/3) {
+    @content;
+  }
+}
+
+@mixin ratio-laptop {
+  @media (min-aspect-ratio: 3/2) {
+    @content;
+  }
+}
+
+@mixin ratio-desktop {
+  @media (min-aspect-ratio: 16/10) {
     @content;
   }
 }
