@@ -1,120 +1,94 @@
 <template>
-  <div class="input-container">
-    <input
-      :id="id"
-      :type="type"
-      :class="['input-box', variantClass]"
-      :style="boxStyle"
-      :placeholder="placeholder"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-      v-bind="$attrs"
-    />
-    <label :for="id" class="input-label">{{ placeholder }}</label>
-  </div>
+  <Field :name="name" v-slot="{ field, errorMessage }" validate-on-input validate-on-blur>
+    <div>
+      <div class="input-container">
+        <input
+          v-bind="field"
+          :type="type"
+          :class="['input-box', variantClass]"
+          :style="boxStyle"
+          :placeholder="placeholder"
+          @input="handleInput"
+        />
+        <label :for="name" :class="['input-label', labelClass]">{{ placeholder }}</label>
+      </div>
+      <p v-if="errorMessage" class="input-error">{{ errorMessage }}</p>
+    </div>
+  </Field>
 </template>
 
-<script>
-export default {
-  props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    type: {
-      type: String,
-      default: 'text',
-    },
-    placeholder: {
-      type: String,
-      default: 'Placeholder',
-    },
-    variant: {
-      type: String,
-      default: 'red',
-    },
-    width: {
-      type: String,
-      default: 'null',
-    },
-    height: {
-      type: String,
-      default: 'null',
-    },
-    modelValue: {
-      type: String,
-      default: '',
-    },
-  },
-  computed: {
-    variantClass() {
-      return `input-box--${this.variant}`
-    },
-    boxStyle() {
-      const styles = { height: this.height }
-      if (this.width) {
-        styles.width = this.width
-      }
-      return styles
-    },
-  },
+<script setup lang="ts">
+import { Field } from 'vee-validate'
+import { computed } from 'vue'
+
+const props = defineProps<{
+  name: string
+  type?: string
+  placeholder?: string
+  variant?: string
+  width?: string
+  height?: string
+}>()
+
+const emit = defineEmits(['update:modelValue'])
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement | null
+  if (target) {
+    emit('update:modelValue', target.value)
+  }
 }
+
+const variantClass = computed(() => `input-box--${props.variant ?? 'default'}`)
+const labelClass = computed(() => `input-label--${props.variant ?? 'red'}`)
+
+const boxStyle = computed(() => ({
+  width: props.width ?? undefined,
+  height: props.height ?? undefined,
+}))
 </script>
 
 <style lang="scss" scoped>
 .input-container {
-  position: relative;
   display: inline-block;
+  position: relative;
   width: 100%;
 }
 
 .input-box {
+  border-radius: $base-br;
+  padding: $component-padding;
+  font-weight: $base-fw;
+  font-size: $base-fs;
   font-family: 'Inter', serif;
-  height: fit-content;
-  border-radius: 0.6rem;
-  @include sm {
-    width: 15rem;
-    padding: 0.6rem 0.6rem;
-    font-size: 1em;
-  }
-  @include md {
-    width: 18rem;
-    padding: 0.6rem 0.8rem;
-    font-size: 1em;
-  }
-  @include lg {
-    width: 20rem;
-    padding: 0.6rem 1rem;
-    font-size: 1.3em;
-  }
-
-  &::placeholder {
-    color: #999;
-    opacity: 0.7;
-  }
 
   &--red {
-    font-size: 0.9rem;
-    border: 0.15px $red;
-    border-style: solid;
     outline: none;
-    font-weight: 850;
+    border: $base-bt solid $red;
     color: $red;
 
     &::placeholder {
       color: transparent;
     }
+
+    &:focus {
+      outline-offset: 0.125rem;
+      border: 4px $red;
+      border-style: solid;
+    }
   }
 
   &--green {
-    border: 0.15px $green;
-    border-style: solid;
     outline: none;
-    font-weight: bold;
+    border: $base-bt solid $green;
     color: $green;
 
     &::placeholder {
       color: transparent;
+    }
+    &:focus {
+      outline-offset: 0.125rem;
+      border: 4px $green;
     }
   }
 }
@@ -124,13 +98,14 @@ export default {
   top: 50%;
   left: 0.6rem;
   transform: translateY(-50%);
-  font-size: 1em;
-  color: #999;
-  pointer-events: none;
+  z-index: 10;
   transition: all 0.2s ease;
   background-color: white;
   padding: 0 0.4rem;
-  z-index: 1000;
+  pointer-events: none;
+  font-weight: $base-fw;
+  font-size: $base-fs;
+  font-family: 'Inter', serif;
 
   &--red {
     color: $red;
@@ -140,9 +115,15 @@ export default {
     color: $green;
   }
 }
-input:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
-  -webkit-text-fill-color: $red !important;
+
+.input-error {
+  margin: 0;
+  padding: 0rem 0rem 0rem 0.5rem;
+  color: $red;
+  font-style: italic;
+  font-weight: normal;
+  font-size: small;
+  text-align: left;
 }
 
 input:-webkit-autofill {
@@ -152,7 +133,7 @@ input:-webkit-autofill {
 .input-box:focus + .input-label,
 .input-box:not(:placeholder-shown) + .input-label {
   top: 0;
-  font-size: 0.8em;
   transform: translateY(-50%);
+  font-size: 0.8em;
 }
 </style>

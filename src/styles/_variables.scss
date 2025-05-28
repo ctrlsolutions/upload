@@ -6,11 +6,6 @@ $green: #014421;
 $black: #101010;
 $white: #fff;
 
-// Typography
-// $font-sans: 'Helvetica Neue', Arial, sans-serif;
-// $font-size-base: 16px;
-// $font-weight-bold: 700;
-
 // Breakpoints
 // Small tablets and large smartphones (landscape view)
 $screen-sm-min: 320px;
@@ -24,6 +19,17 @@ $screen-lg-min: 769px;
 // Large tablets and desktops
 $screen-xl-min: 1024px;
 
-//[TODO:] to be edited also.
+// Typography
+// base border radius
+$base-br: 10px;
 
-//more glbals to come!
+// base border thickness
+$base-bt: 1.5px;
+
+// base font size
+$base-fs: 0.8rem;
+
+// base font weight
+$base-fw: 800;
+
+$component-padding: 0.5rem 0rem 0.5rem 0.8rem;

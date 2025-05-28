@@ -1,10 +1,12 @@
 <template>
-  <label v-if="label" class="dropdown-label">{{ label }}</label>
-  <div class="dropdown-container">
-    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
-      <slot></slot>
-    </select>
-    <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
+  <div>
+    <label v-if="label" class="dropdown-label">{{ label }}</label>
+    <div class="dropdown-container">
+      <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
+        <slot></slot>
+      </select>
+      <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
+    </div>
   </div>
 </template>
 
@@ -32,51 +34,54 @@ const dropdownStyle = computed(() => ({
 </script>
 
 <style lang="scss" scoped>
-.dropdown-container {
-  position: relative;
-  display: inline-block;
+@use 'sass:color';
+.dropdown-label {
+  display: block;
+  box-sizing: border-box;
+  margin-left: 0.3rem;
   width: 100%;
+  color: color.scale($black, $lightness: 40%);
+  font-weight: $base-fw;
+  font-size: $base-fs;
+  text-align: left;
 }
 
-.dropdown-label {
-  font-size: small;
-  font-weight: bold;
-  color: #6f6f6f;
-  display: block;
-  text-align: left;
-  margin-bottom: 0.3rem;
+.dropdown-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
 }
 
 .dropdown {
-  font-family: 'Inter', serif;
-  font-weight: bold;
+  position: relative;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  padding: 0.5rem 2.5rem 0.5rem 0.8rem;
-  border: 0.15px solid $red;
-  border-radius: 0.6rem;
   cursor: pointer;
-  color: $red;
-  width: 100%;
-  height: 2.4rem;
-  position: relative;
+  border: $base-bt solid $red;
+  border-radius: $base-br;
   background-color: transparent;
+  padding: $component-padding;
+  overflow: hidden;
+  color: $red;
+  font-weight: $base-fw;
+  font-size: $base-fs;
+  font-family: 'Inter', serif;
+  text-overflow: ellipsis;
 
   &:not([value='']) {
     color: $red;
-    font-weight: bold;
+    font-weight: $base-fw;
   }
-}
-
-.dropdown:focus {
-  outline: none;
+  &:focus {
+    outline: none;
+  }
 }
 
 .placeholder {
   &:disabled {
-    font-style: italic;
     color: gray;
+    font-style: italic;
   }
 }
 
@@ -85,12 +90,13 @@ const dropdownStyle = computed(() => ({
   font-family: inherit !important;
 }
 
+// TODO: Spin icon when pressed
 .dropdown-icon {
   position: absolute;
-  right: 0.5rem;
   top: 50%;
+  right: 0.5rem;
   transform: translateY(-50%);
-  font-size: 1.25rem;
+  font-size: 1.25em;
   fill: $red;
   pointer-events: none;
 }
