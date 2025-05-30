@@ -1,47 +1,42 @@
 <template>
-  <div class="modal-overlay">
-    <div class="modal-container">
-      <div className="header">
-        <img src="@/assets/up-logo.png" alt="uplogo" className="image-logo" />
-      </div>
-      <div class="modal-content">
-        <h1 class="modal-title">Before you proceed...</h1>
-        <h5 class="modal-subtitle">We need more information from you.</h5>
-        <form @submit.prevent="handleSubmit" class="form-container">
-          <div class="input-container">
-            <label class="label">Birthdate:</label>
-            <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
-            <div class="gender-container">
-              <label class="label">Sex:</label>
-              <BaseFormRadio id="M" label="Male" v-model="gender" />
-              <BaseFormRadio id="F" label="Female" v-model="gender" />
-            </div>
+  <BaseModal>
+    <div class="modal-content">
+      <h1 class="modal-title">Before you proceed...</h1>
+      <h5 class="modal-subtitle">We need more information from you.</h5>
+      <form @submit.prevent="handleSubmit" class="form-container">
+        <div class="input-container">
+          <label class="label">Birthdate:</label>
+          <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
+          <div class="gender-container">
+            <label class="label">Sex:</label>
+            <BaseFormRadio id="M" label="Male" v-model="gender" />
+            <BaseFormRadio id="F" label="Female" v-model="gender" />
           </div>
+        </div>
 
-          <BaseTextInput name="password" type="password" v-model="password" placeholder="Password" class="password" />
-          <p v-if="errors.password" class="error-message">
-            {{ errors.password }}
-          </p>
+        <BaseTextInput name="password" type="password" v-model="password" placeholder="Password" class="password" />
+        <p v-if="errors.password" class="error-message">
+          {{ errors.password }}
+        </p>
 
-          <BaseTextInput
-            name="retype"
-            type="password"
-            v-model="retype"
-            placeholder="Re-enter password"
-            class="retype"
-          />
-          <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
+        <BaseTextInput
+          name="retype"
+          type="password"
+          v-model="retype"
+          placeholder="Re-enter password"
+          class="retype"
+        />
+        <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
 
-          <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
+        <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
 
-          <div class="button-container">
-            <BaseFormButton type="button" variant="black" route="" @click="closeModal">Cancel</BaseFormButton>
-            <BaseFormButton type="submit" variant="red" route="">Proceed</BaseFormButton>
-          </div>
-        </form>
-      </div>
+        <div class="button-container">
+          <BaseFormButton type="button" variant="black" route="" @click="closeModal">Cancel</BaseFormButton>
+          <BaseFormButton type="submit" variant="red" route="">Proceed</BaseFormButton>
+        </div>
+      </form>
     </div>
-  </div>
+  </BaseModal>
 </template>
 
 <script setup>
@@ -50,6 +45,7 @@ import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import BaseFormRadio from '@/components/Global/BaseFormRadio.vue'
 import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
+import BaseModal from '@/components/Global/BaseModal.vue'
 
 const emit = defineEmits(['close', 'submit'])
 

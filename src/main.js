@@ -1,6 +1,7 @@
 import './assets/main.css'
 import { OhVueIcon, addIcons } from 'oh-vue-icons'
 import {
+  HiSolidArrowNarrowLeft,
   BiCaretDownFill,
   FcGoogle,
   BiCalendar,
@@ -15,6 +16,7 @@ import {
   FaFolderOpen,
   MdSpacedashboardRound,
   FaInfoCircle,
+  HiArrowSmLeft,
   BiFileEarmarkMedicalFill,
   BiFileEarmarkExcelFill,
 } from 'oh-vue-icons/icons'
@@ -27,6 +29,7 @@ import App from './App.vue'
 import router from './router'
 
 addIcons(
+  HiSolidArrowNarrowLeft,
   BiCaretDownFill,
   FcGoogle,
   BiCalendar,
@@ -41,6 +44,7 @@ addIcons(
   FaClipboardList,
   MdSpacedashboardRound,
   FaInfoCircle,
+  HiArrowSmLeft,
   BiFileEarmarkMedicalFill,
   BiFileEarmarkExcelFill,
 )
