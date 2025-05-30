@@ -10,12 +10,7 @@
         <form @submit.prevent="handleSubmit" class="form-container">
           <div class="input-container">
             <label class="label">Birthdate:</label>
-            <BaseDateInput
-              id="date"
-              type="date"
-              v-model="dob"
-              placeholder="Birthdate"
-            />
+            <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
             <div class="gender-container">
               <label class="label">Sex:</label>
               <BaseFormRadio id="M" label="Male" v-model="gender" />
@@ -23,19 +18,13 @@
             </div>
           </div>
 
-          <BaseTextInput
-            id="password"
-            type="password"
-            v-model="password"
-            placeholder="Password"
-            class="password"
-          />
+          <BaseTextInput name="password" type="password" v-model="password" placeholder="Password" class="password" />
           <p v-if="errors.password" class="error-message">
             {{ errors.password }}
           </p>
 
           <BaseTextInput
-            id="retype"
+            name="retype"
             type="password"
             v-model="retype"
             placeholder="Re-enter password"
@@ -43,21 +32,11 @@
           />
           <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
 
-          <h5 class="modal-subtitle">
-            Please fill up the required fields and click proceed to continue.
-          </h5>
+          <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
 
           <div class="button-container">
-            <BaseFormButton
-              type="button"
-              variant="black"
-              route=""
-              @click="closeModal"
-              >Cancel</BaseFormButton
-            >
-            <BaseFormButton type="submit" variant="red" route=""
-              >Proceed</BaseFormButton
-            >
+            <BaseFormButton type="button" variant="black" route="" @click="closeModal">Cancel</BaseFormButton>
+            <BaseFormButton type="submit" variant="red" route="">Proceed</BaseFormButton>
           </div>
         </form>
       </div>
@@ -124,82 +103,75 @@ const closeModal = () => {
 }
 
 .header {
-  background: linear-gradient(
-    90deg,
-    $green,
-    #014421,
-    #036a34,
-    #036934,
-    #058e46
-  );
-  height: 3.5rem;
-  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 1rem;
   position: relative;
-  border-top-left-radius: 1rem;
+  justify-content: flex-end;
+  align-items: center;
   border-top-right-radius: 1rem;
+  border-top-left-radius: 1rem;
+  background: linear-gradient(90deg, $green, #014421, #036a34, #036934, #058e46);
+  padding-right: 1rem;
+  width: 100%;
+  height: 3.5rem;
   overflow: hidden;
 }
 
 .image-logo {
-  width: 25%;
   margin-right: 1rem;
+  width: 25%;
   overflow: hidden;
 }
 
 .modal-overlay {
-  font-family: 'Inter', sans-serif;
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
   justify-content: center;
   align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  font-family: 'Inter', sans-serif;
 }
 
 .modal-content {
   margin-top: 0.8rem;
-  padding-left: 2.5rem;
   padding-right: 2.5rem;
+  padding-left: 2.5rem;
   text-align: left;
 }
 
 .modal-title {
-  text-align: left;
   font-weight: 800;
+  text-align: left;
 }
 
 .modal-subtitle {
   align-self: flex-start;
-  font-weight: 700;
   color: rgb(85, 84, 84);
+  font-weight: 700;
 }
 
 .modal-container {
-  background: white;
   border-radius: 1.1rem;
+  background: white;
   width: 40rem;
   height: 32rem;
   text-align: center;
 }
 
 .label {
-  font-weight: 600;
   color: rgb(85, 84, 84);
+  font-weight: 600;
 }
 
 .input-container {
-  width: 100%;
   display: flex;
   align-items: center;
   padding-top: 1rem;
   padding-bottom: 0.5rem;
+  width: 100%;
 }
 
 .password {
@@ -221,16 +193,16 @@ const closeModal = () => {
 }
 
 .button-container {
-  width: 100%;
   display: flex;
   justify-content: space-around;
   margin-top: 0.5rem;
+  width: 100%;
 }
 
 .error-message {
-  color: red;
+  align-self: flex-start;
   margin-top: -1.5rem;
   margin-bottom: 0.5rem;
-  align-self: flex-start;
+  color: red;
 }
 </style>
