@@ -1,5 +1,5 @@
 <template>
-  <Field :name="name" v-slot="{ field, errorMessage }" validate-on-input validate-on-blur>
+  <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
     <div>
       <div class="input-container">
         <input
@@ -12,7 +12,7 @@
         />
         <label :for="name" :class="['input-label', labelClass]">{{ placeholder }}</label>
       </div>
-      <p v-if="errorMessage" class="input-error">{{ errorMessage }}</p>
+      <p v-if="errors" class="input-error">{{ errors[0] }}</p>
     </div>
   </Field>
 </template>
@@ -98,7 +98,7 @@ const boxStyle = computed(() => ({
   top: 50%;
   left: 0.6rem;
   transform: translateY(-50%);
-  z-index: 10;
+  z-index: 2;
   transition: all 0.2s ease;
   background-color: white;
   padding: 0 0.4rem;
