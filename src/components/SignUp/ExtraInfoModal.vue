@@ -4,29 +4,94 @@
       <h1 class="modal-title">Before you proceed...</h1>
       <h5 class="modal-subtitle">We need more information from you.</h5>
       <form @submit.prevent="handleSubmit" class="form-container">
-        <div class="input-container">
-          <label class="label">Birthdate:</label>
-          <BaseDateInput id="date" type="date" v-model="dob" placeholder="Birthdate" />
-          <div class="gender-container">
-            <label class="label">Sex:</label>
-            <BaseFormRadio id="M" label="Male" v-model="gender" />
-            <BaseFormRadio id="F" label="Female" v-model="gender" />
+        <div class="input-row align-label">
+          <div class="input-pair">
+            <BaseDateInput
+              id="date"
+              v-model="dob"
+              label="Birthdate"
+              placeholder="Birthdate"
+            />
+          </div>
+          <div class="input-pair">
+            <BaseSelectInput
+              v-model="gender"
+              label="Sex"
+              width="100%"
+            >
+              <option disabled value="">Select gender</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other</option>
+            </BaseSelectInput>
           </div>
         </div>
 
-        <BaseTextInput name="password" type="password" v-model="password" placeholder="Password" class="password" />
-        <p v-if="errors.password" class="error-message">
-          {{ errors.password }}
-        </p>
+        <div class="input-row align-label full-width">
+          <div class="input-pair full-width">
+            <BaseTextInput
+              name="middleName"
+              v-model="middleName"
+              placeholder="Middle Name"
+              label="Middle Name"
+              width="100%"
+            />
+          </div>
+        </div>
 
-        <BaseTextInput
-          name="retype"
-          type="password"
-          v-model="retype"
-          placeholder="Re-enter password"
-          class="retype"
-        />
-        <p v-if="errors.retype" class="error-message">{{ errors.retype }}</p>
+        <div class="input-row align-label">
+          <div class="input-pair">
+            <BaseSelectInput
+              v-model="college"
+              label="College"
+              width="100%"
+            >
+              <option disabled value="">Select college</option>
+              <option value="CAS">College of Arts and Sciences</option>
+              <option value="COE">College of Engineering</option>
+              <option value="CBA">College of Business Administration</option>
+            </BaseSelectInput>
+          </div>
+          <div class="input-pair">
+            <BaseSelectInput
+              v-model="department"
+              label="Department"
+              width="100%"
+            >
+              <option disabled value="">Select department</option>
+              <option value="Math">Mathematics</option>
+              <option value="CS">Computer Science</option>
+              <option value="Physics">Physics</option>
+            </BaseSelectInput>
+          </div>
+        </div>
+
+        <div class="input-row align-label">
+          <div class="input-pair">
+            <BaseTextInput
+              name="password"
+              type="password"
+              v-model="password"
+              placeholder="Password"
+              label="Password"
+              width="100%"
+            />
+          </div>
+          <div class="input-pair">
+            <BaseTextInput
+              name="retype"
+              type="password"
+              v-model="retype"
+              placeholder="Re-enter password"
+              label="Re-enter Password"
+              width="100%"
+            />
+          </div>
+        </div>
+        <div class="input-row error-row">
+          <span class="error-message" v-if="errors.password">{{ errors.password }}</span>
+          <span class="error-message" v-if="errors.retype">{{ errors.retype }}</span>
+        </div>
 
         <h5 class="modal-subtitle">Please fill up the required fields and click proceed to continue.</h5>
 
@@ -42,10 +107,10 @@
 <script setup>
 import { ref, defineEmits } from 'vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import BaseFormRadio from '@/components/Global/BaseFormRadio.vue'
-import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
+import BaseDateInput from '@/components/Global/BaseDateInput.vue'
 import BaseModal from '@/components/Global/BaseModal.vue'
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
 
 const emit = defineEmits(['close', 'submit'])
 
@@ -53,6 +118,9 @@ const password = ref('')
 const retype = ref('')
 const gender = ref('')
 const dob = ref('')
+const middleName = ref('')
+const college = ref('')
+const department = ref('')
 const errors = ref({
   password: '',
   retype: '',
@@ -82,6 +150,9 @@ const handleSubmit = () => {
       password: trimmedPassword,
       gender: gender.value,
       dob: dob.value,
+      middleName: middleName.value,
+      college: college.value,
+      department: department.value,
     })
   }
 }
@@ -92,100 +163,66 @@ const closeModal = () => {
 </script>
 
 <style lang="scss" scoped>
+.modal-content {
+  padding: 1rem;
+    text-align: left;
+}
+
+.modal-title {
+  font-size: 2.2rem;
+  font-weight: bolder;
+}
+
 .form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.header {
-  display: flex;
-  position: relative;
-  justify-content: flex-end;
-  align-items: center;
-  border-top-right-radius: 1rem;
-  border-top-left-radius: 1rem;
-  background: linear-gradient(90deg, $green, #014421, #036a34, #036934, #058e46);
-  padding-right: 1rem;
+.full-width .single-input {
   width: 100%;
-  height: 3.5rem;
-  overflow: hidden;
 }
 
-.image-logo {
-  margin-right: 1rem;
-  width: 25%;
-  overflow: hidden;
-}
-
-.modal-overlay {
+.input-row {
   display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.5);
+  gap: 1rem;
   width: 100%;
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-}
-
-.modal-content {
-  margin-top: 0.8rem;
-  padding-right: 2.5rem;
-  padding-left: 2.5rem;
-  text-align: left;
-}
-
-.modal-title {
-  font-weight: 800;
-  text-align: left;
-}
-
-.modal-subtitle {
-  align-self: flex-start;
-  color: rgb(85, 84, 84);
-  font-weight: 700;
-}
-
-.modal-container {
-  border-radius: 1.1rem;
-  background: white;
-  width: 40rem;
-  height: 32rem;
-  text-align: center;
-}
-
-.label {
-  color: rgb(85, 84, 84);
-  font-weight: 600;
-}
-
-.input-container {
-  display: flex;
-  align-items: center;
   padding-top: 1rem;
   padding-bottom: 0.5rem;
-  width: 100%;
 }
 
-.password {
-  margin-bottom: 1.5rem;
-  width: 100%;
-  height: 3rem;
+.align-label > .label-side {
+  width: 1rem;
+  min-width: 5rem;
+  text-align: right;
+  margin-left: 1rem;
+  font-weight: 500;
+  font-size: 0.5rem;
 }
 
-.retype {
-  margin-bottom: 1.5rem;
-  width: 100%;
-  height: 3rem;
+.label-side {
+  font-size: 0.8rem;
 }
 
-.gender-container {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
+.label-side {
+  display: block;
+}
+
+.input-row > *:not(.label-side) {
+  flex: 1;
+}
+
+.input-row.error-row {
+  gap: 1.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.95rem;
+  min-height: 1.2em;
 }
 
 .button-container {
@@ -193,12 +230,5 @@ const closeModal = () => {
   justify-content: space-around;
   margin-top: 0.5rem;
   width: 100%;
-}
-
-.error-message {
-  align-self: flex-start;
-  margin-top: -1.5rem;
-  margin-bottom: 0.5rem;
-  color: red;
 }
 </style>
