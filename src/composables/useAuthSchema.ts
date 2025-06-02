@@ -53,3 +53,20 @@ export const getSignupSchema = () =>
     department: yup.number().nullable().required('Please choose your department.'),
     terms: yup.boolean().oneOf([true], 'You must agree to the terms and conditions.'),
   })
+
+  export const getLoginSchema = () =>
+    yup.object({
+      email: yup
+        .string()
+        .required('Your email is required.')
+        .email('Please enter a valid email.')
+        .test('is-up-email', 'Please use your UP email address.', function (value) {
+          if (!value) {
+            return true;
+          }
+          return /^[\w.+-]+@up\.edu\.ph$/.test(value);
+      }),
+    password: yup
+      .string()
+      .required('Entering a password is required.'), // Password is always required for standard login
+    })

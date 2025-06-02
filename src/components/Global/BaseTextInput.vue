@@ -84,8 +84,7 @@ const boxStyle = computed(() => ({
       color: transparent;
     }
     &:focus {
-      outline-offset: 0.125rem;
-      border: 4px $green;
+      border: 2.5px solid $green;
     }
   }
 }
