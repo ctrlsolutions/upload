@@ -1,14 +1,8 @@
-export interface LoginData {
+export interface LoginPayload {
   email: string
   password: string
 }
-
-export interface ErrorState {
-  email: string
-  password: string
-}
-
-export interface SignupData {
+export interface SignupPayload {
   email: string
   password: string
   password2: string
@@ -17,17 +11,12 @@ export interface SignupData {
   last_name: string
   sex: string
   birth_date: string
-  college?: number
-  department?: number
+  college?: number | null
+  department?: number | null
+  access_token?: string | null
 }
 
-export interface ApiResponse {
-  success: boolean
-  data?: any
-  error?: string
-}
-
-export interface GoogleSignupData {
-  access_token: string
-  extra_info: Record<string, any>
+export interface ErrorState {
+  email: string
+  password: string
 }
