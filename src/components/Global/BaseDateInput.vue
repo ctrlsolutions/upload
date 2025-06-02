@@ -1,37 +1,42 @@
 <template>
-  <div :style="{ width: width }">
-    <label v-if="label" class="label">{{ label }}</label>
-    <div class="input-wrapper">
-      <input
-        ref="inputRef"
-        type="date"
-        class="date-input"
-        v-bind="$attrs"
-        :value="modelValue"
-        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-      />
-      <div class="dropdown-toggle">
-        <v-icon name="bi-calendar" class="dropdown-toggle" @click="openDatePicker" />
+  <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
+    <div>
+      <label v-if="label" class="label">{{ label }}</label>
+      <div class="input-wrapper">
+        <input ref="inputRef" type="date" class="date-input" v-bind="$attrs" @input="handleInput" />
+        <div class="dropdown-toggle">
+          <v-icon name="bi-calendar" @click="openDatePicker" />
+        </div>
       </div>
     </div>
-  </div>
+    <p v-if="errors" class="input-error" @blur="console.log(errors)">{{ errors[0] }}</p>
+  </Field>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
+import { Field } from 'vee-validate'
+import { computed, ref } from 'vue'
 const inputRef = ref<HTMLInputElement | null>(null)
 
 const props = withDefaults(
   defineProps<{
+    name: string
     width?: string
-    modelValue?: string
     label?: string
   }>(),
   {
     width: '100%',
   },
 )
+
+const emit = defineEmits(['update:modelValue'])
+
+const handleInput = (event: Event) => {
+  const target = event.target as HTMLInputElement | null
+  if (target) {
+    emit('update:modelValue', target.value)
+  }
+}
 
 const openDatePicker = () => {
   if (inputRef.value?.showPicker) {
@@ -40,6 +45,10 @@ const openDatePicker = () => {
     inputRef.value?.click()
   }
 }
+
+const boxStyle = computed(() => ({
+  width: props.width ?? undefined,
+}))
 </script>
 
 <style lang="scss" scoped>
@@ -59,6 +68,10 @@ const openDatePicker = () => {
   position: relative;
   justify-content: space-between;
   align-items: center;
+  border: $base-bt solid $red;
+  border-radius: $base-br;
+  padding: $component-padding;
+  width: 100%;
   text-overflow: ellipsis;
 }
 
@@ -67,10 +80,10 @@ const openDatePicker = () => {
   -moz-appearance: none;
   appearance: none;
   cursor: text;
-  border: $base-bt solid $red;
+  border: 0;
   border-radius: $base-br;
-  padding: $component-padding;
   width: 100%;
+  height: 100%;
   color: $red;
   font-weight: $base-fw;
   font-size: $base-fs;
@@ -95,20 +108,24 @@ const openDatePicker = () => {
 
 .dropdown-toggle {
   display: flex;
-  position: absolute;
-  top: 50%;
-  right: 0.3rem;
-  align-items: center;
-  transform: translateY(-50%);
-  opacity: 0.8;
-  z-index: 100;
+  align-self: center;
   transition: opacity 0.3s ease;
   cursor: pointer;
-  pointer-events: auto;
+  background-color: yellow;
   color: $red;
   &:hover {
     opacity: 1;
   }
+}
+
+.input-error {
+  margin: 0;
+  padding: 0rem 0rem 0rem 0.5rem;
+  color: $red;
+  font-style: italic;
+  font-weight: normal;
+  font-size: small;
+  text-align: left;
 }
 
 @supports (-moz-appearance: none) {

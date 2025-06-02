@@ -72,9 +72,7 @@ const boxStyle = computed(() => ({
     }
 
     &:focus {
-      outline-offset: 0.125rem;
-      border: 4px $red;
-      border-style: solid;
+      border: 2.5px solid $red;
     }
   }
 
