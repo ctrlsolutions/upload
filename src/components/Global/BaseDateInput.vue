@@ -2,9 +2,9 @@
   <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
     <div>
       <label v-if="label" class="label">{{ label }}</label>
-      <div class="input-wrapper">
+      <div class="wrapper">
         <input ref="inputRef" type="date" class="date-input" v-bind="$attrs" @input="handleInput" />
-        <div class="dropdown-toggle">
+        <div class="icon-toggle">
           <v-icon name="bi-calendar" @click="openDatePicker" />
         </div>
       </div>
@@ -18,16 +18,11 @@ import { Field } from 'vee-validate'
 import { computed, ref } from 'vue'
 const inputRef = ref<HTMLInputElement | null>(null)
 
-const props = withDefaults(
-  defineProps<{
-    name: string
-    width?: string
-    label?: string
-  }>(),
-  {
-    width: '100%',
-  },
-)
+const props = defineProps<{
+  name: string
+  width?: string | null
+  label?: string
+}>()
 
 const emit = defineEmits(['update:modelValue'])
 
@@ -56,38 +51,55 @@ const boxStyle = computed(() => ({
 
 .label {
   display: block;
+  box-sizing: border-box;
   margin-left: 0.3rem;
+  width: 100%;
   color: color.scale($black, $lightness: 40%);
   font-weight: $base-fw;
   font-size: $base-fs;
   text-align: left;
 }
 
-.input-wrapper {
-  display: flex;
-  position: relative;
-  justify-content: space-between;
-  align-items: center;
+.wrapper {
+  // display: flex;
+  display: grid; 
+  grid-template-columns: 6fr 1fr; 
+  grid-template-rows: 1fr; 
+  gap: 0px 0px; 
+  // position: relative;
+  // justify-content: space-between;
+  // align-items: center;
+  cursor: pointer;
   border: $base-bt solid $red;
   border-radius: $base-br;
-  padding: $component-padding;
+  // padding: $component-padding;
+  // background-color: yellow;
   width: 100%;
-  text-overflow: ellipsis;
+  height: 100%;
+  // text-overflow: ellipsis;
+  &:has(input:focus) {
+    border: 2.5px solid $red;
+  }
 }
 
 .date-input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
+  all: unset;
   cursor: text;
   border: 0;
   border-radius: $base-br;
-  width: 100%;
-  height: 100%;
+  background-color: transparent;
+  // width: 100%;
+  padding: $component-padding;
+  // height: 100%;
   color: $red;
   font-weight: $base-fw;
   font-size: $base-fs;
   font-family: 'Inter', sans-serif;
+  text-overflow: ellipsis;
+  // background-color: red;
   text-align: left;
   &:focus {
     outline: none;
@@ -97,25 +109,23 @@ const boxStyle = computed(() => ({
     display: none;
   }
   &::-webkit-calendar-picker-indicator {
-    position: absolute;
-    right: 0;
-    opacity: 0;
-    cursor: pointer;
-    width: 20%;
-    height: 100%;
+    display: none;
+  }
+  &:focus {
+    outline: none;
   }
 }
 
-.dropdown-toggle {
+.icon-toggle {
   display: flex;
-  align-self: center;
+  justify-content: center;
+  align-items: center;
   transition: opacity 0.3s ease;
   cursor: pointer;
-  background-color: yellow;
+  // background-color: yellow;
+  padding: 0em 0.25em;
   color: $red;
-  &:hover {
-    opacity: 1;
-  }
+  margin: 0;
 }
 
 .input-error {
@@ -129,7 +139,7 @@ const boxStyle = computed(() => ({
 }
 
 @supports (-moz-appearance: none) {
-  .dropdown-toggle {
+  .icon-toggle {
     display: none;
   }
 }
