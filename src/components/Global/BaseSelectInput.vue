@@ -2,8 +2,8 @@
   <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
     <div>
       <label v-if="label" class="label">{{ label }}</label>
-      <div class="wrapper">
-        <select id="" ref="inputRef" v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
+      <div class="wrapper" :style="boxStyle">
+        <select ref="inputRef" v-model="selectedValue" class="dropdown" @change="handleInput" v-bind="field">
           <slot></slot>
         </select>
         <div class="icon-toggle">
@@ -19,18 +19,18 @@
 import { Field } from 'vee-validate'
 import { ref, defineProps, computed } from 'vue'
 
-const emit = defineEmits(['update:modelValue'])
-
 const props = defineProps<{
   name: string
   width?: string | null
   label?: string
 }>()
 
+const emit = defineEmits(['update:modelValue'])
+
 const selectedValue = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
 
-function handleChange(event: Event) {
+function handleInput(event: Event) {
   const value = (event.target as HTMLSelectElement).value
   emit('update:modelValue', value)
 }
@@ -43,7 +43,7 @@ function openDropdown(event: Event) {
   }
 }
 
-const dropdownStyle = computed(() => ({
+const boxStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
 }))
 </script>
@@ -62,12 +62,12 @@ const dropdownStyle = computed(() => ({
 }
 
 .wrapper {
-  // display: flex;
-  display: grid; 
-  grid-template-columns: 6fr 1fr; 
-  grid-template-rows: 1fr; 
-  gap: 0px 0px; 
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 6fr 1fr;
+  gap: 0px 0px;
   cursor: pointer;
+  margin: 0;
   border: $base-bt solid $red;
   border-radius: $base-br;
   background-color: transparent;
@@ -76,28 +76,23 @@ const dropdownStyle = computed(() => ({
   &:has(select:focus) {
     border: 2.5px solid $red;
   }
-  margin: 0;
 }
 
 .dropdown {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  display: flex;
-  justify-content: start;
-  all: unset;
   cursor: pointer;
   border: 0;
   border-radius: $base-br;
   background-color: transparent;
   padding: $component-padding;
-  // height: 100%;
+  height: $base-height;
   color: $red;
   font-weight: $base-fw;
   font-size: $base-fs;
   font-family: 'Inter', sans-serif;
   text-overflow: ellipsis;
-  // background-color: blue;
   &:not([value='']) {
     color: $red;
   }
@@ -127,7 +122,6 @@ const dropdownStyle = computed(() => ({
   justify-content: center;
   align-items: center;
   margin: 0;
-  // background-color: yellow;
   padding: 0em 0.25em;
   color: $red;
 }

@@ -1,7 +1,7 @@
 <template>
   <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
     <div>
-      <div class="input-container">
+      <div class="input-container" :style="boxStyle">
         <input
           v-bind="field"
           :type="type"
@@ -27,7 +27,6 @@ const props = defineProps<{
   placeholder?: string
   variant?: string
   width?: string
-  height?: string
 }>()
 
 const emit = defineEmits(['update:modelValue'])
@@ -44,7 +43,6 @@ const labelClass = computed(() => `input-label--${props.variant ?? 'red'}`)
 
 const boxStyle = computed(() => ({
   width: props.width ?? undefined,
-  height: props.height ?? undefined,
 }))
 </script>
 
@@ -58,6 +56,7 @@ const boxStyle = computed(() => ({
 .input-box {
   border-radius: $base-br;
   padding: $component-padding;
+  height: $base-height;
   font-weight: $base-fw;
   font-size: $base-fs;
   font-family: 'Inter', serif;
