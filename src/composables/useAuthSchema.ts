@@ -5,19 +5,21 @@ const capitalizeWords = (str: string) =>
 
 export const getSignupSchema = () =>
   yup.object({
-    email: yup
-      .string()
-      .when('access_token', {
-        is: (val: string | null) => !val,
-        then: schema => schema.required('Your email is required.'),
-        otherwise: schema => schema.notRequired(),
-      })
-      .email('Please enter a valid email.')
-      .test('is-up-email', 'Please use your UP email address.', function (value) {
-        if (!value) return true
-        if (!value.includes('@')) return true
-        return /^[\w.+-]+@up\.edu\.ph$/.test(value)
-      }),
+    email: yup.string().when('access_token', {
+      is: (val: string | null) => !val,
+      then: schema =>
+        schema
+          .required('Your email is required.')
+          .email('Please enter a valid email.')
+          .test('is-up-email', 'Please use your UP email address.', value => {
+            if (!value) return false
+            const email = value.trim().toLowerCase()
+            if (!email.includes('@')) return true
+            console.log('VALIDATION', email.endsWith('@up.edu.ph'))
+            return email.endsWith('@up.edu.ph')
+          }),
+      otherwise: schema => schema.notRequired(),
+    }),
     password: yup
       .string()
       .required('Entering a password is required.')

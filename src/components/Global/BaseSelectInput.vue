@@ -3,7 +3,7 @@
     <div>
       <label v-if="label" class="label">{{ label }}</label>
       <div class="wrapper" :style="boxStyle">
-        <select ref="inputRef" v-model="selectedValue" class="dropdown" @change="handleInput" v-bind="field">
+        <select ref="inputRef" v-model="selectedValue" class="dropdown" @change="handleInput">
           <slot></slot>
         </select>
         <div class="icon-toggle">
@@ -54,7 +54,6 @@ const boxStyle = computed(() => ({
   display: block;
   box-sizing: border-box;
   margin-left: 0.3rem;
-  width: 100%;
   color: color.scale($black, $lightness: 40%);
   font-weight: $base-fw;
   font-size: $base-fs;
@@ -71,7 +70,6 @@ const boxStyle = computed(() => ({
   border: $base-bt solid $red;
   border-radius: $base-br;
   background-color: transparent;
-  width: 100%;
   height: 100%;
   &:has(select:focus) {
     border: 2.5px solid $red;
@@ -87,12 +85,15 @@ const boxStyle = computed(() => ({
   border-radius: $base-br;
   background-color: transparent;
   padding: $component-padding;
+  max-width: 100%;
   height: $base-height;
+  overflow: hidden;
   color: $red;
   font-weight: $base-fw;
   font-size: $base-fs;
   font-family: 'Inter', sans-serif;
   text-overflow: ellipsis;
+  white-space: nowrap;
   &:not([value='']) {
     color: $red;
   }

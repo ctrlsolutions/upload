@@ -8,6 +8,7 @@
       :initial-values="form"
       @submit.prevent="submitForm(form)"
       :validation-schema="signupSchema"
+      validate-on-blur
       v-slot="{ errors }"
       class="form-wrapper"
     >
@@ -194,21 +195,6 @@ const googleSignUp = async (response: any) => {
   showModal.value = true
 }
 
-// const submit = async (extraInfo: Record<string, any>) => {
-//   if (!accessToken.value) return
-//   const googleData: GoogleSignupPayload = {
-//     access_token: accessToken.value,
-//     extra_info: extraInfo,
-//   }
-//   const response = await googleSignup(googleData)
-//   if (response.success) {
-//     toast.value?.showToast('Google Signup successful!', 'success')
-//     showModal.value = false
-//   } else {
-//     toast.value?.showToast(`Error submitting form: ${response.error}`, 'error')
-//   }
-// }
-
 onMounted(async () => {
   try {
     if (universityStore.colleges.length === 0) {
@@ -249,6 +235,7 @@ onBeforeUnmount(() => {
 
 .form-wrapper {
   display: grid;
+
   grid-template-rows: minmax(0, 1fr) auto;
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -266,7 +253,7 @@ onBeforeUnmount(() => {
   display: flex;
   grid-area: fields;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   box-sizing: border-box;
   padding: 1rem 0.5rem;
   min-height: 0;
@@ -312,7 +299,7 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr 1fr;
     grid-auto-columns: 1fr;
     align-items: start;
-    gap: 0.7em;
+    gap: 0.5em;
   }
 }
 
@@ -327,7 +314,7 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr 1fr;
     grid-auto-columns: 1fr;
     align-items: start;
-    gap: 0.7em;
+    gap: 0.5em;
   }
 }
 
@@ -342,7 +329,7 @@ onBeforeUnmount(() => {
     grid-template-columns: 1fr 1fr;
     grid-auto-columns: 1fr;
     align-items: start;
-    gap: 0.7em;
+    gap: 0.5em;
   }
 }
 
@@ -370,7 +357,6 @@ onBeforeUnmount(() => {
 }
 
 .separator {
-  align-self: center;
   opacity: 80%;
   margin: 0.5rem 0;
   background-color: $red;
