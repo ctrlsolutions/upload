@@ -47,6 +47,7 @@ export const useReportStore = defineStore('report', {
   state: () => ({
     reports: [] as Report[],
     lastSubmittedReport: null as Report | null,
+    reportPreviewUrl: null as any,
   }),
 
   getters: {
@@ -124,14 +125,23 @@ export const useReportStore = defineStore('report', {
       }
     },
 
-    async generateReport(payload: any) {
+    async generateReportSummary(payload: any) {
       try {
         const res = await generateReport(payload)
         if (!res.success) {
           console.error('Report generation failed:', res.error)
+          return null
         }
+
+        // create a blob URL for display
+        const blob = new Blob([res.data], { type: 'application/pdf' })
+        const url = URL.createObjectURL(blob)
+
+        this.reportPreviewUrl = url // save it to state
+        return url
       } catch (err) {
         console.error('Unexpected error generating report:', err)
+        return null
       }
     },
   },

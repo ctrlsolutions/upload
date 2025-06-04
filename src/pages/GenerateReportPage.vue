@@ -1,247 +1,255 @@
 <template>
-    <div class="generate-container">
-        <FolderComponent 
-            width="100%"
-            :tabs="myTabs" 
-            :initialActiveTabId="currentTab"
-            @update:activeTabId="handleTabChange" 
-            class="folder-component"
-        >
-            <template v-slot="{ activeTabId }"> 
-                <div v-if="activeTabId === 'generate'" class="content-area">
-                    <div class="options-container">
-                        <div v-if="isHead">
-                            <p class="scope-label">Select a scope:</p>
-                            <BaseSelectInput
-                                class="scope-select"
-                                placeholder="Summary scope"
-                                :options="[
-                                    { value: 'department', label: 'Department'},
-                                    { value: 'college', label: 'College' },
-                                    { value: 'university', label: 'University' },
-                                ]"
-                            >
-                                <option disabled>Select a scope</option>
-                                <option value="SELF">Self</option>
-                                <option value="DEPT">Department</option>
-                                <option value="COLG">College</option>
-                                <option value="UNIV">University</option>
-                            </BaseSelectInput>
-                        </div>
+  <div class="generate-container">
+    <FolderComponent
+      width="100%"
+      :tabs="myTabs"
+      :initialActiveTabId="currentTab"
+      @update:activeTabId="handleTabChange"
+      class="folder-component"
+    >
+      <template v-slot="{ activeTabId }">
+        <div v-if="activeTabId === 'generate'" class="content-area">
+          <div class="options-container">
+            <div v-if="userStore.getUserProfile?.role.code !== 'FA'">
+              <BaseSelectInput
+                label="Scope"
+                name="scope"
+                class="scope-select"
+                placeholder="Summary scope"
+                v-model="form.scope"
+              >
+                <option disabled>Select a scope</option>
+                <option value="FA">Self</option>
+                <option value="DH">Department</option>
+                <option
+                  value="CD"
+                  v-if="userStore.getUserProfile?.role.code == 'CD' || userStore.getUserProfile?.role.code == 'CH'"
+                >
+                  College
+                </option>
+                <option value="CH" v-if="userStore.getUserProfile?.role.code == 'CH'">University</option>
+              </BaseSelectInput>
+            </div>
+            <div>
+              <BaseSelectInput label="Timeframe" name="timeframe" class="timeframe-select" v-model="form.timeframe">
+                <option disabled>Select a timeframe</option>
+                <option value="SM">6 Months</option>
+                <option value="YR">Year</option>
+                <option value="CS">Custom</option>
+              </BaseSelectInput>
+              <BaseFormButton variant="red" height="100%" width="100%" type="button" @click="handleUpdate">
+                Update Preview
+              </BaseFormButton>
+            </div>
+          </div>
 
-                        <p class="timeframe-label">Select a timeframe:</p>
-                        <BaseSelectInput
-                            class="timeframe-select"
-                            v-model="timeframe"
-                        >
-                            <option disabled>Select a timeframe</option>
-                            <option value="SM">6 Months</option>
-                            <option value="YR">Year</option>
-                            <option value="CS">Custom</option>
-                        </BaseSelectInput>
+          <div class="preview-title">
+            <div class="line"></div>
+            Generate Summary Document Preview
+          </div>
 
-                        <p class="generation-label">Save option:</p>
-                        <BaseFormRadio
-                            class="pdf-radio"
-                            name="saveOption" value="pdf" id="pdf-option"
-                            label="Save as .pdf"
-                        />
-                        <BaseFormButton variant="red" height="100%" width="100%" type="button">
-                            Update Preview
-                        </BaseFormButton>
-                    </div>
+          <div class="preview-container">
+            <!-- <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" /> -->
+            <iframe v-if="previewUrl" :src="previewUrl" type="application/pdf" width="100%" height="600px"></iframe>
+          </div>
 
-                    
-                    <div class="preview-title">
-                        <div class="line"></div>
-                        Generate Summary Document Preview
-                    </div>
-
-                    <div class="preview-container">
-                        <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" />
-                    </div>
-
-                    <BaseFormButton variant="red" width="100%" type="button">
-                        Generate
-                    </BaseFormButton>
-                </div>
-            </template>
-        </FolderComponent>
-    </div>
+          <BaseFormButton variant="red" width="100%" type="button"> Download </BaseFormButton>
+        </div>
+      </template>
+    </FolderComponent>
+  </div>
 </template>
 
 <script lang="ts" setup>
-    import { ref, computed, onMounted } from "vue";
-    import BaseSelectInput from "@/components/Global/BaseSelectInput.vue";
-    import BaseFormRadio from "@/components/Global/BaseFormRadio.vue";
-    import BaseFormButton from "@/components/Global/BaseFormButton.vue";
-    import FolderComponent from "@/components/Global/FolderComponent.vue";
-    import { useUserStore } from '@/stores/UserStore';
+import { ref, computed, onMounted } from 'vue'
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
+import BaseFormButton from '@/components/Global/BaseFormButton.vue'
+import FolderComponent from '@/components/Global/FolderComponent.vue'
+import { useUserStore } from '@/stores/UserStore'
+import { useReportStore } from '@/stores/ReportStore'
+import { generateReport } from '@/services/ReportService'
 
+const initialFormState = {
+  scope: 'FA',
+  timeframe: '',
+}
 
-    const userStore = useUserStore();
-    const timeframe = ref('');
+const form = ref({ ...initialFormState })
 
-    const myTabs = ref([
-        { id: 'generate', title: 'Generate Summary' },
-    ]);
+const userStore = useUserStore()
+const reportStore = useReportStore()
 
-    const currentTab = ref('generate');
+const myTabs = ref([{ id: 'generate', title: 'Generate Summary' }])
 
-    const isHead = computed(() => {
-        const role = userStore.profile?.role?.toLowerCase();
-        return role === 'department_head' || 
-            role === 'college_dean' || 
-            role === 'chancellor';
-    });
+const currentTab = ref('generate')
+const previewUrl = ref('')
 
-    onMounted(async () => {
-        if (!userStore.initialized) {
-            await userStore.fetchUserProfile();
-        }
-    });
+// const isHead = computed(() => {
+//   const role = userStore.profile?.role
+//   return role === 'department_head' || role === 'college_dean' || role === 'chancellor'
+// })
 
-    function handleTabChange(newTabId: string) {
-        console.log("Tab changed to:", newTabId);
-        currentTab.value = newTabId;
+const handleUpdate = async () => {
+  try {
+    const res = await generateReport(form.value)
+    console.log(res.data instanceof Blob) // should be false (we're making the blob manually)
+    console.log(typeof res.data) // should be object (ArrayBuffer or Uint8Array ideally)
+
+    if (res.success) {
+      const blob = new Blob([res.data], { type: 'application/pdf' })
+      const url = URL.createObjectURL(blob)
+      previewUrl.value = url
     }
+  } catch (err) {
+    console.error('Error generating report', err)
+  }
+}
 
+onMounted(async () => {
+  if (!userStore.initialized) {
+    await userStore.fetchUserProfile()
+  }
+  console.log('ROLE', userStore.getUserProfile?.role.code)
+})
 
+function handleTabChange(newTabId: string) {
+  currentTab.value = newTabId
+}
 </script>
 
 <style lang="scss" scoped>
-.container {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    box-sizing: border-box;
-    margin: 0;
-    justify-content: center;
-    align-items: end;
+.generate-container {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr;
+  width: 100%;
+  height: 100%;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  justify-content: center;
+  align-items: end;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .folder-component {
-    height: 100%;
-    overflow: hidden;
+  height: 100%;
+  overflow: hidden;
 }
 
 .content-area {
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: 1fr 0.5fr 2fr 1fr 0.2fr;
-    gap: 1rem;
-    box-sizing: border-box;
+  display: grid;
+  grid-template-rows: 1fr 0.5fr 2fr 1fr 0.2fr;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1rem;
+  box-sizing: border-box;
+  height: 100%;
 }
 
 .options-container {
-    display: grid;
-    grid-template-columns: auto 1fr auto 1fr;
-    grid-template-rows: auto auto;
-    gap: 1rem 1.5rem;
-    align-items: center;
-    margin-top: 1rem;
-    color: $green; 
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  margin-top: 1rem;
+  color: $green;
 }
 
 .scope-label {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-    justify-self: start;
-    font-weight: bold;
+  grid-row: 1 / 2;
+  grid-column: 1 / 2;
+  justify-self: start;
+  font-weight: bold;
 }
 
 .scope-select {
-    grid-column: 2 / 3;
-    grid-row: 1 / 2;
-    width: 100%;
+  grid-row: 1 / 2;
+  grid-column: 2 / 3;
+  width: 100%;
 }
 
 .timeframe-label {
-    grid-column: 3 / 4;
-    grid-row: 1 / 2;
-    justify-self: start;
-    font-weight: bold;
+  grid-row: 1 / 2;
+  grid-column: 3 / 4;
+  justify-self: start;
+  font-weight: bold;
 }
 
 .timeframe-select {
-    grid-column: 4 / 5;
-    grid-row: 1 / 2;
-    width: 100%;
+  grid-row: 1 / 2;
+  grid-column: 4 / 5;
+  width: 100%;
 }
 
 .generation-label {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    justify-self: start;
-    font-weight: bold;
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  justify-self: start;
+  font-weight: bold;
 }
 
 .pdf-radio {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-    justify-self: start;
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  justify-self: start;
 }
 
 .line {
-    width: 100%;
-    height: 1px;
-    background: #d0d0d0;
-    margin: 1rem 0 1rem 0;
+  margin: 1rem 0 1rem 0;
+  background: #d0d0d0;
+  width: 100%;
+  height: 1px;
 }
 
 .preview-title {
-    margin-bottom: 1rem;
-    color: $red;
-    font-weight: bold;
+  margin-bottom: 1rem;
+  color: $red;
+  font-weight: bold;
 }
 
 .preview-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: #e6e6e6;
-    border-radius: 10px;
-    padding: 2rem;
-    margin-bottom: 0.5rem;
-    grid-row: span 2 / span 2;
+  display: flex;
+  grid-row: span 2 / span 2;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  background: #e6e6e6;
+  padding: 2rem;
 }
 
 .update-button {
-    background: $red;
-    border-radius: 7px;
-    color: white;
-    font-size: 0.7rem;
-    font-weight: bold;
-    padding: 0.6rem 1.5rem;
-    border: none;
-    cursor: pointer;
+  cursor: pointer;
+  border: none;
+  border-radius: 7px;
+  background: $red;
+  padding: 0.6rem 1.5rem;
+  color: white;
+  font-weight: bold;
+  font-size: 0.7rem;
 }
 
 .update-button:hover {
-    background: $red;
+  background: $red;
 }
 
 .generate-button {
-    width: 100%;
-    height: 3rem;
-    background: $red;
-    border-radius: 8px;
-    color: white;
-    font-size: 0.8rem;
-    font-weight: bold;
-    border: none;
-    cursor: pointer;
-    margin-top: 1rem;
-    padding: 0.5rem 0;
+  cursor: pointer;
+  margin-top: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: $red;
+  padding: 0.5rem 0;
+  width: 100%;
+  height: 3rem;
+  color: white;
+  font-weight: bold;
+  font-size: 0.8rem;
 }
 
 .generate-button:hover {
-    background: $red;
+  background: $red;
 }
 
 .preview-icon {

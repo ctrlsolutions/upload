@@ -38,15 +38,21 @@ export const fetchReports = async (): Promise<ApiResponse> => {
   }
 }
 
-export const generateReport = async (payload: any): Promise<ApiResponse> => {
+export const generateReport = async (payload: any) => {
   try {
-    const response = await api.post('/report/generate/', payload)
-    return { success: true, data: response.data }
+    const res = await api.post('/report/generate/', payload, {
+      responseType: 'blob', // 🧠 important!
+    })
+
+    return {
+      success: true,
+      data: res.data, // the PDF blob
+    }
   } catch (error: any) {
-    console.error('❌ Generate report failed:', error.response?.data || error.message)
+    console.error('❌ Generate report failed:', error)
     return {
       success: false,
-      error: error.response?.data?.error || 'An unexpected error occurred',
+      error: error.message || 'Unknown error',
     }
   }
 }
