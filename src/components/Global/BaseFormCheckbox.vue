@@ -32,11 +32,11 @@ const variantClass = computed(() => `form-checkbox--${props.variant}`);
 
 .form-checkbox {
     display: flex;
-    align-items: center;
+    // align-items: center;
     cursor: pointer;
-    margin-left: 20px;
-    display: flex;
-    align-items: flex-start;
+    // margin-left: 20px;
+    // display: flex;
+    // align-items: flex-start;
     gap:0.5rem;
 
     input[type='checkbox'] {
