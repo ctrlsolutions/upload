@@ -4,12 +4,11 @@ import type { LoginPayload, SignupPayload } from '@/types/AuthInterface'
 import type { ApiResponse } from '@/types/CommonInterface'
 import { useUserStore } from '@/stores/UserStore'
 
-export const signup = async (userData: SignupPayload): Promise<ApiResponse> => {
+export const signup = async (data: SignupPayload): Promise<ApiResponse> => {
   try {
-    const response = await api.post('/user/', userData, {
+    const response = await api.post('/user/', data, {
       headers: { 'Content-Type': 'application/json', withCredentials: false },
     })
-    console.log('Signup response:', response.data)
     return handleApiResponse(response)
   } catch (error: any) {
     return handleApiError(error)
@@ -80,7 +79,7 @@ export const logout = async () => {
 //   }
 // }
 
-async function setCSRFToken() {
+export async function setCSRFToken() {
   await api.get('/user/csrf', {
     withCredentials: true,
   })
