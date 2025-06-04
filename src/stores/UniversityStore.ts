@@ -4,6 +4,7 @@ import type { College } from '@/types/ProfileInterface'
 import { getCollegeDepartments } from '@/services/ProfileService'
 
 let socket: WebSocket | null = null
+const WS_BASE_URL = import.meta.env.VITE_API_WS_URL
 
 export const useUniversityStore = defineStore('university', {
   state: () => ({
@@ -24,12 +25,12 @@ export const useUniversityStore = defineStore('university', {
   actions: {
     async fetchColleges() {
       const res = await getCollegeDepartments()
-      this.colleges = await res.data
+      if (res.success) this.colleges = await res.data
     },
     setupWebSocket() {
       if (socket) return // prevent multiple connections
 
-      socket = new WebSocket('ws://localhost:8000/ws/college/')
+      socket = new WebSocket(WS_BASE_URL + '/college/')
 
       socket.onopen = () => {
         console.log('✅ WebSocket connected')

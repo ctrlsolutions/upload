@@ -1,390 +1,477 @@
-<template>HELLO</template>
-
-<!-- <template>
-  <div class="report-history">
+<template>
+  <div class="report-history-page">
     <div class="banner">
-      <h1>Report History</h1>
+        <v-icon name="fa-history" class="history-icon" />
+        <h1>Report History</h1>
     </div>
-    <div class="drop-search">
-      <BaseSelectInput
-        v-model="selectedSort"
-        :options="options"
-        placeholder="Sort by"
-        width="210px"
-        :textColor="'#fff'"
-        :borderColor="'transparent'"
-        class="select1"
-      />
-      <BaseSelectInput
-        v-model="selectedDelete"
-        :options="deleteOptions"
-        placeholder="Delete History"
-        width="210px"
-        :textColor="'#fff'"
-        :borderColor="'transparent'"
-        class="select2"
-      />
-      <div class="search-container">
-        <OhVueIcon name="co-magnifying-glass" class="search-icon" />
-        <BaseTextInput
-          id="search-history"
-          v-model="searchQuery"
-          placeholder="Search History"
-          width="700px"
-          :textColor="'black'"
-          :borderColor="'#ccc'"
-          class="search-bar"
+    <div class="select1">
+        <BaseSelectInput
+            name="sort"
+            v-model="selectedSort"
+            placeholder="Sort by"
+            variant="filled"
+            color="green"
+            class="sort-select"
+        >
+            <option disabled value="">Sort By</option> 
+            <option value="date_desc">Date Submitted (Newest First)</option>
+            <option value="date_asc">Date Submitted (Oldest First)</option>
+            <option value="title_asc">Title (A-Z)</option>
+            <option value="title_desc">Title (Z-A)</option>
+        </BaseSelectInput>
+    </div>
+    <div class="search-bar">
+        <SearchBar
+            id="search-history-input"  v-model="searchQuery"
+            placeholder="Search by title, author, etc."
         />
-      </div>
-      <BaseSelectInput
-        v-model="selectedFilter"
-        :options="filterOptions"
-        placeholder="Filters"
-        width="200px"
-        :textColor="'#fff'"
-        :borderColor="'transparent'"
-        class="select2"
-      />
+    </div>
+    <div class="filter">
+        <BaseSelectInput
+            name="filter"
+            modelValue=""
+            placeholder="Filters"
+            variant="filled"
+            :options="filterOptionsArray"
+        >
+          <option disabled value="">Filters</option>
+          <option value="SELF">Self</option>
+          <option value="DEPT">Department</option>
+          <option value="COLG">College</option>
+        </BaseSelectInput>
     </div>
     <div class="report-history-container">
-      <div v-if="selectedCount > 0" class="delete-container">
-        <BaseFormButton variant="red" width="7rem" height="2.5rem" @click="deleteSelectedReports">
-          Delete ({{ selectedCount }})
-        </BaseFormButton>
-      </div>
-
-      <div v-for="(reportGroup, date) in groupedReports" :key="date">
-        <div class="date-header">{{ date }}</div>
-
-        <div v-for="(report, index) in (reportGroup as Report[]).slice(0, 5)" :key="report.id" class="report-item">
-          <BaseFormCheckbox v-model="selectedReports[report.id]" :id="`report-${report.id}`" />
-          <span class="timestamp">{{ report.time_submitted || 'time' }}</span>
-          <img :src="cosImage" alt="Report" class="report-icon" />
-          <span class="report-title">{{ report.title || 'Research Title' }}</span>
-          <span class="report-author">{{ report.formatted_author || 'Last Name' }}</span>
-          <span class="report-author-college">{{ report.college_code || 'DCS' }}</span>
-          <span class="report-author-department">{{ report.department_code || 'DCS' }}</span>
-          <span class="report-type">{{ report.report_type || 'Research Type' }}</span>
-          <button variant="transparent" width="0" height="2rem" class="options-button">⋮</button>
+        <div class="report-history-inner">
+            <div v-if="filteredReports.length === 0" class="empty-state">
+                <v-icon name="fa-file-alt" size="3rem" />
+                <h2>No reports yet</h2>
+                <p>When you submit reports, they'll appear here.</p>
+            </div>
+            <div v-else v-for="(reports, date) in groupedReports" :key="date">
+                <div v-if="selectedCount > 0" class="delete-container">
+                    <p>{{ selectedCount }} selected</p>
+                    <BaseFormButton
+                    variant="red"
+    
+                    @click="deleteSelectedReports"
+                    >
+                    Delete
+                    </BaseFormButton>
+                </div>
+                <div class="date-header">{{ date }}</div>
+                <div v-for="(report, index) in reports.slice(0,8)" :key="index" class="report-item">
+                    <div class="check-box">
+                        <Checkbox
+                            v-model="selectedReports[report.id]"  
+                            :id="`report-checkbox-${report.id || `item-${date}-${index}`}`"
+                        />
+                    </div>
+                    <span class="timestamp">{{ formatTimestamp(report.created_on) || '...' }}</span>
+                    <v-icon name="fa-clipboard-list" class="report-icon" />
+                    <span class="report-title">{{ report.title || '...' }}</span>
+                    <span class="report-author">{{ report.user?.last_name || '...' }}, {{ report.user?.first_name }}</span>
+                    <span class="report-author-college" :style="{ backgroundColor: getCollegeColor(report.college) }">
+                        {{ report.college_name || '...' }}
+                    </span>
+                    <span class="report-author-department">{{ report.department_name || '...' }}</span>
+                    <span class="report-type">{{ report.form_name || '...' }}</span>
+                    <button variant="transparent" width="0" height="2rem" class="options-button">⋮</button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-
-    <DeleteModal
-      v-if="showDeleteModal"
-      :isOpen="showDeleteModal"
-      @close="closeModal"
-      @confirm-delete="deleteAllReports"
-    />
-    <DeleteModal
-      v-if="showDeleteSelectedModal"
-      :isOpen="showDeleteSelectedModal"
-      @close="showDeleteSelectedModal = false"
-      @confirm-delete="confirmDeleteSelectedReports"
-    />
+    <DeleteModal v-if="showDeleteModal" :isOpen="showDeleteModal" @close="closeModal" @confirm-delete="deleteAllReports" />
+    <DeleteModal v-if="showDeleteSelectedModal" :isOpen="showDeleteSelectedModal" @close="showDeleteSelectedModal = false" @confirm-delete="confirmDeleteSelectedReports" />
   </div>
 </template>
 
-<script lang="ts" setup>
-import cosImage from '@/assets/COS.png'
-import { ref, computed, onMounted, watch } from 'vue'
-import BaseSelectInput from '@/components/Global/BaseSelectInput.vue'
-import BaseTextInput from '@/components/Global/BaseTextInput.vue'
-import BaseFormButton from '@/components/Global/BaseFormButton.vue'
-import BaseFormCheckbox from '@/components/Global/BaseFormCheckbox.vue'
-import DeleteModal from '@/components/ReportHistory/DeleteModal.vue'
-import { OhVueIcon, addIcons } from 'oh-vue-icons'
-import { CoMagnifyingGlass } from 'oh-vue-icons/icons'
-import type { Report } from '@/types/ReportInterface'
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue';
+import BaseSelectInput from '@/components/Global/BaseSelectInput.vue';
+import BaseTextInput from '@/components/Global/BaseTextInput.vue';
+import BaseFormButton from '@/components/Global/BaseFormButton.vue';
+import BaseFormCheckbox from '@/components/Global/BaseFormCheckbox.vue';
+import DeleteModal from '@/components/ReportHistory/DeleteModal.vue';
+import { OhVueIcon, addIcons } from "oh-vue-icons";
+import { CoMagnifyingGlass, IoDocumentTextSharp } from "oh-vue-icons/icons"; // Combined icon imports
+import SearchBar from "@/components/ReportHistory/SearchBar.vue";
+import Checkbox from "@/components/ReportHistory/Checkbox.vue"; // Assuming this is a custom Checkbox, not BaseFormCheckbox
+import { useReportStore } from '@/stores/ReportStore';
+import { storeToRefs } from 'pinia';
+import type { Report } from '@/types/ReportInterface';
+import { useUserStore } from '@/stores/UserStore';
 
-addIcons(CoMagnifyingGlass)
+addIcons(CoMagnifyingGlass, IoDocumentTextSharp); // Added IoDocumentTextSharp as it was imported but not added
 
-const allReports = ref<Report[]>([])
-const reports = ref<Report[]>([])
-const searchQuery = ref('')
-const selectedSort = ref('by-date')
-const selectedDelete = ref('')
-const selectedFilter = ref('')
-const selectedReports = ref<{ [key: string]: boolean }>({})
-const showDeleteModal = ref(false)
-const showDeleteSelectedModal = ref(false)
-
-const groupedReports = computed((): Record<string, Report[]> => {
-  const groups: Record<string, Report[]> = {}
-
-  const sortKey = selectedSort.value
-
-  ;(reports.value || []).forEach(report => {
-    let groupKey = ''
-
-    if (sortKey === 'by-date') {
-      groupKey = report.created_on || 'Unknown Date'
-    } else if (sortKey === 'by-college') {
-      groupKey = report.college_name || 'Unknown College'
-    } else if (sortKey === 'by-department') {
-      groupKey = report.department_name || 'Unknown Department'
-    } else if (sortKey === 'my-submission') {
-      groupKey = 'My Submissions'
-    }
-
-    if (!groups[groupKey]) {
-      groups[groupKey] = []
-    }
-    groups[groupKey].push(report)
-  })
-
-  return groups
-})
-
-const options = [
-  { label: 'By Date', value: 'by-date' },
-  { label: 'By College', value: 'by-college' },
-  { label: 'By Department', value: 'by-department' },
-  { label: 'My Submission', value: 'my-submission' },
-]
-
-const deleteOptions = [{ label: 'Delete All', value: 'delete-all' }]
-const filterOptions = [{ label: 'All', value: 'all' }]
-type SortKey = 'by-date' | 'by-college' | 'by-department' | 'my-submission'
-
-const headers: Record<SortKey, string> = {
-  'by-date': 'Date',
-  'by-college': 'College',
-  'by-department': 'Department',
-  'my-submission': 'My Submissions',
+interface GroupedReports {
+  [key: string]: Report[];
 }
 
-const headerText = computed(() => {
-  const key = selectedSort.value as SortKey
-  return headers[key] || 'Date'
-})
-
-const selectedCount = computed(() => Object.values(selectedReports.value).filter(Boolean).length)
-
-watch(selectedDelete, newValue => {
-  if (newValue === 'delete-all') {
-    showDeleteModal.value = true
-    selectedDelete.value = ''
-  }
-})
-
-watch(reports, newReports => {
-  const newSelection: Record<string, boolean> = {}
-
-  for (const report of newReports) {
-    newSelection[report.id] = selectedReports.value[report.id] === true
-  }
-
-  selectedReports.value = newSelection
-})
-
-watch(selectedSort, newSort => {
-  applyCurrentSort()
-})
-
-function applyCurrentSort() {
-  const sort = selectedSort.value
-  if (sort === 'my-submission') {
-    reports.value = allReports.value.filter(report => report.is_owner === true)
-  } else if (sort === 'by-date') {
-    reports.value = [...allReports.value].sort(
-      (a, b) => new Date(b.created_on).getTime() - new Date(a.created_on).getTime(),
-    )
-  } else if (sort === 'by-college') {
-    reports.value = [...allReports.value].sort((a, b) => (a.college_name || '').localeCompare(b.college_name || ''))
-  } else if (sort === 'by-department') {
-    reports.value = [...allReports.value].sort((a, b) =>
-      (a.department_name || '').localeCompare(b.department_name || ''),
-    )
-  } else {
-    reports.value = [...allReports.value]
-  }
+interface Headers {
+  [key: string]: string;
+  "by-date": string;
+  "by-college": string;
+  "by-department": string;
+  "my-submission": string;
 }
 
-onMounted(async () => {
-  await fetchReports()
-})
+const reportStore = useReportStore();
+const { reports } = storeToRefs(reportStore);
+const userStore = useUserStore(); 
+const { profile: currentUserProfile } = storeToRefs(userStore);
+const searchQuery = ref("");
+const selectedSort = ref("date-desc");
+const selectedDelete = ref<string | null>(null);
+const selectedFilter = ref<string>("ALL");
+const selectedReports = ref<Record<number, boolean>>({});
+const showDeleteModal = ref(false);
+const showDeleteSelectedModal = ref(false);
 
-async function fetchReports() {
+const deleteOptions = ref([{ label: "Delete All", value: "delete-all" }]);
+const filterOptions = ref([{ label: "All", value: "all" }]);
+const reportTypes = ref<string[]>([]);
+
+const headerText = computed<string>(() => {
+  const headers: Headers = {
+    "by-date": "Date",
+    "by-college": "College",
+    "by-department": "Department",
+    "my-submission": "My Submissions",
+  };
+  return headers[selectedSort.value] || "Date";
+});
+
+const sortedReports = computed<Report[]>(() => {
+  const currentReports = [...reports.value];
+
+  switch (selectedSort.value) {
+    case "date_desc":
+      return currentReports.sort((a, b) => new Date(b.created_on).getTime() - new Date(a.created_on).getTime());
+    case "date_asc":
+      return currentReports.sort((a, b) => new Date(a.created_on).getTime() - new Date(b.created_on).getTime());
+    case "by_college":
+      return currentReports.sort((a, b) => (a.college_name || "").localeCompare(b.college_name || ""));
+    case "by_department":
+      return currentReports.sort((a, b) => (a.department_name || "").localeCompare(b.department_name || ""));
+    case "title_asc":
+      return currentReports.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+    case "title_desc":
+      return currentReports.sort((a, b) => (b.title || "").localeCompare(a.title || ""));
+
+    default:
+      return currentReports; 
+  }
+});
+
+const filterOptionsArray = ref([
+  { value: "ALL", label: "All My Reports" },
+  { value: "SELF", label: "My Submissions (Self)" }, 
+  { value: "DEPT", label: "My Department Reports" },
+  { value: "COLG", label: "My College Reports" },
+]);
+
+const baseReportsForFiltering = computed<Report[]>(() => {
+  const userProf = currentUserProfile.value; 
+
+  if (!userProf) {
+    return reports.value;
+  }
+
+  switch (selectedFilter.value) {
+    case "SELF":
+      return reports.value.filter(report => report.user?.id === userProf.id);
+    case "DEPT":
+
+      return reports.value.filter(report => report.department.department_id === userProf.department?.department_id);
+    case "COLG":
+
+      return reports.value.filter(report => report.college.college_id === userProf.college?.college_id);
+    case "ALL":
+    default:
+      return reports.value;
+  }
+});
+
+const filteredReports = computed<Report[]>(() => {
+  if (!searchQuery.value.trim()) return sortedReports.value;
+
+  const query = searchQuery.value.toLowerCase();
+  return sortedReports.value.filter((report) =>
+    [report.title, report.user.last_name || report.user.email, report.college.name, report.department.name]
+      .some(field => field?.toLowerCase().includes(query))
+  );
+});
+
+const groupedReports = computed<GroupedReports>(() => {
+  return filteredReports.value.reduce((groups: GroupedReports, report) => {
+    let key: string;
+    if (selectedSort.value === "by-college") {
+      key = report.college.name;
+    } else if (selectedSort.value === "by-department") {
+      key = report.department.name;
+    } else if (selectedSort.value === "my-submission") {
+      key = "My Submission"; // Consistent key
+    } else { // Default to by-date
+      const date = new Date(report.created_on);
+      key = isNaN(date.getTime()) ? "No Reports" : date.toLocaleDateString(); // Handle invalid dates
+    }
+
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(report);
+    return groups;
+  }, {});
+});
+
+const selectedCount = computed<number>(() => {
+  return Object.values(selectedReports.value).filter(Boolean).length;
+});
+
+// Watchers
+watch(selectedDelete, (newValue: string | null) => {
+  if (newValue === "delete-all") {
+    showDeleteModal.value = true;
+    selectedDelete.value = ""; // Reset to prevent re-triggering if selected again
+  }
+});
+
+function formatTimestamp(isoString: string | null | undefined): string {
+  if (!isoString) {
+    return '...'; // Or an empty string, or 'N/A'
+  }
   try {
-    const response = await ReportService.getAllReports()
-    allReports.value = response ?? []
-    applyCurrentSort()
-    selectedReports.value = {}
-    for (const report of reports.value) {
-      selectedReports.value[report.id] = false
+    const date = new Date(isoString);
+    if (isNaN(date.getTime())) {
+      return 'Invalid Date'; // Handle cases where the date string might be invalid
     }
+    // Use toLocaleTimeString for HH:MM AM/PM format
+    // You can specify 'en-US' for a common AM/PM format or let it use the user's default locale.
+    // Adjust options as needed.
+    return date.toLocaleTimeString([], {
+      hour: '2-digit', // HH
+      minute: '2-digit', // MM
+      hour12: true    // AM/PM
+    });
   } catch (error) {
-    console.error('Error fetching reports:', error)
-    reports.value = []
+    console.error("Error formatting date:", isoString, error);
+    return 'Error'; // Or the original string, or '...'
   }
 }
 
+// Methods converted to functions
 function closeModal() {
-  showDeleteModal.value = false
-  selectedDelete.value = ''
+  showDeleteModal.value = false;
+  selectedDelete.value = null; // Reset the selection
 }
 
 async function deleteAllReports() {
-  try {
-    await ReportService.deleteAllReports()
-    await fetchReports() // Refresh list after deletion
-    closeModal()
-  } catch (error) {
-    console.error('Error deleting all reports:', error)
-  }
+  // console.log("deleteAllReports called - implement deletion logic here");
+  // Example: await reportStore.deleteAllReportsAction();
+  closeModal();
 }
 
 function deleteSelectedReports() {
-  showDeleteSelectedModal.value = true
+  showDeleteSelectedModal.value = true;
 }
 
 async function confirmDeleteSelectedReports() {
+  const reportIdsToDelete = Object.entries(selectedReports.value)
+    .filter(([_, selected]) => selected)
+    .map(([reportId]) => parseInt(reportId));
+
+  if (reportIdsToDelete.length === 0) {
+    showDeleteSelectedModal.value = false;
+    return;
+  }
+
+  // Assuming deleteReport can handle an array or you loop
+  // For multiple deletions, it's often better to have a store action that takes an array of IDs
+  const deletePromises = reportIdsToDelete.map(reportId => reportStore.deleteReport(reportId));
+
   try {
-    const selectedIds = Object.entries(selectedReports.value)
-      .filter(([_, selected]) => selected)
-      .map(([id]) => parseInt(id))
-
-    if (selectedIds.length === 0) {
-      console.warn('No reports selected for deletion.')
-      return
-    }
-
-    await ReportService.deleteMultipleReports(selectedIds)
-
-    await fetchReports() // Refresh list after deletion
-    selectedReports.value = {}
-    showDeleteSelectedModal.value = false
+    await Promise.all(deletePromises);
+    // Successfully deleted
   } catch (error) {
-    console.error('Error deleting selected reports:', error)
+    console.error("Failed to delete selected reports:", error);
+    // Handle error (e.g., show a notification)
+  } finally {
+    selectedReports.value = {}; // Clear selection
+    showDeleteSelectedModal.value = false;
+    // Optionally, re-fetch reports or let the store handle updates
+    // await reportStore.fetchReportHistory();
   }
 }
-</script>
 
-<style lang="scss" scoped>
-.no-reports {
-  padding: 2rem;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #777;
+function getCollegeColor(college: { name: string }): string {
+  const colors: Record<string, string> = {
+    "College of Science": "#D89E00",
+    "College of Social Sciences": "#7B1113",
+    "School of Management": "#1E46A4",
+    "College of Communication, Arts, and Design": "#28772C",
+  };
+  return colors[college?.name] || "gray";
 }
 
-.report-history {
+onMounted(async () => {
+  await reportStore.fetchReportHistory();
+});
+
+</script>
+
+
+<style lang="scss" scoped>
+
+.delete-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1em 2em;
+    font-weight: $base-fw;
+    font-size: 12px;
+    border-radius: $base-br;
+    background-color: rgb(232, 232, 232);
+}
+
+.sort-select {
+    color: $green;
+    background-color: $green;
+}
+
+.empty-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0 10px;
-  margin-right: 20px;
-  height: 100vh;
-  overflow: hidden;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  color: #666;
+  height: 100%;
+  
+  h2 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.5rem;
+  }
+  
+  p {
+    margin: 0;
+    color: #999;
+  }
+}
+
+.report-history-page {
+  display: grid; 
+  grid-template-columns: 1fr 1fr 3.5fr 1fr; 
+  grid-template-rows: 0.5fr 0.5fr 4fr; 
+  gap: 0em 0px; 
+  grid-template-areas: 
+    "header header header header"
+    "filter sort search search"
+    "main main main main"; 
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .banner {
-  width: 100%;
-  height: 92px;
-  border-radius: 15px;
-  background-color: #014421;
-  box-shadow: 0px 6px 6.8px rgba(0, 0, 0, 0.25);
+  grid-area: header;
   display: flex;
   align-items: center;
-  padding: 20px;
-  margin: 28px;
-  margin-bottom: 20px;
+  gap: 1rem;
+  border-radius: 1rem;
+  background-color: $green;
+  box-shadow: 0px 6px 6.8px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
 }
+
 .banner h1 {
   color: $white;
   font-size: 35px;
   font-weight: 800;
 }
 
-.drop-search {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 18px;
-  margin: auto 0;
-  max-width: 100%;
-}
-
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: auto;
-  flex-grow: center;
-  max-width: 50%;
+.history-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: white;
 }
 
 .search-bar {
-  font-family: Inter, sans-serif;
-  font-weight: 400;
-  font-size: 1.2rem;
-  border-radius: 8px;
-  width: 100%;
-  height: 45px;
-  padding-left: 2.5rem;
-  padding-right: 1rem;
-  border: 1px solid #ccc;
+  grid-area: search;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-icon {
   position: absolute;
-  left: 10px;
   font-size: 1.5rem;
-  color: #333;
+  color: $red;
 }
 
 .select1 {
-  background-color: $red;
-  border-radius: 8px;
-  max-width: 50%;
-  height: 45px;
+  grid-area: sort;
+  display: flex;
+  align-items: center;
+  padding-right: 1em;
 }
 
 .select2 {
-  background-color: $green;
-  border-radius: 8px;
-  flex-shrink: 0;
-  max-width: 50%;
-  height: 45px;
+  grid-area: delete;
+  display: flex;
+  align-items: center;
+//   padding-right: 1em;
+}
+
+.filter {
+  grid-area: filter;
+  display: flex;
+  align-items: center;
+  padding-left: 1em;
 }
 
 .report-history-container {
-  max-width: 100vw;
-  max-height: 100vh;
-  width: 100%;
-  height: 100%;
+  grid-area: main;
   background: white;
   border-radius: 15px;
-  padding: 20px;
-  margin: 25px 0;
-  margin-bottom: 45px;
+  padding: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
 }
 
+.report-history-inner {
+    // height: 100%;
+    // overflow-y: auto;
+    flex-grow: 1;
+}
+
 .date-header {
-  font-size: 1.5rem;
-  font-weight: 900;
-  margin: 5px 0;
-  margin-left: 50px;
-  margin-top: 20px;
-  color: $black;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin: 1em 2em;
+  color: $red;
 }
 
 .report-item {
   display: grid;
-  grid-template-columns: 40px 80px 30px 2fr 1fr 1fr 1fr 1fr auto;
+  grid-template-columns: 0.3fr 0.5fr 0.1fr 2fr 1fr 1fr 1fr 1fr auto;
   align-items: center;
-  width: 100%;
-  max-width: 90vw;
-  padding: 10px 50px;
-  gap: 10px;
+  justify-content: center;
+  padding: 0.4em 3em;
+  gap: 1em;
   overflow-y: hidden;
+}
+
+.check-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .timestamp {
   margin-left: -10px;
   font-weight: bold;
+  font-size: 0.8em;
   color: #333;
 }
 
@@ -392,36 +479,39 @@ async function confirmDeleteSelectedReports() {
   width: 24px;
   height: 24px;
   margin: 0 10px;
+  color: gray;
 }
 
 .report-title {
-  font-weight: bold;
-  color: $black;
-  background-color: #f4c6c6;
+//   font-weight: bold;
+//   color: $black;
+    font-size: 0.8em;
+  background-color: #F4C6C6;
   border-radius: 8px;
-  padding: 1px 5px;
+  padding: 5px 10px;
   text-overflow: ellipsis;
 }
 
-.report-author,
-.report-author-department {
-  color: $black;
-  background-color: #fbf5e7;
+.report-author, .report-author-department {
+//   color: $black;
+  background-color: #FBF5E7;
   border-radius: 8px;
   padding: 1px 10px;
   text-overflow: ellipsis;
+  font-size: 0.8em;
 }
 
 .report-author-college {
-  color: $black;
-  background-color: #fbf5e7;
+  color: rgb(240, 240, 240);
   border-radius: 8px;
   padding: 1px 10px;
   text-overflow: ellipsis;
+  font-size: 0.8em;
 }
 
 .report-type {
-  color: $black;
+//   color: $black;
+font-size: 0.8em;
   background-color: $white;
   border-radius: 8px;
   padding: 1px 10px;
@@ -437,6 +527,7 @@ async function confirmDeleteSelectedReports() {
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 100px;
+  font-size: 0.8em;
 }
 
 .options-button {
@@ -445,10 +536,4 @@ async function confirmDeleteSelectedReports() {
   background-color: transparent;
 }
 
-.delete-container {
-  display: flex;
-  justify-content: flex-end;
-  margin-right: 50px;
-  margin-top: 15px;
-}
-</style> -->
+</style>

@@ -30,23 +30,36 @@ export const submitReport = async (form: any): Promise<ApiResponse> => {
 
 export const fetchReports = async (): Promise<ApiResponse> => {
   try {
-    const response = await api.get('/report/')
-    return { success: true, data: response.data }
+    console.log('Making request to /report/');
+    const response = await api.get('/report/');
+    console.log('Response:', response);
+    return { success: true, data: response.data };
   } catch (error: any) {
-    console.error('❌ Error fetching reports:', error.response?.data || error.message)
-    return { success: false, error: error.response?.data }
+    console.error('Full error:', error);
+    console.error('Response data:', error.response?.data);
+    console.error('Status code:', error.response?.status);
+    return { 
+      success: false, 
+      error: error.response?.data || error.message 
+    };
   }
 }
 
-export const generateReport = async (payload: any): Promise<ApiResponse> => {
+export const generateReport = async (payload: any) => {
   try {
-    const response = await api.post('/report/generate/', payload)
-    return { success: true, data: response.data }
+    const res = await api.post('/report/generate/', payload, {
+      responseType: 'blob', // 🧠 important!
+    })
+
+    return {
+      success: true,
+      data: res.data, // the PDF blob
+    }
   } catch (error: any) {
-    console.error('❌ Generate report failed:', error.response?.data || error.message)
+    console.error('❌ Generate report failed:', error)
     return {
       success: false,
-      error: error.response?.data?.error || 'An unexpected error occurred',
+      error: error.message || 'Unknown error',
     }
   }
 }

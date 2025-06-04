@@ -4,7 +4,12 @@
       <h1 class="title">Sign up</h1>
       <p class="subtitle">New here? Create a new account below.</p>
     </header>
-    <Form @submit.prevent="submitForm" :validation-schema="signupSchema" v-slot="{ errors, handleSubmit }">
+    <Form
+      @submit.prevent="submitForm"
+      :validation-schema="signupSchema"
+      v-slot="{ errors, handleSubmit }"
+      class="outer-form"
+    >
       <form @submit.prevent="handleSubmit(submitForm)" class="form-wrapper">
         <div class="fields">
           <InputField
@@ -233,6 +238,11 @@ onBeforeUnmount(() => {
   grid-area: title;
 }
 
+.outer-form {
+  grid-area: form;
+  min-height: 0;
+}
+
 .form-wrapper {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
@@ -241,11 +251,10 @@ onBeforeUnmount(() => {
     'fields'
     'sub-btns';
   grid-auto-columns: 1fr;
-  grid-area: 'form';
   gap: 0em 1%;
   box-sizing: border-box;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .fields {

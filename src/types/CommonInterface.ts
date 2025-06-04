@@ -1,4 +1,4 @@
-import type { College, Department, Role } from './ProfileInterface'
+import type { College, Department, Role } from '@/types/ProfileInterface'
 
 export type ApiResponse<T = any> =
   | { success: true; data: T; message?: string }
