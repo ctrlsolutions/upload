@@ -4,123 +4,108 @@
       <h1 class="title">Sign up</h1>
       <p class="subtitle">New here? Create a new account below.</p>
     </header>
-    <Form
-      :initial-values="form"
-      @submit.prevent="submitForm(form)"
-      :validation-schema="signupSchema"
-      validate-on-blur
-      v-slot="{ errors }"
-      class="form-wrapper"
-    >
-      <div class="fields">
-        <InputField
-          name="email"
-          type="email"
-          placeholder="Email"
-          variant="red"
-          width="100%"
-          autocomplete="email"
-          v-model="form.email"
-        />
-        <InputField
-          name="password"
-          type="password"
-          placeholder="Password"
-          variant="red"
-          width="100%"
-          autocomplete="current-password"
-          v-model="form.password"
-        />
-        <InputField
-          name="password2"
-          type="password"
-          placeholder="Re-enter password"
-          variant="red"
-          width="100%"
-          v-model="form.password2"
-        />
-        <div class="separator"></div>
-        <div class="name-fields">
+    <Form @submit.prevent="submitForm" :validation-schema="signupSchema" v-slot="{ errors, handleSubmit }">
+      <form @submit.prevent="handleSubmit(submitForm)" class="form-wrapper">
+        <div class="fields">
           <InputField
-            name="first_name"
-            type="text"
-            placeholder="First name"
+            name="email"
+            type="email"
+            placeholder="Email"
             variant="red"
             width="100%"
-            v-model="form.first_name"
+            autocomplete="email"
+            v-model="form.email"
           />
           <InputField
-            name="middle_name"
-            type="text"
-            placeholder="Middle name"
+            name="password"
+            type="password"
+            placeholder="Password"
             variant="red"
             width="100%"
-            v-model="form.middle_name"
+            autocomplete="current-password"
+            v-model="form.password"
           />
-        </div>
-        <InputField
-          id="last_name"
-          name="last_name"
-          type="text"
-          placeholder="Last name"
-          variant="red"
-          width="100%"
-          v-model="form.last_name"
-        />
-        <div class="demographic-fields">
-          <BaseSelectInput name="sex" v-model="form.sex" width="100%" label="Sex"
-            ><option value="" disabled>Select</option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-            <option value="O">Other / Prefer not to say</option>
-          </BaseSelectInput>
-          <BaseDateInput
-            name="birth_date"
-            v-model="form.birth_date"
+          <InputField
+            name="password2"
+            type="password"
+            placeholder="Re-enter password"
+            variant="red"
             width="100%"
-            :max="maxDate"
-            label="Date of Birth"
+            v-model="form.password2"
           />
-        </div>
-        <div class="university-fields">
-          <BaseSelectInput
-            name="college"
-            v-model="form.college"
-            placeholder="Select College"
+          <div class="separator"></div>
+          <div class="name-fields">
+            <InputField
+              name="first_name"
+              type="text"
+              placeholder="First name"
+              variant="red"
+              width="100%"
+              v-model="form.first_name"
+            />
+            <InputField
+              name="middle_name"
+              type="text"
+              placeholder="Middle name"
+              variant="red"
+              width="100%"
+              v-model="form.middle_name"
+            />
+          </div>
+          <InputField
+            id="last_name"
+            name="last_name"
+            type="text"
+            placeholder="Last name"
+            variant="red"
             width="100%"
-            label="College"
-          >
-            <option value="" disabled>Select</option>
-            <option v-for="college in universityStore.colleges" :key="college.college_id" :value="college.college_id">
-              {{ college.name }}
-            </option>
-          </BaseSelectInput>
-          <BaseSelectInput
-            name="department"
-            v-model="form.department"
-            placeholder="Select Department"
-            width="100%"
-            :disabled="!form.college"
-            label="Department"
-          >
-            <option value="" disabled>Select</option>
-            <option
-              v-for="dept in universityStore.getDepartmentsByCollege(Number(form.college))"
-              :key="dept.department_id"
-              :value="Number(dept.department_id)"
+            v-model="form.last_name"
+          />
+          <div class="demographic-fields">
+            <BaseSelectInput name="sex" v-model="form.sex" width="100%" label="Sex"
+              ><option value="" disabled>Select</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="O">Other / Prefer not to say</option>
+            </BaseSelectInput>
+            <BaseDateInput
+              name="birth_date"
+              v-model="form.birth_date"
+              width="100%"
+              :max="maxDate"
+              label="Date of Birth"
+            />
+          </div>
+          <div class="university-fields">
+            <BaseSelectInput name="college" v-model="form.college" placeholder="Select College" label="College">
+              <option value="" disabled>Select</option>
+              <option v-for="college in universityStore.colleges" :key="college.college_id" :value="college.college_id">
+                {{ college.name }}
+              </option>
+            </BaseSelectInput>
+            <BaseSelectInput
+              name="department"
+              v-model="form.department"
+              placeholder="Select Department"
+              :disabled="!form.college"
+              label="Department"
             >
-              {{ dept.name }}
-            </option>
-          </BaseSelectInput>
+              <option value="" disabled>Select</option>
+              <option
+                v-for="dept in universityStore.getDepartmentsByCollege(Number(form.college))"
+                :key="dept.department_id"
+                :value="Number(dept.department_id)"
+              >
+                {{ dept.name }}
+              </option>
+            </BaseSelectInput>
+          </div>
         </div>
-        <button @click="console.log(form)">check form</button>
-        <!-- <span v-if="errors">{{ errors }}</span> -->
-        <!-- <span v-if="!meta.valid">Form is invalid</span> -->
-      </div>
-      <div class="button-group">
-        <FormButton variant="black" width="100%">CANCEL</FormButton>
-        <FormButton variant="red" width="100%" type="submit">SUBMIT</FormButton>
-      </div>
+        <div class="button-group">
+          <FormButton variant="black" width="100%">CANCEL</FormButton>
+          <FormButton variant="red" width="100%" type="submit">SUBMIT</FormButton>
+        </div>
+      </form>
     </Form>
     <div class="google-buttons">
       <p class="or-text">OR</p>
@@ -134,8 +119,8 @@
   </div>
   <ExtraInfoModal
     v-if="showModal"
-    :form="ref(form)"
-    @submit="submitForm"
+    :form="ref(modalForm)"
+    @form-submit="handleModalSubmit"
     @close="showModal = false"
     class="info-modal"
   />
@@ -151,6 +136,7 @@ import { Form } from 'vee-validate'
 import { getSignupSchema } from '@/composables/useAuthSchema'
 import { useUniversityStore } from '@/stores/UniversityStore'
 import { useUserStore } from '@/stores/UserStore'
+import { setCSRFToken } from '@/services/AuthService'
 
 const signupSchema = getSignupSchema()
 const universityStore = useUniversityStore()
@@ -171,32 +157,46 @@ const initialFormState: SignupPayload = {
 }
 
 const form: Ref<SignupPayload> = ref({ ...initialFormState })
+const modalForm: Ref<SignupPayload> = ref({ ...initialFormState })
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 const maxDate = new Date().toISOString().split('T')[0]
 const showModal = ref<boolean>(false)
 
-const submitForm = async (form: SignupPayload) => {
-  console.log('FORM VALUE', form)
-  await userStore.signup(form)
-  if (!userStore.success) {
-    toast.value?.showToast(userStore.message, 'error')
-    form = { ...initialFormState }
-  } else {
-    toast.value?.showToast(userStore.message, 'success')
-    form = { ...initialFormState }
-    setTimeout(() => (window.location.href = '/login'), 2000)
+const submitForm = async () => {
+  try {
+    console.log('HERE', form.value)
+    await userStore.signup(form.value)
+    if (!userStore.success) {
+      toast.value?.showToast(userStore.message, 'error')
+      form.value = { ...initialFormState }
+    } else {
+      toast.value?.showToast(userStore.message, 'success')
+      form.value = { ...initialFormState }
+      setTimeout(() => (window.location.href = '/login'), 2000)
+    }
+  } catch (error: any) {
+    console.log(error)
   }
 }
 
 const googleSignUp = async (response: any) => {
-  form.value = { ...initialFormState }
-  form.value.access_token = response.access_token
+  console.log(response.access_token)
+  modalForm.value = { ...initialFormState }
+  modalForm.value.access_token = response.access_token
   showModal.value = true
+}
+
+const handleModalSubmit = () => {
+  form.value = { ...modalForm.value }
+  console.log('SUSUBMIT NA', form.value)
+  submitForm()
+  showModal.value = false
 }
 
 onMounted(async () => {
   try {
+    await setCSRFToken()
     if (universityStore.colleges.length === 0) {
       await universityStore.fetchColleges()
     }
@@ -235,7 +235,6 @@ onBeforeUnmount(() => {
 
 .form-wrapper {
   display: grid;
-
   grid-template-rows: minmax(0, 1fr) auto;
   grid-template-columns: 1fr;
   grid-template-areas:
@@ -330,6 +329,7 @@ onBeforeUnmount(() => {
     grid-auto-columns: 1fr;
     align-items: start;
     gap: 0.5em;
+    width: 100%;
   }
 }
 
