@@ -43,7 +43,7 @@ export const useReportFormStore = defineStore('report-form', {
   },
 })
 
-export const useReportHistoryStore = defineStore('report-history', {
+export const useReportStore = defineStore('report', {
   state: () => ({
     reports: [] as Report[],
     lastSubmittedReport: null as Report | null,
