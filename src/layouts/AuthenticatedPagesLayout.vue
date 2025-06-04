@@ -52,48 +52,59 @@
   </div>
 </template>
 
-<script setup>
-import { computed } from 'vue'
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
+import { useUserStore } from '@/stores/UserStore'
 
-const username = sessionStorage.getItem('username') || ''
+const userStore = useUserStore()
 
-const dashboardRoute = computed(() => (username ? `/${username}` : '/login'))
-const profileRoute = computed(() => (username ? `/${username}/profile` : '/login'))
-const settingsRoute = computed(() => (username ? `/${username}/settings` : '/login'))
-const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
+const username = ref<string | undefined>('')
+console.log('LAYOUT USERNAME', username.value)
+
+const dashboardRoute = computed(() => (username.value ? `/${username.value}` : '/login'))
+const profileRoute = computed(() => (username.value ? `/${username.value}/profile` : '/login'))
+const settingsRoute = computed(() => (username.value ? `/${username.value}/settings` : '/login'))
+const adminRoute = computed(() => (username.value ? `/${username.value}/admin` : '/login'))
+
+onMounted(async () => {
+  if (!userStore.initialized) {
+    await userStore.fetchUserProfile()
+  }
+  username.value = userStore.getUserProfile?.username
+})
 </script>
 
 <style scoped lang="scss">
 .container {
   display: grid;
-  grid-template-columns: 0.1fr 4.5fr;
   grid-template-rows: 1fr;
-  padding: 0.75em;
+  grid-template-columns: 0.1fr 4.5fr;
   grid-template-areas: 'sidebar main';
-  width: 100vw;
-  height: 100vh;
+  box-sizing: border-box;
+  margin: 0 auto;
   // background: url('@/assets/DashboardBG.png') no-repeat center center fixed;
   background-size: cover;
   background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
-  box-sizing: border-box;
-  margin: 0 auto;
+  padding: 0.75em;
+  width: 100vw;
+  height: 100vh;
 }
 
 .sidebar {
-  grid-area: sidebar;
-  width: 5em;
-  background-color: $red;
-  padding: 1em;
-  margin: 0.5em 0.5em 0.5em 0em;
-  border-radius: 10px;
   display: flex;
+  grid-area: sidebar;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   z-index: 5;
   box-sizing: border-box;
+  margin: 0.5em 0.5em 0.5em 0em;
   margin-top: 0.05em;
   margin-bottom: 0.02em;
+  border-radius: 10px;
+  background-color: $red;
+  padding: 1em;
+  width: 5em;
 }
 
 .nav-link,
@@ -102,33 +113,33 @@ const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  text-decoration: none;
-  color: white;
-  border-radius: 5px;
   transition:
     background-color 0.15s ease-in-out,
     transform 0.15s ease-in-out;
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  text-decoration: none;
 }
 .logo {
+  position: relative;
   width: 40px;
   height: 40px;
-  position: relative;
 }
 .icon {
+  position: relative;
   width: 35px;
   height: 35px;
-  position: relative;
 }
 .icon-label {
   display: none;
-  height: 30px;
   position: relative;
   padding-left: 5px;
+  height: 30px;
 }
 .nav-link:hover {
-  background-color: #a04747;
   transform: translateX(50px);
+  background-color: #a04747;
 }
 .nav-link:not(:hover) {
   transform: none;
@@ -144,10 +155,10 @@ const adminRoute = computed(() => (username ? `/${username}/admin` : '/login'))
 }
 .content {
   grid-area: 'main';
-  width: 100%;
-  z-index: 0;
   justify-content: start;
   align-items: start;
+  z-index: 0;
+  width: 100%;
   // margin-left: -2rem;
 }
 </style>
