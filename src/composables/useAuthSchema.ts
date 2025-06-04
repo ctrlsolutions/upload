@@ -5,21 +5,16 @@ const capitalizeWords = (str: string) =>
 
 export const getSignupSchema = () =>
   yup.object({
-    email: yup.string().when('access_token', {
-      is: (val: string | null) => !val,
-      then: schema =>
-        schema
-          .required('Your email is required.')
-          .email('Please enter a valid email.')
-          .test('is-up-email', 'Please use your UP email address.', value => {
-            if (!value) return false
-            const email = value.trim().toLowerCase()
-            if (!email.includes('@')) return true
-            console.log('VALIDATION', email.endsWith('@up.edu.ph'))
-            return email.endsWith('@up.edu.ph')
-          }),
-      otherwise: schema => schema.notRequired(),
-    }),
+    email: yup
+      .string()
+      .required('Your email is required.')
+      .email('Please enter a valid email.')
+      .test('is-up-email', 'Please use your UP email address.', value => {
+        if (!value) return false
+        const email = value.trim().toLowerCase()
+        if (!email.includes('@')) return true
+        return email.endsWith('@up.edu.ph')
+      }),
     password: yup
       .string()
       .required('Entering a password is required.')
@@ -27,28 +22,14 @@ export const getSignupSchema = () =>
       .matches(/[a-z]/, 'Password must contain at least one lowercase letter.')
       .matches(/[A-Z]/, 'Password must contain at least one uppercase letter.')
       .matches(/\d/, 'Password must contain at least one number.')
-      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character.'), // TODO: VERIFY IF NEEDED
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character.'),
     password2: yup
       .string()
       .required('Retype your password.')
       .oneOf([yup.ref('password')], 'Password does not match.'),
-    first_name: yup
-      .string()
-      .when('access_token', {
-        is: (val: string | null) => !val,
-        then: schema => schema.required('Your first name is required.'),
-        otherwise: schema => schema.notRequired(),
-      })
-      .transform(capitalizeWords),
+    first_name: yup.string().required('Your first name is required.').transform(capitalizeWords),
     middle_name: yup.string().transform(capitalizeWords).optional(),
-    last_name: yup
-      .string()
-      .when('access_token', {
-        is: (val: string | null) => !val,
-        then: schema => schema.required('Your last name is required.'),
-        otherwise: schema => schema.notRequired(),
-      })
-      .transform(capitalizeWords),
+    last_name: yup.string().required('Your last name is required.').transform(capitalizeWords),
     sex: yup.string().required('Please choose a valid sex.'),
     birth_date: yup.string().required('Your birthdate is required.'),
     college: yup.number().nullable().required('Please choose your college.'),
@@ -56,19 +37,38 @@ export const getSignupSchema = () =>
     terms: yup.boolean().oneOf([true], 'You must agree to the terms and conditions.'),
   })
 
-  export const getLoginSchema = () =>
-    yup.object({
-      email: yup
-        .string()
-        .required('Your email is required.')
-        .email('Please enter a valid email.')
-        .test('is-up-email', 'Please use your UP email address.', function (value) {
-          if (!value) {
-            return true;
-          }
-          return /^[\w.+-]+@up\.edu\.ph$/.test(value);
-      }),
+export const getExtraInfoSchema = () =>
+  yup.object({
+    middle_name: yup.string().transform(capitalizeWords).optional(),
+    sex: yup.string().required('Please choose a valid sex.'),
+    birth_date: yup.string().required('Your birthdate is required.'),
+    college: yup.number().nullable().required('Please choose your college.'),
+    department: yup.number().nullable().required('Please choose your department.'),
     password: yup
       .string()
-      .required('Entering a password is required.'), // Password is always required for standard login
-    })
+      .required('Entering a password is required.')
+      .min(8, 'Your password must be at least 8 characters long.')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter.')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+      .matches(/\d/, 'Password must contain at least one number.')
+      .matches(/[!@#$%^&*(),.?":{}|<>]/, 'Password must contain at least one special character.'),
+    password2: yup
+      .string()
+      .required('Retype your password.')
+      .oneOf([yup.ref('password')], 'Password does not match.'),
+  })
+
+export const getLoginSchema = () =>
+  yup.object({
+    email: yup
+      .string()
+      .required('Your email is required.')
+      .email('Please enter a valid email.')
+      .test('is-up-email', 'Please use your UP email address.', function (value) {
+        if (!value) {
+          return true
+        }
+        return /^[\w.+-]+@up\.edu\.ph$/.test(value)
+      }),
+    password: yup.string().required('Entering a password is required.'),
+  })
