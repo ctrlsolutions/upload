@@ -2,13 +2,12 @@
   <div class="dashboard-page">
     <div class="left-section">
       <div class="greeting-card"><GreetingCard :lastName="user?.last_name ?? ''" /></div>
-      <div class="statistic-report"><StatisticReport /></div>
-      <div class="last-report"><LastReport /></div>
+      <div class="statistic-report"><MyCalendar /></div>
     </div>
     <div class="right-section">
       <div class="search-bar"><SearchBar /></div>
       <div class="my-profile"><MyProfile :user="user" /></div>
-      <div class="my-calendar"><MyCalendar /></div>
+      <div class="my-calendar"><StatisticReport /></div>
     </div>
   </div>
 </template>
@@ -54,7 +53,7 @@ onMounted(async () => {
   grid-area: left-section;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 0.8fr 1fr 1fr;
+  grid-template-rows: 0.38fr 1fr;
   grid-auto-columns: 1fr;
   gap: 2% 0%;
   grid-auto-flow: row;

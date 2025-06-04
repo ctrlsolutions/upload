@@ -6,9 +6,9 @@
       <div v-else class="profile-content">
         <img :src="profileImage" alt="Profile Picture" class="profile-pic" />
         <div class="user-info">
-          <p class="name">Prof. {{ user.fullName }}</p>
-          <p class="role">{{ formattedRole }}</p>
-          <p class="email">{{ user.email }}</p>
+          <p class="name">Prof. {{ userStore.getUserProfile?.last_name }}</p>
+          <p class="role">{{ userStore.getUserProfile?.role}}</p>
+          <p class="email">{{ userStore.getUserProfile?.email }}</p>
         </div>
         <div class="reports">
           <p class="ReportsSubmitted">Reports Submitted</p>
@@ -23,6 +23,7 @@
 import { ref, computed, onMounted } from 'vue'
 // import { getProfileData } from '@/services/ProfileService'
 import CardComponent from '@/components/Global/CardComponent.vue'
+import { useUserStore } from '@/stores/UserStore'
 
 const user = ref({
   profilePicture: '',
@@ -34,7 +35,7 @@ const user = ref({
 const isLoading = ref(true)
 const error = ref<string | null>(null)
 const defaultProfilePicture = new URL('@/assets/DefaultProfile.png', import.meta.url).href
-
+const userStore = useUserStore()
 const profileImage = computed(() => user.value.profilePicture || defaultProfilePicture)
 
 const formattedRole = computed((): string => {
