@@ -8,7 +8,6 @@
       />
       <img src="@/assets/searchLogo.png" alt="Search" class="search-icon" />
     </div>
-    <img src="@/assets/NotificationBell.png" alt="Notifications" class="notification-icon" />
   </div>
 </template>
 
@@ -20,7 +19,7 @@ export default {};
 .search-bar-wrapper {
   display: flex;
   align-items: center;
-  gap: 1rem; /* Space between search bar and notification bell */
+  gap: 1rem;
 }
 
 .search-bar-container {
