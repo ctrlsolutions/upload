@@ -22,10 +22,10 @@ import LastReport from '@/components/Dashboard/LastReport.vue'
 import MyProfile from '@/components/Dashboard/MyProfile.vue'
 import MyCalendar from '@/components/Dashboard/MyCalendar.vue'
 import { useUserStore } from '@/stores/UserStore'
-import { UserProfile } from '@/types/ProfileInterface'
+import type { User } from '@/types/CommonInterface'
 
 const userStore = useUserStore()
-const user = ref<UserProfile | null>(null)
+const user = ref<User | null>(null)
 
 onMounted(async () => {
   if (!userStore.profile) {

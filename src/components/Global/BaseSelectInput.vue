@@ -1,82 +1,104 @@
 <template>
-  <label v-if="label" class="dropdown-label">{{ label }}</label>
-  <div class="dropdown-container">
-    <select v-model="selectedValue" class="dropdown" :style="dropdownStyle" @change="handleChange">
-      <slot></slot>
-    </select>
-    <v-icon name="bi-caret-down-fill" class="dropdown-icon" />
-  </div>
+  <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
+    <div>
+      <label v-if="label" class="label">{{ label }}</label>
+      <div class="wrapper" :style="boxStyle">
+        <select ref="inputRef" v-model="selectedValue" class="dropdown" @change="handleInput">
+          <slot></slot>
+        </select>
+        <div class="icon-toggle">
+          <v-icon name="bi-caret-down-fill" @click="openDropdown" />
+        </div>
+      </div>
+      <p v-if="errors" class="input-error">{{ errors[0] }}</p>
+    </div>
+  </Field>
 </template>
 
 <script setup lang="ts">
+import { Field } from 'vee-validate'
 import { ref, defineProps, computed } from 'vue'
 
-const emit = defineEmits(['update:modelValue'])
-
 const props = defineProps<{
-  placeholder?: string
+  name: string
   width?: string | null
   label?: string
 }>()
 
-const selectedValue = ref('')
+const emit = defineEmits(['update:modelValue'])
 
-function handleChange(event: Event) {
+const selectedValue = ref('')
+const inputRef = ref<HTMLInputElement | null>(null)
+
+function handleInput(event: Event) {
   const value = (event.target as HTMLSelectElement).value
   emit('update:modelValue', value)
 }
 
-const dropdownStyle = computed(() => ({
+function openDropdown(event: Event) {
+  if (inputRef.value?.showPicker) {
+    inputRef.value.showPicker()
+  } else {
+    inputRef.value?.click()
+  }
+}
+
+const boxStyle = computed(() => ({
   ...(props.width ? { width: props.width } : {}),
 }))
 </script>
 
 <style lang="scss" scoped>
-.dropdown-container {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-}
-
-.dropdown-label {
-  font-size: small;
-  font-weight: bold;
-  color: #6f6f6f;
+@use 'sass:color';
+.label {
   display: block;
+  box-sizing: border-box;
+  margin-left: 0.3rem;
+  color: color.scale($black, $lightness: 40%);
+  font-weight: $base-fw;
+  font-size: $base-fs;
   text-align: left;
-  margin-bottom: 0.3rem;
 }
 
-.dropdown {
-  font-family: 'Inter', serif;
-  font-weight: bold;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding: 0.5rem 2.5rem 0.5rem 0.8rem;
-  border: 0.15px solid $red;
-  border-radius: 0.6rem;
+.wrapper {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 6fr 1fr;
+  gap: 0px 0px;
   cursor: pointer;
-  color: $red;
-  width: 100%;
-  height: 2.4rem;
-  position: relative;
+  margin: 0;
+  border: $base-bt solid $red;
+  border-radius: $base-br;
   background-color: transparent;
-
-  &:not([value='']) {
-    color: $red;
-    font-weight: bold;
+  height: 100%;
+  &:has(select:focus) {
+    border: 2.5px solid $red;
   }
 }
 
-.dropdown:focus {
-  outline: none;
-}
-
-.placeholder {
-  &:disabled {
-    font-style: italic;
-    color: gray;
+.dropdown {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: $base-br;
+  background-color: transparent;
+  padding: $component-padding;
+  max-width: 100%;
+  height: $base-height;
+  overflow: hidden;
+  color: $red;
+  font-weight: $base-fw;
+  font-size: $base-fs;
+  font-family: 'Inter', sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:not([value='']) {
+    color: $red;
+  }
+  &:focus {
+    outline: none;
   }
 }
 
@@ -85,13 +107,23 @@ const dropdownStyle = computed(() => ({
   font-family: inherit !important;
 }
 
-.dropdown-icon {
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 1.25rem;
-  fill: $red;
-  pointer-events: none;
+.input-error {
+  margin: 0;
+  padding: 0rem 0rem 0rem 0.5rem;
+  color: $red;
+  font-style: italic;
+  font-weight: normal;
+  font-size: small;
+  text-align: left;
+}
+
+// TODO: Spin icon when pressed
+.icon-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0em 0.25em;
+  color: $red;
 }
 </style>

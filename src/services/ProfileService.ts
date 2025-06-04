@@ -1,16 +1,16 @@
 import api from '@/api'
-import { ApiResponse } from '@/types/AuthInterface'
-import { ProfileData } from '@/types/ProfileInterface'
+import { ApiResponse } from '@/types/CommonInterface'
+import { User } from '@/types/CommonInterface'
 
 // USER
-export const getProfileData = async (username: string | null): Promise<ApiResponse> => {
+export const fetchProfile = async (): Promise<ApiResponse<User>> => {
   try {
-    const response = await api.get<ProfileData>('/profile/get_data/')
-    console.log('✅ Dashboard Data:', response.data)
+    const response = await api.get<User>('/profile/me/')
     return { success: true, data: response.data }
   } catch (error: any) {
-    console.error('❌ Error fetching dashboard data:', error.response?.data || error.message)
-    return { success: false, error: error.response?.data }
+    console.error('❌ Error fetching profile:', error.response?.data || error.message)
+    const errMsg = error.response?.data?.detail || error.message || 'Unknown error'
+    return { success: false, error: errMsg }
   }
 }
 

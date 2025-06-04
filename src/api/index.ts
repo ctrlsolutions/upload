@@ -1,4 +1,5 @@
-import axios from 'axios'
+import axios, { AxiosError, AxiosResponse } from 'axios'
+import type { ApiResponse } from '@/types/CommonInterface'
 import { getCSRFToken } from '@/services/AuthService'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
@@ -17,5 +18,20 @@ api.interceptors.request.use(config => {
   }
   return config
 })
+
+export const handleApiResponse = <T>(response: AxiosResponse<ApiResponse<T>>): ApiResponse<T> => {
+  return response.data
+}
+
+export const handleApiError = (error: AxiosError<ApiResponse>): ApiResponse => {
+  if (error.response?.data) {
+    return error.response.data
+  }
+  return {
+    success: false,
+    error: { non_field_error: 'Network error. Please try again.' },
+    message: 'Could not connect to the server. Check your internet.',
+  }
+}
 
 export default api

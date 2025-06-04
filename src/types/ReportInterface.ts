@@ -1,3 +1,6 @@
+import { User } from '@/types/CommonInterface'
+import { College, Department } from '@/types/ProfileInterface'
+
 export interface Field {
   id: number
   label: string
@@ -16,4 +19,12 @@ export interface Form {
   description: string | null
   active: boolean
   fields: Field[]
+}
+export interface Report {
+  id: number
+  title: string
+  user: User
+  created_on: string
+  department: Department
+  college: College
 }

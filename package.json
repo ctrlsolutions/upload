@@ -15,9 +15,12 @@
     "js-cookie": "^3.0.5",
     "oh-vue-icons": "^1.0.0-rc3",
     "pinia": "^3.0.2",
+    "prettier-plugin-css-order": "^2.1.2",
+    "vee-validate": "^4.15.0",
     "vue": "^3.5.12",
     "vue-router": "^4.4.5",
-    "vue3-google-login": "^2.0.33"
+    "vue3-google-login": "^2.0.33",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",

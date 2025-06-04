@@ -1,34 +1,33 @@
 <template>
-  <div class="button-container">
-    <button
-      :class="['form-button', variantClass]"
-      :style="buttonStyle"
-      v-bind="attrs"
-      @click="handleClick"
-    >
-      <slot></slot>
-    </button>
-  </div>
+  <button :class="['form-button', variantClass]" :style="buttonStyle" v-bind="$attrs" @click="handleClick">
+    <slot></slot>
+  </button>
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, useAttrs } from 'vue'
+import { computed, defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 
-const props = defineProps<{
-  route?: string
-  variant?: string
-  width?: string
-  height?: string
-  type?: string
-}>()
+const props = withDefaults(
+  defineProps<{
+    route?: string
+    variant?: string
+    width?: string
+    height?: string
+    type?: string
+  }>(),
+  {
+    variant: 'red',
+    width: 'null',
+    height: 'auto',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'click'): void
 }>()
 
 const router = useRouter()
-const attrs = useAttrs() // Handles v-bind="$attrs"
 
 const handleClick = () => {
   emit('click')
@@ -38,77 +37,63 @@ const handleClick = () => {
   }
 }
 
-const variantClass = computed(() =>
-  props.variant ? `form-button--${props.variant}` : '',
-)
+const variantClass = computed(() => (props.variant ? `form-button--${props.variant}` : ''))
 
-const buttonStyle = computed(() => ({
-  width: props.width || 'auto',
-  height: props.height || 'auto',
-}))
+const buttonStyle = computed(() => {
+  const styles: Record<string, string> = {
+    height: props.height,
+  }
+
+  if (props.width) {
+    styles.width = props.width
+  }
+
+  return styles
+})
 </script>
 
 <style lang="scss">
+@use 'sass:color';
+
 .form-button {
-  border: none;
-  border-radius: 0.8rem;
-  padding: 0.9rem;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  font-weight: 800;
-  color: $white;
-  text-align: center;
-  font-size: 1rem;
-  margin-bottom: -0.3rem;
-  margin-top: 0.3rem;
   display: flex;
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease;
-
-  @include sm {
-    width: 9rem;
-    height: 0.5rem;
-    font-size: .4rem
-  }
-
-  @include md {
-    width: 13rem;
-    height: 1rem;
-    font-size: .7rem;
-  }
-
-  @include lg {
-    width: 16.5rem;
-    height: 2rem;
-    font-size: .75rem;
-  }
-
-  @include xl {
-    width: 16.5rem;
-    height: 3.5rem;
-    font-size: .75rem;
-  }
+  cursor: pointer;
+  border: none;
+  border-radius: $base-br;
+  padding: 0.7em 5em;
+  color: $white;
+  font-weight: 800;
+  font-size: 0.8rem;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
 }
 
 .form-button--red {
   background-color: $red;
+  &:hover {
+    background-color: color.scale($red, $lightness: 10%);
+  }
 }
 
 .form-button--green {
   background-color: $green;
+  &:hover {
+    background-color: color.scale($green, $lightness: 5%);
+  }
 }
 
 .form-button--black {
   background-color: $black;
-}
-
-.form-button:hover {
-  opacity: 0.9;
+  &:hover {
+    background-color: color.scale($black, $lightness: 10%);
+  }
 }
 
 .form-button:focus {
-  outline: 0.125rem solid $white;
+  outline: 0.125rem solid $black;
   outline-offset: 0.125rem;
 }
 </style>
