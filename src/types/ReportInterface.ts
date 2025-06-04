@@ -26,5 +26,8 @@ export interface Report {
   user: User
   created_on: string
   department: Department
+  department_name: string
   college: College
+  college_name: string
+  type: string;
 }

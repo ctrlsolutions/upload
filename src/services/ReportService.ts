@@ -30,11 +30,18 @@ export const submitReport = async (form: any): Promise<ApiResponse> => {
 
 export const fetchReports = async (): Promise<ApiResponse> => {
   try {
-    const response = await api.get('/report/')
-    return { success: true, data: response.data }
+    console.log('Making request to /report/');
+    const response = await api.get('/report/');
+    console.log('Response:', response);
+    return { success: true, data: response.data };
   } catch (error: any) {
-    console.error('❌ Error fetching reports:', error.response?.data || error.message)
-    return { success: false, error: error.response?.data }
+    console.error('Full error:', error);
+    console.error('Response data:', error.response?.data);
+    console.error('Status code:', error.response?.status);
+    return { 
+      success: false, 
+      error: error.response?.data || error.message 
+    };
   }
 }
 

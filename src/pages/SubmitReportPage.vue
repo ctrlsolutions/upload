@@ -11,7 +11,11 @@
         <div class="left-container" v-if="activeTabId === 'submit'">
           <!-- Select Section -->
           <div class="select">
-            <BaseSelectInput v-model="selectedForm">
+            <BaseSelectInput
+              name="select-type"
+              v-model="selectedForm"
+              width="100%"
+            >
               <option disabled value="">Select a Report Type</option>
               <option v-for="option in formOptions" :key="option.value" :value="option.value">
                 {{ option.label }}
@@ -296,8 +300,8 @@ const handleSubmit = async () => {
   display: flex;
   flex-direction: row;
   gap: 1rem;
-  justify-content: center;
   align-items: center;
+  width: 100%;
 }
 
 .form {
