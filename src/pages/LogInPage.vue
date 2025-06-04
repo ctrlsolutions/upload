@@ -4,50 +4,44 @@
       <h1 id="title" class="title">Log in</h1>
       <p id="subtitle">Welcome! Log in to access your dashboard.</p>
     </header>
-    
-    <Form 
-      :initial-values="form"
-      @submit.prevent="submitForm(form)"
-      :validation-schema="loginSchema"
-      v-slot="{ errors }"
-      class="input-group" 
-    >
-      <div class="fields">
-        <InputField
-          id="email"
-          name="email"
-          type="email"
-          placeholder="Email"
-          variant="green"
-          width="100%"
-          v-model="form.email"
-        />
-  
-        <InputField
-          id="password"
-          name="password"
-          type="password"
-          placeholder="Password"
-          variant="green"
-          width="100%"
-          v-model="form.password"
-        />
-      </div>
 
-      <a href="#" class="forgotp">Forgot Password?</a>
+    <Form :validation-schema="loginSchema" v-slot="{ errors, handleSubmit }" class="input-group">
+      <form @submit.prevent="handleSubmit(submitForm)">
+        <div class="fields">
+          <InputField
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Email"
+            variant="green"
+            width="100%"
+            v-model="form.email"
+          />
 
+          <InputField
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            variant="green"
+            width="100%"
+            v-model="form.password"
+          />
+        </div>
+
+        <a href="#" class="forgotp">Forgot Password?</a>
+        <FormButton variant="green" width="100%" type="submit"> LOG IN </FormButton>
+      </form>
     </Form>
 
     <div class="submit-group">
-
-      <FormButton variant="green" width="100%" @click.prevent="validateForm"> LOG IN </FormButton>
-  
       <p class="or-text">OR</p>
-  
+
       <div id="google-login">
         <GoogleLogin :callback="handleGoogleLogin">
-          
-          <FormButton class="google-button" variant="red" width="100%" type="button"><v-icon name="fc-google" scale="1"/> CONTINUE WITH GOOGLE </FormButton>
+          <FormButton class="google-button" variant="red" width="100%" type="button"
+            ><v-icon name="fc-google" scale="1" /> CONTINUE WITH GOOGLE
+          </FormButton>
         </GoogleLogin>
       </div>
     </div>
@@ -65,12 +59,9 @@ import { getLoginSchema } from '@/composables/useAuthSchema'
 import { useRouter } from 'vue-router'
 import { onMounted, ref, onBeforeUnmount, Ref } from 'vue'
 import { Form } from 'vee-validate'
-import { validateField as validateFieldFn, validateForm as validateFormFn } from '@/validators/AuthValidators'
 import { login, googleLogin, logout } from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
-import { UserProfile } from '@/types/ProfileInterface'
-import { getProfileData } from '@/services/ProfileService'
-
+import { User } from '@/types/CommonInterface'
 import Toast from '@/components/Global/Toast.vue'
 import { InputField } from '@/components/Global'
 
@@ -88,43 +79,18 @@ const router = useRouter()
 
 const toast = ref<InstanceType<typeof Toast> | null>(null)
 
-const errors = reactive<ErrorState>({
-  email: '',
-  password: '',
-})
+const user = ref<User | null>(null)
 
-// const onBlur = (field: keyof LoginData) => {
-//   clearError(field)
-//   errors[field] = validateFieldFn(form, field) || ''
-// }
-
-const clearError = (field: keyof ErrorState) => {
-  errors[field] = ''
-}
-
-const validateForm = async () => {
-  const validationErrors = validateFormFn(form)
-
-  errors.email = validationErrors.email || ''
-  errors.password = validationErrors.password || ''
-
-  // if (!errors.email && !errors.password) {
-  //   await submitForm()
-  // }
-}
-
-const user = ref<UserProfile | null>(null)
-
-const submitForm = async (form: LoginPayload) => {
+const submitForm = async () => {
   console.log('FORM VALUE', form)
-  await userStore.login(form)
+  await userStore.login(form.value)
   if (!userStore.success) {
     toast.value?.showToast(userStore.message, 'error')
-    form = { ...initialFormState }
+    form.value = { ...initialFormState }
   } else {
     toast.value?.showToast(userStore.message, 'success')
-    form = { ...initialFormState }
-    setTimeout(() => (window.location.href = '/login'), 2000)
+    form.value = { ...initialFormState }
+    setTimeout(() => (window.location.href = `/${userStore.getUserProfile?.username}`), 2000)
   }
 }
 
@@ -139,13 +105,9 @@ const handleGoogleLogin = async (googleResponse: any) => {
 }
 
 onMounted(async () => {
-  const storedUsername = sessionStorage.getItem('username')
-
-  if (storedUsername) {
+  if (userStore.isLoggedIn) {
     try {
       await logout()
-      sessionStorage.removeItem('username')
-      router.push('/login')
     } catch (error) {
       console.error('Logout failed', error)
     }
@@ -155,9 +117,9 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .error-message {
+  margin: -0.9rem;
   color: $red;
   font-size: 0.75rem;
-  margin: -0.9rem;
 }
 
 .google-button {
@@ -201,12 +163,12 @@ onMounted(async () => {
   grid-auto-columns: 1fr;
   gap: 0em 1%;
   box-sizing: border-box;
+  margin: auto;
+  background-color: transparent;
+  padding: 2rem;
   width: 100%;
   height: 100%;
   max-height: 40rem;
-  margin: auto;
-  padding: 2rem;
-  background-color: transparent;
   // background-color: yellow;
   // @include sm {
   //   width: 12rem;
@@ -224,15 +186,15 @@ onMounted(async () => {
 
 .login-header {
   grid-area: title;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 900;
   margin-bottom: 2rem;
+  font-weight: 900;
+  font-size: 2rem;
+  text-align: center;
 }
 
 #title {
-  font-size: 4rem;
   font-weight: 900;
+  font-size: 4rem;
 }
 
 #subtitle {
@@ -240,11 +202,11 @@ onMounted(async () => {
 }
 
 .input-group {
-  grid-area: form;
-  width: 100%;
   display: flex;
+  grid-area: form;
   flex-direction: column;
   gap: 2rem;
+  width: 100%;
   overflow-y: auto;
 
   @include sm {
@@ -299,36 +261,35 @@ onMounted(async () => {
 }
 
 .forgot-password {
-  width: 100%;
-  text-align: right;
-  
   margin-top: -0.5rem;
   padding-right: 1rem;
+  width: 100%;
+  text-align: right;
 
   @include sm {
-    padding-right: 0.5rem;
     margin-bottom: 0.1rem;
+    padding-right: 0.5rem;
   }
 
   @include md {
-    padding-right: 0.75rem;
     margin-bottom: 0.2rem;
+    padding-right: 0.75rem;
   }
 
   @include lg {
-    padding-right: 1rem;
     margin-bottom: 0.3rem;
+    padding-right: 1rem;
   }
 }
 
 .forgotp {
   color: $green;
-  text-decoration: none;
   text-align: right;
+  text-decoration: none;
 
   &:hover {
-    text-decoration: underline;
     background-color: transparent;
+    text-decoration: underline;
   }
 
   &:focus {

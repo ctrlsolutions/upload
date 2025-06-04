@@ -50,6 +50,7 @@ export const useUserStore = defineStore('user', {
         if (res.error) this.errors = res.error
         this.message = res.message || 'Login failed.'
       } else {
+        this.profile = res.data
         this.message = res.message || 'Logged in successfully!'
       }
     },
