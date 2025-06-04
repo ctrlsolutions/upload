@@ -4,7 +4,7 @@ import LogInPage from '@/pages/LogInPage.vue'
 import LandingPage from '@/pages/LandingPage.vue'
 import DashboardPage from '@/pages/DashboardPage.vue'
 import ProfilePage from '@/pages/ProfilePage.vue'
-import { isAuthenticated } from '@/services/AuthService'
+// import { isAuthenticated } from '@/services/AuthService'
 import SettingsPage from '@/pages/SettingsPage.vue'
 import AdminPanelPage from '@/pages/AdminPanelPage.vue'
 import ReportHistoryPage from '@/pages/ReportHistoryPage.vue'
@@ -60,28 +60,28 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach(async (to, from, next) => {
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
-  const requiredRoles = to.meta.roles as string[] | undefined
+// router.beforeEach(async (to, from, next) => {
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+//   const requiresGuest = to.matched.some(record => record.meta.requiresGuest)
+//   const requiredRoles = to.meta.roles as string[] | undefined
 
-  const authResponse = await isAuthenticated()
-  const isLoggedIn = authResponse.success && authResponse.data
-  const user = authResponse.data
+//   // const authResponse = await isAuthenticated()
+//   // const isLoggedIn = authResponse.success && authResponse.data
+//   // const user = authResponse.data
 
-  if (requiresAuth && !isLoggedIn) {
-    return next('/login')
-  }
+//   if (requiresAuth && !isLoggedIn) {
+//     return next('/login')
+//   }
 
-  if (requiresGuest && isLoggedIn) {
-    return next(`/${user.username}`)
-  }
+//   if (requiresGuest && isLoggedIn) {
+//     return next(`/${user.username}`)
+//   }
 
-  if (requiredRoles && (!user || !requiredRoles.includes(user.role))) {
-    return next('/unauthorized')
-  }
+//   if (requiredRoles && (!user || !requiredRoles.includes(user.role))) {
+//     return next('/unauthorized')
+//   }
 
-  next()
-})
+//   next()
+// })
 
 export default router

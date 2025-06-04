@@ -1,51 +1,76 @@
 <template>
   <div class="container">
-    <div
-      class="background red-bg"
-      :style="{ opacity: isSignupRoute ? 1 : 0 }"
-    ></div>
-    <div
-      class="background green-bg"
-      :style="{ opacity: isSignupRoute ? 0 : 1 }"
-    ></div>
+    <div class="background red-bg" :style="{ opacity: isSignupRoute ? 1 : 0 }"></div>
+    <div class="background green-bg" :style="{ opacity: isSignupRoute ? 0 : 1 }"></div>
     <main class="content-container">
-      <div class="imageContainer">
+      <div class="image-container">
         <div class="header">
-          <div class="logoContainer">
+          <div class="logo-container">
             <img src="@/assets/UPLogo.svg" class="logo" />
             <img src="@/assets/UPloadLogo.svg" class="logo" />
           </div>
-          <div class="buttonContainer">
+          <div class="button-container">
             <BaseNavButton
               id="signup"
               route="/signup"
-              :variant="isSignupRoute ? 'red-full' : 'empty'"
-              width="7rem"
+              :variant="signupVariant"
+              width="5rem"
+              :class="{ 'sm-hidden': isSignupRoute }"
               >Signup</BaseNavButton
             >
             <BaseNavButton
               id="login"
               route="/login"
-              :variant="isSignupRoute ? 'empty' : 'green-full'"
-              width="7rem"
+              :variant="loginVariant"
+              width="5rem"
+              :class="{ 'sm-hidden': !isSignupRoute }"
               >Login</BaseNavButton
             >
           </div>
         </div>
         <img src="@/assets/backgroundImages/oble_closeup.png" class="img" />
       </div>
-      <RouterView></RouterView>
+      <div class="content">
+        <RouterView />
+      </div>
     </main>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseNavButton from '@/components/Global/BaseNavButton.vue'
 
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const isBelowMd = ref(false)
+
+onMounted(() => {
+  const mediaQuery = window.matchMedia('(max-width: 575px)')
+  isBelowMd.value = mediaQuery.matches
+  const update = (e: MediaQueryListEvent) => {
+    isBelowMd.value = e.matches
+  }
+  mediaQuery.addEventListener('change', update)
+
+  onBeforeUnmount(() => {
+    mediaQuery.removeEventListener('change', update)
+  })
+})
+
 const route = useRoute()
 const isSignupRoute = computed(() => route.path === '/signup')
+
+const loginVariant = computed(() => {
+  if (isBelowMd.value) return 'green-full'
+  return !isSignupRoute.value ? 'green-full' : 'empty'
+})
+
+const signupVariant = computed(() => {
+  if (isBelowMd.value) return 'red-full'
+  return isSignupRoute.value ? 'red-full' : 'empty'
+})
 </script>
 
 <style lang="scss" scoped>
@@ -55,86 +80,122 @@ const isSignupRoute = computed(() => route.path === '/signup')
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-color: $black;
 }
 
 .content-container {
-  position: relative;
   display: flex;
+  position: relative;
+  flex-direction: row;
   align-items: center;
+  z-index: 2;
+  border-radius: 2.5rem;
+  background-color: white;
   width: 80%;
   height: 90%;
-  background-color: white;
-  border-radius: 2.5rem;
-  z-index: 2;
+  overflow-y: auto;
+
+  @include ratio-portrait {
+    flex-direction: column;
+    width: 90%;
+    height: 95%;
+  }
 }
 
-.imageContainer {
-  position: relative;
+.content {
+  width: 55%;
+  height: 100%;
+  @include ratio-portrait {
+    flex: 1 0 auto;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.image-container {
   display: flex;
+  position: relative;
+  flex: 1;
   justify-content: center;
   align-items: center;
-  flex: 1;
-  height: 100%;
-  max-width: 40%;
   box-sizing: border-box;
   padding: 1rem;
+  height: 100%;
+  @include lg {
+    max-width: 45%;
+  }
+  @include ratio-portrait {
+    width: 100%;
+    max-width: 100%;
+    max-height: 25vh;
+  }
 }
 
 .img {
+  border-radius: 2rem;
   width: 100%;
   height: 100%;
-  max-height: 90vh;
+  max-height: 100%;
   object-fit: cover;
-  border-radius: 2rem;
+  @include ratio-portrait {
+    object-position: 50% 2.5%;
+  }
 }
 
 .header {
+  display: flex;
   position: absolute;
   top: 1.5rem;
   left: 0;
-  width: 100%;
-  display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
   box-sizing: border-box;
-  flex-wrap: wrap;
   padding: 0 2rem 0 2rem;
+  width: 100%;
 }
 
-.logoContainer {
+.logo-container {
   display: flex;
   align-items: center;
 }
 
 .logo {
-  height: 2.8rem;
   width: auto;
+  height: 2em;
+  @include sm {
+    height: 2.2em;
+  }
+  @include md {
+    height: 2.5em;
+  }
+  @include lg {
+    height: 3.4em;
+  }
 }
 
-.buttonContainer {
+.button-container {
   display: flex;
-  align-items: center;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0rem;
 }
 
 .red-bg {
   background-image: url('@/assets/backgroundImages/bgee.png');
-  background-blend-mode: multiply;
+  background-position: left center;
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
   background-color: $red;
+  background-blend-mode: multiply;
 }
 
 .green-bg {
   background-image: url('@/assets/backgroundImages/bgee.png');
-  background-blend-mode: multiply;
+  background-position: left center;
   background-size: cover;
-  background-position: center;
   background-repeat: no-repeat;
   background-color: $green;
+  background-blend-mode: multiply;
 }
 
 .red-bg,
@@ -142,17 +203,26 @@ const isSignupRoute = computed(() => route.path === '/signup')
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  visibility: visible;
+  z-index: 1;
   transition:
     opacity 0.45s ease,
     visibility 0.5s ease;
-  visibility: visible;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
 }
 
 .red-bg[style*='opacity: 0'],
 .green-bg[style*='opacity: 0'] {
   visibility: hidden;
+}
+
+.sm-hidden {
+  @include sm {
+    display: none;
+  }
+  @include md {
+    display: inline;
+  }
 }
 </style>

@@ -1,28 +1,28 @@
 <template>
   <div class="my-profile">
     <CardComponent title="MY PROFILE" height="100%" width="100%" :header="true">
-        <div v-if="isLoading" class="loading">Loading...</div>
-        <div v-else-if="error" class="error-message">{{ error }}</div>
-        <div v-else class="profile-content">
-          <img :src="profileImage" alt="Profile Picture" class="profile-pic" />
-          <div class="user-info">
-            <p class="name">Prof. {{ user.fullName }}</p>
-            <p class="role">{{ formattedRole }}</p>
-            <p class="email">{{ user.email }}</p>
-          </div>
-          <div class="reports">
-            <p class="ReportsSubmitted">Reports Submitted</p>
-            <p class="ReportsNumber">{{ user.reportsSubmitted }}</p>
-          </div>
+      <div v-if="isLoading" class="loading">Loading...</div>
+      <div v-else-if="error" class="error-message">{{ error }}</div>
+      <div v-else class="profile-content">
+        <img :src="profileImage" alt="Profile Picture" class="profile-pic" />
+        <div class="user-info">
+          <p class="name">Prof. {{ user.fullName }}</p>
+          <p class="role">{{ formattedRole }}</p>
+          <p class="email">{{ user.email }}</p>
+        </div>
+        <div class="reports">
+          <p class="ReportsSubmitted">Reports Submitted</p>
+          <p class="ReportsNumber">{{ user.reportsSubmitted }}</p>
+        </div>
       </div>
     </CardComponent>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { getProfileData } from '@/services/ProfileService';
-import CardComponent from '@/components/Global/CardComponent.vue';
+import { ref, computed, onMounted } from 'vue'
+// import { getProfileData } from '@/services/ProfileService'
+import CardComponent from '@/components/Global/CardComponent.vue'
 
 const user = ref({
   profilePicture: '',
@@ -30,57 +30,56 @@ const user = ref({
   role: '',
   email: '',
   reportsSubmitted: 0,
-});
-const isLoading = ref(true);
-const error = ref<string | null>(null);
-const defaultProfilePicture = new URL('@/assets/DefaultProfile.png', import.meta.url).href;
+})
+const isLoading = ref(true)
+const error = ref<string | null>(null)
+const defaultProfilePicture = new URL('@/assets/DefaultProfile.png', import.meta.url).href
 
-const profileImage = computed(() => user.value.profilePicture || defaultProfilePicture);
+const profileImage = computed(() => user.value.profilePicture || defaultProfilePicture)
 
 const formattedRole = computed((): string => {
-  if (!user.value.role) return '';
-  const role = user.value.role.toLowerCase();
-  if (role === 'cd') return 'College Dean';
-  if (role === 'f') return 'Faculty';
-  if (role === 'c') return 'Chancellor';
-  if (role === 'dc') return 'Department Chair';
-  return user.value.role;
-});
+  if (!user.value.role) return ''
+  const role = user.value.role.toLowerCase()
+  if (role === 'cd') return 'College Dean'
+  if (role === 'f') return 'Faculty'
+  if (role === 'c') return 'Chancellor'
+  if (role === 'dc') return 'Department Chair'
+  return user.value.role
+})
 
 const fetchUserProfile = async () => {
   try {
-    const username = sessionStorage.getItem('username');
-    const dashboardData = await getProfileData(username);
-    if (dashboardData && dashboardData.data.user) {
-      user.value = {
-        profilePicture:
-          dashboardData.data.user.profile_picture || defaultProfilePicture,
-        fullName: formatFullName(
-          dashboardData.data.user.first_name,
-          dashboardData.data.user.middle_name,
-          dashboardData.data.user.last_name,
-        ),
-        role: dashboardData.data.user.role,
-        email: dashboardData.data.user.email,
-        reportsSubmitted: 0,
-      };
-    } else {
-      throw new Error('Failed to load user data.');
-    }
+    const username = sessionStorage.getItem('username')
+    // const dashboardData = await getProfileData(username)
+    // if (dashboardData && dashboardData.data.user) {
+    // user.value = {
+    //   profilePicture: dashboardData.data.user.profile_picture || defaultProfilePicture,
+    //   fullName: formatFullName(
+    //     dashboardData.data.user.first_name,
+    //     dashboardData.data.user.middle_name,
+    //     dashboardData.data.user.last_name,
+    //   ),
+    //   role: dashboardData.data.user.role,
+    //   email: dashboardData.data.user.email,
+    //   reportsSubmitted: 0,
+    // }
+    // } else {
+    //   throw new Error('Failed to load user data.')
+    // }
   } catch (err) {
-    error.value = 'Error fetching profile. Please try again.';
-    console.error(err);
+    error.value = 'Error fetching profile. Please try again.'
+    console.error(err)
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
-};
+}
 
-const formatFullName = (firstName: string, middleName?: string, lastName: string): string => {
-  return `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim();
-};
+// const formatFullName = (firstName: string, middleName?: string, lastName: string): string => {
+//   return `${firstName} ${middleName ? middleName + ' ' : ''}${lastName}`.trim();
+// };
 
 // Lifecycle hook
-onMounted(fetchUserProfile);
+onMounted(fetchUserProfile)
 </script>
 
 <style scoped>

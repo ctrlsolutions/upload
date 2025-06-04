@@ -17,3 +17,7 @@ export interface Form {
   active: boolean
   fields: Field[]
 }
+export interface Report {
+  id: number
+  title: string
+}
