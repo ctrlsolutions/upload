@@ -1,12 +1,12 @@
 <template>
   <div class="login-container">
     <header class="login-header">
-      <h1 id="title" class="title">Log in</h1>
-      <p id="subtitle">Welcome! Log in to access your dashboard.</p>
+      <h1 class="title">Log in</h1>
+      <p class="subtitle">Welcome! Log in to access your dashboard.</p>
     </header>
 
-    <Form :validation-schema="loginSchema" v-slot="{ errors, handleSubmit }" class="input-group">
-      <form @submit.prevent="handleSubmit(submitForm)">
+    <Form :validation-schema="loginSchema" v-slot="{ errors, handleSubmit }" class="outer-input">
+      <form @submit.prevent="handleSubmit(submitForm)" class="input-group">
         <div class="fields">
           <InputField
             id="email"
@@ -27,9 +27,9 @@
             width="100%"
             v-model="form.password"
           />
+          <a href="#" class="forgot-password">Forgot Password?</a>
         </div>
 
-        <a href="#" class="forgotp">Forgot Password?</a>
         <FormButton variant="green" width="100%" type="submit"> LOG IN </FormButton>
       </form>
     </Form>
@@ -51,8 +51,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import FormButton from '@/components/Global/BaseFormButton.vue'
 import { LoginPayload, ErrorState } from '@/types/AuthInterface'
 import { getLoginSchema } from '@/composables/useAuthSchema'
@@ -151,86 +149,65 @@ onMounted(async () => {
 }
 
 .login-container {
-  // display: flex;
-  // flex-direction: column;
-  // align-items: center;
-  display: grid;
-  grid-template-rows: 1fr 6fr 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    'title'
-    'form'
-    'submission';
-  grid-auto-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   gap: 0em 1%;
   box-sizing: border-box;
-  margin: auto;
-  background-color: transparent;
-  padding: 2rem;
+  padding: 2rem 2.5rem;
   width: 100%;
   height: 100%;
-  max-height: 40rem;
-  // background-color: yellow;
-  // @include sm {
-  //   width: 12rem;
-  //   padding: 1rem;
-  // }
-  // @include md {
-  //   width: 15rem;
-  //   padding: 1.5rem;
-  // }
-  // @include lg {
-  //   width: 25rem;
-  //   padding: 2rem;
-  // }
+  text-align: center;
+  @include ratio-portrait {
+    justify-content: start;
+    height: fit-content;
+  }
 }
 
 .login-header {
   grid-area: title;
-  margin-bottom: 2rem;
-  font-weight: 900;
-  font-size: 2rem;
-  text-align: center;
 }
 
-#title {
-  font-weight: 900;
-  font-size: 4rem;
+.title {
+  font-weight: $base-fw;
+  @include sm {
+    font-size: 3em;
+  }
+  @include lg {
+    font-size: 4em;
+  }
 }
 
-#subtitle {
-  font-size: 1rem;
+.subtitle {
+  color: #6f6f6f;
+  font-weight: $base-fw;
+}
+
+.outer-input {
+  grid-area: form;
+  min-height: 0;
+  max-height: 60%;
 }
 
 .input-group {
-  display: flex;
-  grid-area: form;
-  flex-direction: column;
-  gap: 2rem;
-  width: 100%;
-  overflow-y: auto;
-
-  @include sm {
-    gap: 1rem;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  @include md {
-    gap: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 0.75rem;
-  }
-
-  @include lg {
-    gap: 2rem;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-  }
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    'fields'
+    'sub-btns';
+  grid-auto-columns: 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 0em 1%;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
 }
 
 .submit-group {
   grid-area: submission;
+  justify-content: start;
 }
 
 .login-button {
@@ -238,52 +215,11 @@ onMounted(async () => {
 }
 
 .or-text {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
-
-  @include sm {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 0.9em;
-  }
-
-  @include md {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
-    font-size: 1em;
-  }
-
-  @include lg {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    font-size: 1em;
-  }
+  padding: 1em 0em;
+  font-weight: bold;
 }
 
 .forgot-password {
-  margin-top: -0.5rem;
-  padding-right: 1rem;
-  width: 100%;
-  text-align: right;
-
-  @include sm {
-    margin-bottom: 0.1rem;
-    padding-right: 0.5rem;
-  }
-
-  @include md {
-    margin-bottom: 0.2rem;
-    padding-right: 0.75rem;
-  }
-
-  @include lg {
-    margin-bottom: 0.3rem;
-    padding-right: 1rem;
-  }
-}
-
-.forgotp {
   color: $green;
   text-align: right;
   text-decoration: none;
@@ -302,7 +238,6 @@ onMounted(async () => {
 #google-login {
   display: flex;
   flex-direction: column;
-  // margin-top: -0.75rem;
   width: 100%;
 }
 </style>
