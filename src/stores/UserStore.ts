@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import type { User } from '@/types/CommonInterface'
-import { fetchProfile, updateProfile } from '@/services/ProfileService'
+import { fetchProfile } from '@/services/ProfileService'
 import { signup, login } from '@/services/AuthService'
 import type { SignupPayload, LoginPayload } from '@/types/AuthInterface'
 
@@ -45,12 +45,12 @@ export const useUserStore = defineStore('user', {
       this.errors = null
 
       const res = await fetchProfile()
-      this.success = res.success
       if (!res.success) {
         if (res.error) this.errors = res.error
         this.message = res.message || 'Login failed.'
       } else {
-        this.profile = res.data
+        this.profile = res.data.user
+        this.initialized = true
         this.message = res.message || 'Logged in successfully!'
       }
     },
@@ -58,15 +58,15 @@ export const useUserStore = defineStore('user', {
     async updateUserProfile(profileData: Partial<User>) {
       this.loading = true
 
-      try {
-        const response = await updateProfile(profileData)
-        console.log(response.data)
-        this.profile = response.data.user
-      } catch (error: any) {
-        throw error
-      } finally {
-        this.loading = false
-      }
+      // try {
+      //   // const response = await updateProfile(profileData)
+      //   console.log(response.data)
+      //   this.profile = response.data.user
+      // } catch (error: any) {
+      //   throw error
+      // } finally {
+      //   this.loading = false
+      // }
     },
     setUserProfile(user: User) {
       this.profile = user

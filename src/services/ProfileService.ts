@@ -1,21 +1,15 @@
-import api from '@/api'
+import api, { handleApiResponse, handleApiError } from '@/api'
 import { ApiResponse } from '@/types/CommonInterface'
 import { User } from '@/types/CommonInterface'
 
 // USER
-export const fetchProfile = async (): Promise<ApiResponse<User>> => {
+export const fetchProfile = async (): Promise<ApiResponse> => {
   try {
-    const response = await api.get<User>('/profile/me/')
-    return { success: true, data: response.data }
+    const response = await api.get('/profile/me/')
+    return handleApiResponse(response)
   } catch (error: any) {
-    console.error('❌ Error fetching profile:', error.response?.data || error.message)
-    const errMsg = error.response?.data?.detail || error.message || 'Unknown error'
-    return { success: false, error: errMsg }
+    return handleApiError(error)
   }
-}
-
-export const updateProfile = async (profileData: object) => {
-  return api.patch(`/profile/update_profile/`, profileData)
 }
 
 // COLLEGE & DEPARTMENT

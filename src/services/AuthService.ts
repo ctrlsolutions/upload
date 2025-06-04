@@ -15,16 +15,6 @@ export const signup = async (data: SignupPayload): Promise<ApiResponse> => {
   }
 }
 
-export const googleSignup = async (data: SignupPayload): Promise<ApiResponse> => {
-  try {
-    const response = await api.post('/user/google/signup/', data)
-    return { success: true, data: response.data }
-  } catch (error: any) {
-    const errorMessage = error.response?.data?.error || 'An unexpected error occurred'
-    return { success: false, error: errorMessage }
-  }
-}
-
 export const login = async (form: LoginPayload): Promise<ApiResponse> => {
   try {
     await setCSRFToken()
@@ -33,17 +23,9 @@ export const login = async (form: LoginPayload): Promise<ApiResponse> => {
         'Content-Type': 'application/json',
       },
     })
-    if (response.data.success) {
-      const userStore = useUserStore()
-      userStore.fetchUserProfile()
-    }
-    return { success: response.data.success, data: response.data.data }
+    return handleApiResponse(response)
   } catch (error: any) {
-    console.error('Login failed:', error)
-    return {
-      success: false,
-      error: error.response?.data?.error || 'An unexpected error occurred',
-    }
+    return handleApiError(error)
   }
 }
 

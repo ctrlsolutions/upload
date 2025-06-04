@@ -82,12 +82,13 @@ const toast = ref<InstanceType<typeof Toast> | null>(null)
 const user = ref<User | null>(null)
 
 const submitForm = async () => {
-  console.log('FORM VALUE', form)
   await userStore.login(form.value)
   if (!userStore.success) {
     toast.value?.showToast(userStore.message, 'error')
     form.value = { ...initialFormState }
   } else {
+    await userStore.fetchUserProfile()
+    console.log('USERNAME', userStore.getUserProfile?.username)
     toast.value?.showToast(userStore.message, 'success')
     form.value = { ...initialFormState }
     setTimeout(() => (window.location.href = `/${userStore.getUserProfile?.username}`), 2000)
