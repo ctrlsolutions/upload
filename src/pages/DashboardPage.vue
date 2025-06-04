@@ -17,7 +17,6 @@ import { computed, onMounted, ref } from 'vue'
 import GreetingCard from '@/components/Dashboard/GreetingCard.vue'
 import SearchBar from '@/components/Dashboard/SearchBar.vue'
 import StatisticReport from '@/components/Dashboard/StatisticReport.vue'
-import LastReport from '@/components/Dashboard/LastReport.vue'
 import MyProfile from '@/components/Dashboard/MyProfile.vue'
 import MyCalendar from '@/components/Dashboard/MyCalendar.vue'
 import { useUserStore } from '@/stores/UserStore'
@@ -37,30 +36,40 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .dashboard-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  gap: 0px 1%;
-  grid-template-areas: 'left-section right-section';
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
   width: 100%;
   height: 100%;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  @include sm {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 2rem;
+    overflow: scroll;
+  }
+  @include lg {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: 'left-section right-section';
+    gap: 0px 1%;
+    max-height: 100vh;
+    overflow: hidden;
+  }
 }
 
 .left-section {
-  grid-area: left-section;
   display: grid;
-  grid-template-columns: 1fr;
   grid-template-rows: 0.38fr 1fr;
-  grid-auto-columns: 1fr;
-  gap: 2% 0%;
-  grid-auto-flow: row;
+  grid-template-columns: 1fr;
   grid-template-areas:
     'greeting-card'
     'statistic-report'
     'last-report';
+  grid-auto-columns: 1fr;
+  grid-auto-flow: row;
+  grid-area: left-section;
+  gap: 2% 0%;
 }
 
 .greeting-card {
@@ -76,15 +85,15 @@ onMounted(async () => {
 }
 
 .right-section {
-  grid-area: right-section;
   display: grid;
-  grid-template-columns: 1fr;
   grid-template-rows: 0.1fr 0.4fr 1fr;
-  gap: 2% 0px;
+  grid-template-columns: 1fr;
   grid-template-areas:
     'search-bar'
     'my-profile'
     'my-calendar';
+  grid-area: right-section;
+  gap: 2% 0px;
 }
 
 .search-bar {

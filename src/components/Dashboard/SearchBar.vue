@@ -1,64 +1,64 @@
 <template>
   <div class="search-bar-wrapper">
     <div class="search-bar-container">
-      <input 
-        type="text" 
-        placeholder="Search for reports" 
-        class="search-input"
-      />
+      <input type="text" placeholder="Search for reports" class="search-input" />
       <img src="@/assets/searchLogo.png" alt="Search" class="search-icon" />
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+export default {}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .search-bar-wrapper {
   display: flex;
   align-items: center;
   gap: 1rem;
+  @include sm {
+    width: 100%;
+  }
 }
 
 .search-bar-container {
   display: flex;
   align-items: center;
-  width: 100%;
-  background: white;
+  box-shadow: 0 0.125rem 0.313rem rgba(0, 0, 0, 0.1);
+  border: 0.063rem solid #ccc;
   border-radius: 1.5rem;
-  padding: .625rem .938rem;
-  box-shadow: 0 .125rem .313rem rgba(0, 0, 0, 0.1);
-  border: .063rem solid #ccc;
-  flex-grow: 1;
+  background: white;
+  padding: 0.625rem 0.938rem;
+  width: 100%;
+  @include sm {
+  }
 }
 
 .search-input {
   flex: 1;
-  border: none;
   outline: none;
+  border: none;
+  padding: 0.5rem;
   font-size: 1rem;
-  padding: .5rem;
 }
 
 .search-icon {
+  cursor: pointer;
+  margin-left: 0.625;
   width: 1.25rem;
   height: 1.25rem;
-  cursor: pointer;
-  margin-left: .625;
 }
 
-.notification-icon {
-  width: 2.5rem;
-  height: 2.5rem;
-  cursor: pointer;
-}
+// .notification-icon {
+//   cursor: pointer;
+//   width: 2.5rem;
+//   height: 2.5rem;
+// }
 
 /* Responsive Design */
 @media (max-width: 768px) {
   .search-bar-wrapper {
-    width: 90%;
+    width: 100%;
   }
 }
 </style>

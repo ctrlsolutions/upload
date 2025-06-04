@@ -6,8 +6,8 @@
       <div v-else class="profile-content">
         <img :src="profileImage" alt="Profile Picture" class="profile-pic" />
         <div class="user-info">
-          <p class="name">Prof. {{ userStore.getUserProfile?.last_name }}</p>
-          <p class="role">{{ userStore.getUserProfile?.role}}</p>
+          <p class="name">Prof. {{ userStore.getUserProfile?.first_name }} {{ userStore.getUserProfile?.last_name }}</p>
+          <p class="role">{{ userStore.getUserProfile?.role.name }}</p>
           <p class="email">{{ userStore.getUserProfile?.email }}</p>
         </div>
         <div class="reports">
@@ -84,13 +84,13 @@ onMounted(fetchUserProfile)
 
 <style scoped>
 .my-profile {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  background: white;
+  overflow: hidden;
 }
 
 /* .profile-header {
@@ -107,16 +107,16 @@ onMounted(fetchUserProfile)
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
   padding: 1.5rem 2rem;
+  width: 100%;
 }
 
 .profile-pic {
+  margin-left: -1rem;
+  border-radius: 50%;
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   object-fit: cover;
-  margin-left: -1rem;
 }
 
 .user-info {
@@ -125,41 +125,41 @@ onMounted(fetchUserProfile)
 }
 
 .name {
-  font-size: 1.25rem;
-  font-weight: bold;
   color: #000;
+  font-weight: bold;
+  font-size: 1.25rem;
 }
 
 .role {
-  font-size: 0.9rem;
-  font-weight: bold;
   color: #555;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .email,
 .contact {
-  font-size: 0.9rem;
   color: #555;
+  font-size: 0.9rem;
 }
 
 .reports {
-  text-align: center;
-  padding: 0rem 0rem 0rem 0rem;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  padding: 0rem 0rem 0rem 0rem;
+  text-align: center;
 }
 
 .ReportsNumber {
-  font-size: 2rem;
-  font-weight: bold;
-  color: black;
   padding: 0rem 0rem 0rem 0rem;
+  color: black;
+  font-weight: bold;
+  font-size: 2rem;
 }
 
 .ReportsSubmitted {
-  font-size: 0.9rem;
-  font-weight: bold;
   color: #555;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 /* .card-header {
