@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import type { User, ApiResponse } from '@/types/CommonInterface'
-import { fetchProfile, updateProfile, getCollegeDepartments } from '@/services/ProfileService'
-import { signup, login, logout } from '@/services/AuthService'
+import type { User } from '@/types/CommonInterface'
+import { fetchProfile, updateProfile } from '@/services/ProfileService'
+import { signup, login } from '@/services/AuthService'
 import type { SignupPayload, LoginPayload } from '@/types/AuthInterface'
 
 export const useUserStore = defineStore('user', {
@@ -26,12 +26,6 @@ export const useUserStore = defineStore('user', {
       } else {
         this.message = res.message || 'Signed up successfully!'
       }
-    },
-    async googleSignup() {
-      this.loading = true
-      this.errors = null
-
-      // const res = await goog
     },
     async login(credentials: LoginPayload) {
       this.loading = true
@@ -66,10 +60,9 @@ export const useUserStore = defineStore('user', {
       try {
         const response = await updateProfile(profileData)
         console.log(response.data)
-        // Assuming the response includes the updated user profile
         this.profile = response.data.user
       } catch (error: any) {
-        throw error // Rethrow so the component can catch it too
+        throw error
       } finally {
         this.loading = false
       }
