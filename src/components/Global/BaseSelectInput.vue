@@ -2,8 +2,14 @@
   <Field :name="name" v-slot="{ field, errors }" validate-on-input validate-on-blur>
     <div>
       <label v-if="label" class="label">{{ label }}</label>
-      <div class="wrapper" :style="boxStyle">
-        <select ref="inputRef" v-model="selectedValue" class="dropdown" @change="handleInput">
+      <div class="wrapper" :class="dynamicWrapperClasses" :style="boxStyle">
+        <select 
+          ref="inputRef" 
+          v-model="selectedValue" 
+          class="dropdown" 
+          :class="dynamicDropdownClasses"
+          @change="handleInput"
+        >
           <slot></slot>
         </select>
         <div class="icon-toggle">
@@ -17,15 +23,36 @@
 
 <script setup lang="ts">
 import { Field } from 'vee-validate'
-import { ref, defineProps, computed } from 'vue'
+import { ref, defineProps, computed, withDefaults } from 'vue'
 
-const props = defineProps<{
+interface Props {
   name: string
   width?: string | null
   label?: string
-}>()
+  variant?: 'filled' | 'outline'
+  color?: 'red' | 'green'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  variant: 'outline', // Default variant
+  color: 'red',       // Default color
+})
 
 const emit = defineEmits(['update:modelValue'])
+
+const dynamicWrapperClasses = computed(() => {
+  return [
+    `variant-${props.variant}`, // e.g., 'variant-filled'
+    `color-${props.color}`,     // e.g., 'color-red'
+  ];
+});
+
+const dynamicDropdownClasses = computed(() => {
+  return [
+    `variant-${props.variant}`,
+    `color-${props.color}`,
+  ];
+});
 
 const selectedValue = ref('')
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -50,6 +77,7 @@ const boxStyle = computed(() => ({
 
 <style lang="scss" scoped>
 @use 'sass:color';
+
 .label {
   display: block;
   box-sizing: border-box;
@@ -67,12 +95,34 @@ const boxStyle = computed(() => ({
   gap: 0px 0px;
   cursor: pointer;
   margin: 0;
-  border: $base-bt solid $red;
   border-radius: $base-br;
-  background-color: transparent;
   height: 100%;
-  &:has(select:focus) {
-    border: 2.5px solid $red;
+  background-color: transparent;
+  border: $base-bt transparent;
+
+  &.variant-outline {
+    background-color: transparent;
+    &.color-red {
+      border: $base-bt solid $red;
+      // &:has(select:focus) { border: 2.5px solid $red; }
+    }
+    &.color-green {
+      border: $base-bt solid $green;
+      // &:has(select:focus) { border: 2.5px solid $green; }
+    }
+  }
+
+  &.variant-filled {
+    &.color-red {
+      background-color: $red;
+      border: $base-bt solid $red;
+      // &:has(select:focus) { border: 2.5px solid color.scale($red, $lightness: -20%); }
+    }
+    &.color-green {
+      background-color: $green;
+      border: $base-bt solid $green;
+      // &:has(select:focus) { border: 2.5px solid color.scale($green, $lightness: -20%); }
+    }
   }
 }
 
@@ -88,24 +138,65 @@ const boxStyle = computed(() => ({
   max-width: 100%;
   height: $base-height;
   overflow: hidden;
-  color: $red;
   font-weight: $base-fw;
   font-size: $base-fs;
   font-family: 'Inter', sans-serif;
   text-overflow: ellipsis;
   white-space: nowrap;
-  &:not([value='']) {
-    color: $red;
-  }
+
   &:focus {
     outline: none;
+  }
+
+  &.variant-outline {
+    &.color-red {
+      color: $red;
+      &:not([value='']) { color: $red; }
+    }
+    &.color-green {
+      color: $green;
+      &:not([value='']) { color: $green; }
+    }
+  }
+
+  &.variant-filled {
+    &.color-red {
+      color: $white;
+      &:not([value='']) { color: $white; }
+    }
+    &.color-green {
+      color: $white;
+      &:not([value='']) { color: $white; }
+    }
   }
 }
 
 .dropdown option {
-  color: $red;
   font-family: inherit !important;
+  // background-color: $white;
+  // color: $black;
+
+  // Styling for outline variant options
+  .dropdown.variant-outline.color-red & {
+    color: $red;
+    // background-color: $white; // Explicitly white if needed, or inherit
+  }
+  .dropdown.variant-outline.color-green & {
+    color: $green;
+    // background-color: $white; // Explicitly white if needed, or inherit
+  }
+
+  // Styling for filled variant options
+  .dropdown.variant-filled.color-red & {
+    // background-color: $red;
+    color: $white; // Ensure contrast
+  }
+  .dropdown.variant-filled.color-green & {
+    // background-color: $green;
+    color: $white; // Ensure contrast
+  }
 }
+
 
 .input-error {
   margin: 0;
@@ -117,13 +208,18 @@ const boxStyle = computed(() => ({
   text-align: left;
 }
 
-// TODO: Spin icon when pressed
 .icon-toggle {
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0;
   padding: 0em 0.25em;
-  color: $red;
 }
+
+.wrapper.variant-outline.color-red .icon-toggle { color: $red; }
+.wrapper.variant-outline.color-green .icon-toggle { color: $green; }
+
+.wrapper.variant-filled.color-red .icon-toggle { color: $white; }
+.wrapper.variant-filled.color-green .icon-toggle { color: $white; }
+
 </style>

@@ -23,14 +23,14 @@
           <v-icon name="fa-history" class="icon" />
           <span class="icon-label">Report History</span>
         </router-link>
-        <router-link to="/report" class="nav-link">
+        <!-- <router-link to="/report" class="nav-link">
           <v-icon name="io-people" class="icon" />
           <span class="icon-label">Members</span>
         </router-link>
         <router-link :to="adminRoute" class="nav-link">
           <v-icon name="md-adminpanelsettings-round" class="icon" />
           <span class="icon-label">Admin Panel</span>
-        </router-link>
+        </router-link> -->
       </div>
       <div class="sidebar-bottom-group">
         <router-link :to="profileRoute" class="profile-link">
