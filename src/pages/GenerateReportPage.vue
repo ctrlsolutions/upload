@@ -10,17 +10,16 @@
       <template v-slot="{ activeTabId }">
         <div v-if="activeTabId === 'generate'" class="content-area">
           <div class="options-container">
-            <div v-if="userStore.getUserProfile?.role.code !== 'FA'">
-              <BaseSelectInput
+              <div class="scope-select">
+                <BaseSelectInput
                 label="Scope"
                 name="scope"
-                class="scope-select"
                 placeholder="Summary scope"
                 v-model="form.scope"
-              >
+                :disabled="userStore.getUserProfile?.role.code === 'FA'" >
                 <option disabled>Select a scope</option>
                 <option value="FA">Self</option>
-                <option value="DH">Department</option>
+                <option value="DH" v-if="userStore.getUserProfile?.role.code == 'DP'">Department</option>
                 <option
                   value="CD"
                   v-if="userStore.getUserProfile?.role.code == 'CD' || userStore.getUserProfile?.role.code == 'CH'"
@@ -30,13 +29,15 @@
                 <option value="CH" v-if="userStore.getUserProfile?.role.code == 'CH'">University</option>
               </BaseSelectInput>
             </div>
-            <div>
-              <BaseSelectInput label="Timeframe" name="timeframe" class="timeframe-select" v-model="form.timeframe">
+            <div class="timeframe-select">
+              <BaseSelectInput label="Timeframe" name="timeframe"  v-model="form.timeframe">
                 <option disabled>Select a timeframe</option>
                 <option value="SM">6 Months</option>
                 <option value="YR">Year</option>
                 <option value="CS">Custom</option>
               </BaseSelectInput>
+            </div>
+            <div class="preview-area">
               <BaseFormButton variant="red" height="100%" width="100%" type="button" @click="handleUpdate">
                 Update Preview
               </BaseFormButton>
@@ -141,6 +142,7 @@ function handleTabChange(newTabId: string) {
   display: grid;
   grid-template-rows: 1fr 0.5fr 2fr 1fr 0.2fr;
   grid-template-columns: repeat(1, 1fr);
+  
   gap: 1rem;
   box-sizing: border-box;
   height: 100%;
@@ -148,11 +150,13 @@ function handleTabChange(newTabId: string) {
 
 .options-container {
   display: grid;
-  grid-template-rows: auto auto;
-  grid-template-columns: auto 1fr auto 1fr;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: 
+    "scope scope timeframe timeframe preview-button";
   align-items: center;
   gap: 1rem 1.5rem;
-  margin-top: 1rem;
+  // margin-top: 1rem;
   color: $green;
 }
 
@@ -164,8 +168,7 @@ function handleTabChange(newTabId: string) {
 }
 
 .scope-select {
-  grid-row: 1 / 2;
-  grid-column: 2 / 3;
+  grid-area: scope;
   width: 100%;
 }
 
@@ -177,14 +180,15 @@ function handleTabChange(newTabId: string) {
 }
 
 .timeframe-select {
-  grid-row: 1 / 2;
-  grid-column: 4 / 5;
+  grid-area: timeframe;
   width: 100%;
 }
 
+.preview-area {
+  grid-area: preview-button;
+}
+
 .generation-label {
-  grid-row: 2 / 3;
-  grid-column: 1 / 2;
   justify-self: start;
   font-weight: bold;
 }
