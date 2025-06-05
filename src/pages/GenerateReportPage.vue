@@ -38,8 +38,8 @@
               </BaseSelectInput>
             </div>
             <div class="preview-area">
-              <BaseFormButton variant="red" height="100%" width="100%" type="button" @click="handleUpdate">
-                Update Preview
+              <BaseFormButton variant="red" height="66%" width="100%" type="button" @click="handleUpdate">
+                Generate
               </BaseFormButton>
             </div>
           </div>
@@ -51,7 +51,7 @@
 
           <div class="preview-container">
             <!-- <v-icon name="bi-file-earmark-text" class="preview-icon" scale="10" /> -->
-            <iframe v-if="previewUrl" :src="previewUrl" type="application/pdf" width="100%" height="600px"></iframe>
+            <iframe v-if="previewUrl" :src="previewUrl" type="application/pdf" width="100%" height="100%"></iframe>
           </div>
 
           <BaseFormButton variant="red" width="100%" type="button"> Download </BaseFormButton>
@@ -99,7 +99,7 @@ const handleUpdate = async () => {
     if (res.success) {
       const blob = new Blob([res.data], { type: 'application/pdf' })
       const url = URL.createObjectURL(blob)
-      previewUrl.value = url
+      previewUrl.value = url + '#toolbar=0&navpanes=0'; 
     }
   } catch (err) {
     console.error('Error generating report', err)
@@ -140,10 +140,10 @@ function handleTabChange(newTabId: string) {
 
 .content-area {
   display: grid;
-  grid-template-rows: 1fr 0.5fr 2fr 1fr 0.2fr;
+  grid-template-rows: 0.3fr 0.5fr 2fr 1fr 0.2fr;
   grid-template-columns: repeat(1, 1fr);
   
-  gap: 1rem;
+  gap: 1em;
   box-sizing: border-box;
   height: 100%;
 }
@@ -154,7 +154,7 @@ function handleTabChange(newTabId: string) {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-areas: 
     "scope scope timeframe timeframe preview-button";
-  align-items: center;
+  // align-items: center;
   gap: 1rem 1.5rem;
   // margin-top: 1rem;
   color: $green;
@@ -186,6 +186,9 @@ function handleTabChange(newTabId: string) {
 
 .preview-area {
   grid-area: preview-button;
+  display: flex;
+  align-items: end;
+  justify-content: end;
 }
 
 .generation-label {
@@ -200,27 +203,26 @@ function handleTabChange(newTabId: string) {
 }
 
 .line {
-  margin: 1rem 0 1rem 0;
+  margin: 1rem 0 1.5rem 0;
   background: #d0d0d0;
   width: 100%;
   height: 1px;
 }
 
 .preview-title {
-  margin-bottom: 1rem;
-  color: $red;
+  color: $green;
   font-weight: bold;
 }
 
 .preview-container {
   display: flex;
   grid-row: span 2 / span 2;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  border-radius: 10px;
-  background: #e6e6e6;
-  padding: 2rem;
+  // justify-content: center;
+  // align-items: center;
+  // margin-bottom: 0.5rem;
+  // border-radius: 10px;
+  // background: #e6e6e6;
+  // padding: 2rem;
 }
 
 .update-button {
