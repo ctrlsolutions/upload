@@ -16,10 +16,10 @@
           <div class="profile-container">
             <h4 class="name">
               {{ dashboardData?.first_name }}
-              {{ dashboardData?.middle_name || '' }}
+              {{ dashboardData?.middle_name[0] + '.' || '' }}
               {{ dashboardData?.last_name }}
             </h4>
-            <h6 class="role">{{ dashboardData?.role }}</h6>
+            <h6 class="role">{{ dashboardData?.role.name }}</h6>
             <p class="college">College of Science</p>
           </div>
         </div>
