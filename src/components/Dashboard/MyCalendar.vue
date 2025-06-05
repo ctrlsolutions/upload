@@ -6,16 +6,18 @@
           <h4>Events for {{ selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) }}</h4>
           <button class="calendar-add-event-btn" @click="showEventForm = true">+ Add Event</button>
         </div>
-            <div v-if="selectedDateEvents.length === 0" class="calendar-no-events">No events for this day.</div>
-            <ul v-else class="calendar-events-list">
-              <li v-for="event in selectedDateEvents" :key="event.id" class="calendar-event-item">
-              <div class="calendar-event-title-time">
-                <span>{{ event.title }}</span>
-                <span v-if="event.time" class="calendar-event-time">{{ event.time }}</span>
-              </div>
-              <div class="calendar-event-desc">{{ event.description }}</div>
-            </li>
-          </ul>
+         <div class="calendar-events-body">
+           <div v-if="selectedDateEvents.length === 0" class="calendar-no-events">No events for this day.</div>
+           <ul v-else class="calendar-events-list">
+             <li v-for="event in selectedDateEvents" :key="event.id" class="calendar-event-item">
+             <div class="calendar-event-title-time">
+               <span>{{ event.title }}</span>
+               <span v-if="event.time" class="calendar-event-time">{{ event.time }}</span>
+             </div>
+             <div class="calendar-event-desc">{{ event.description }}</div>
+           </li>
+         </ul>
+         </div>
         <form v-if="showEventForm" class="calendar-event-form" @submit.prevent="saveEvent">
           <input v-model="eventForm.title" placeholder="Title" required />
           <input v-model="eventForm.time" type="time" placeholder="Time (optional)" />
@@ -142,8 +144,8 @@ function selectDate(date: Date) {
 .calendar-feature-grid {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
-  height: 100%;
+  height: 100%; 
+  min-height: 0;
   // overflow: hidden;
 }
 
@@ -154,21 +156,29 @@ function selectDate(date: Date) {
 }
 
 .calendar-events-section {
-  background: #f9f9f9;
+  background: white;
   border-radius: 20px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow-y: auto;
+  height: 100px; // Fixed height
+  position: relative; // For absolute positioning of form
+  overflow: hidden; // Hide overflowing content
 }
 
 .calendar-events-body {
   flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  overflow-y: auto; // Enable scrolling for events
+  padding-right: 0.5rem; // Prevent scrollbar overlap
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: #014421;
+    border-radius: 3px;
+  }
 }
 
 .calendar-events-header {
@@ -187,8 +197,14 @@ function selectDate(date: Date) {
   font-size: 1rem;
 }
 .calendar-events-list {
+  flex: 1;
   overflow-y: auto;
-  max-height: 100px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 .calendar-event-item {
   background: #fff;
@@ -217,10 +233,17 @@ function selectDate(date: Date) {
   margin-top: 1rem;
 }
 .calendar-event-form {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(249, 249, 249, 0.95);
+  padding: 1rem;
+  z-index: 10;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  overflow-y: hidden;
+  overflow-y: auto; // Scrollable if form is tall
 }
 .calendar-event-form input,
 .calendar-event-form textarea {
