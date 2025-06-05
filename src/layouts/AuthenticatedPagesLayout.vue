@@ -7,39 +7,53 @@
         <img src="@/assets/logo.png" alt="logo" class="logo" />
       </div>
       <div class="sidebar-mid-group">
-        <router-link :to="dashboardRoute" class="nav-link">
+        <router-link :to="dashboardRoute" class="nav-link" :class="{ active: $route.path === dashboardRoute }">
           <v-icon name="md-spacedashboard-round" class="icon" scale="3" />
           <span class="icon-label">Dashboard</span>
         </router-link>
-        <router-link to="/submit" class="nav-link">
+        <router-link to="/submit" class="nav-link" :class="{ active: $route.path === '/submit' }">
           <v-icon name="fa-folder-open" class="icon" />
           <span class="icon-label">Submit Report</span>
         </router-link>
-        <router-link to="/generate" class="nav-link">
+        <router-link to="/generate" class="nav-link" :class="{ active: $route.path === '/generate' }">
           <v-icon name="fa-clipboard-list" class="icon" />
           <span class="icon-label">Generate Report</span>
         </router-link>
-        <router-link to="/report" class="nav-link">
+        <router-link to="/report" class="nav-link" :class="{ active: $route.path === '/report' }">
           <v-icon name="fa-history" class="icon" />
           <span class="icon-label">Report History</span>
         </router-link>
-        <!-- <router-link to="/report" class="nav-link">
+        <router-link
+          to="/report"
+          class="nav-link"
+          :class="{ active: $route.path === '/members' }"
+          v-if="
+            userStore.getUserProfile?.role.code == 'AD' ||
+            userStore.getUserProfile?.role.code == 'CD' ||
+            userStore.getUserProfile?.role.code == 'DH'
+          "
+        >
           <v-icon name="io-people" class="icon" />
           <span class="icon-label">Members</span>
         </router-link>
-        <router-link :to="adminRoute" class="nav-link">
+        <router-link
+          :to="adminRoute"
+          class="nav-link"
+          :class="{ active: $route.path === adminRoute }"
+          v-if="userStore.getUserProfile?.role.code == 'AD'"
+        >
           <v-icon name="md-adminpanelsettings-round" class="icon" />
           <span class="icon-label">Admin Panel</span>
-        </router-link> -->
+        </router-link>
       </div>
       <div class="sidebar-bottom-group">
-        <router-link :to="profileRoute" class="profile-link">
+        <router-link :to="profileRoute" class="profile-link" :class="{ active: $route.path === profileRoute }">
           <v-icon name="io-person" class="icon" />
         </router-link>
-        <router-link :to="settingsRoute" class="settings-link">
+        <router-link :to="settingsRoute" class="profile-link" :class="{ active: $route.path === settingsRoute }">
           <v-icon name="bi-gear-fill" class="icon" />
         </router-link>
-        <router-link :to="settingsRoute" class="settings-link">
+        <router-link :to="settingsRoute" class="profile-link" @click="logout">
           <v-icon name="fa-sign-out-alt" class="icon" />
         </router-link>
       </div>
@@ -59,7 +73,6 @@ import { useUserStore } from '@/stores/UserStore'
 const userStore = useUserStore()
 
 const username = ref<string | undefined>('')
-console.log('LAYOUT USERNAME', username.value)
 
 const dashboardRoute = computed(() => (username.value ? `/${username.value}` : '/login'))
 const profileRoute = computed(() => (username.value ? `/${username.value}/profile` : '/login'))
@@ -72,6 +85,10 @@ onMounted(async () => {
   }
   username.value = userStore.getUserProfile?.username
 })
+
+const logout = async () => {
+  //  await userStore.logout
+}
 </script>
 
 <style scoped lang="scss">
@@ -82,7 +99,6 @@ onMounted(async () => {
   grid-template-areas: 'sidebar main';
   box-sizing: border-box;
   margin: 0 auto;
-  // background: url('@/assets/DashboardBG.png') no-repeat center center fixed;
   background-size: cover;
   background: linear-gradient(to bottom right, #f6ddde, #ddf6e9);
   padding: 0.75em;
@@ -92,6 +108,7 @@ onMounted(async () => {
 
 .sidebar {
   display: flex;
+  position: sticky;
   grid-area: sidebar;
   flex-direction: column;
   justify-content: space-between;
@@ -121,6 +138,13 @@ onMounted(async () => {
   color: white;
   text-decoration: none;
 }
+
+.nav-link.active,
+.profile-link.active {
+  border-radius: 4px;
+  background-color: #a04747;
+}
+
 .logo {
   position: relative;
   width: 40px;
@@ -133,32 +157,58 @@ onMounted(async () => {
 }
 .icon-label {
   display: none;
-  position: relative;
-  padding-left: 5px;
-  height: 30px;
+  position: absolute;
+  top: 50%;
+  left: 75%; // show to the right of the icon
+  transform: translateY(-50%);
+  z-index: 10;
+  margin-left: 0.5em;
+  border-radius: 5px;
+  background-color: #a04747;
+  padding: 27% 10px;
+  height: 100%;
+  color: white;
+  white-space: nowrap;
 }
+.nav-link:hover > .icon-label {
+  display: block;
+}
+
+.nav-link {
+  position: relative; // allow absolute children
+}
+
 .nav-link:hover {
-  transform: translateX(50px);
+  transform: translateX(15px);
   background-color: #a04747;
 }
 .nav-link:not(:hover) {
   transform: none;
   transition: none;
 }
+
 .nav-link:hover > .icon-label {
   display: inline;
-  width: 130px;
+  width: fit-content;
 }
+
 .profile-link:hover,
 .settings-link:hover {
   background-color: #a04747;
 }
+
+.sidebar-mid-group,
+.sidebar-bottom-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
 .content {
   grid-area: 'main';
   justify-content: start;
   align-items: start;
   z-index: 0;
   width: 100%;
-  // margin-left: -2rem;
 }
 </style>
