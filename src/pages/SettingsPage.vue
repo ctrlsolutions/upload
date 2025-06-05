@@ -14,8 +14,8 @@
                 />
                 <div class="user-info">
                   <p class="name">
-                    {{ userProfile?.first_name }} {{ userProfile?.middle_name }}
-                    {{ userProfile?.last_name }}
+                    {{ User?.first_name }} {{ User?.middle_name }}
+                    {{ User?.last_name }}
                   </p>
                   <p class="role">Faculty</p>
                   <p class="college">College of Science</p>
@@ -40,9 +40,10 @@
             <div class="info-grid">
               <div class="input-group">
                 <BaseTextInput
+                  name="first_name"
                   placeholder="First Name"
                   id="firstName"
-                  :model-value="userProfile?.first_name"
+                  :model-value="User?.first_name"
                   variant="red"
                   :disabled="!isEditing"
                   @update:model-value="value => handleInputChange('first_name', value)"
@@ -50,9 +51,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="middle_name"
                   placeholder="Middle Name"
                   id="middleName"
-                  :model-value="userProfile?.middle_name"
+                  :model-value="User?.middle_name"
                   variant="red"
                   :disabled="!isEditing"
                   @update:model-value="value => handleInputChange('middle_name', value)"
@@ -60,9 +62,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="last_name"
                   placeholder="Last Name"
                   id="lastName"
-                  :model-value="userProfile?.last_name"
+                  :model-value="User?.last_name"
                   variant="red"
                   :disabled="!isEditing"
                   @update:model-value="value => handleInputChange('last_name', value)"
@@ -70,9 +73,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="email"
                   placeholder="Email"
                   id="email"
-                  :model-value="userProfile?.email"
+                  :model-value="User?.email"
                   type="email"
                   variant="red"
                   :disabled="!isEditing"
@@ -81,9 +85,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="role"
                   placeholder="Role"
                   id="role"
-                  :model-value="userProfile?.role"
+                  :model-value="User?.role.name"
                   variant="red"
                   :disabled="true"
                   @update:model-value="value => handleInputChange('role', value)"
@@ -91,9 +96,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="college"
                   placeholder="College"
                   id="college"
-                  :model-value="userProfile?.role"
+                  :model-value="User?.college?.name"
                   variant="red"
                   :disabled="true"
                   @update:model-value="value => handleInputChange('college', value)"
@@ -101,9 +107,10 @@
               </div>
               <div class="input-group">
                 <BaseTextInput
+                  name="department"
                   placeholder="Department"
                   id="dept"
-                  :model-value="userProfile?.role"
+                  :model-value="User?.department?.name"
                   variant="red"
                   :disabled="true"
                   @update:model-value="value => handleInputChange('department', value)"
@@ -123,29 +130,26 @@ import axios from 'axios'
 import BaseFormButton from '@/components/Global/BaseFormButton.vue'
 import BaseTextInput from '@/components/Global/BaseTextInput.vue'
 import CardComponent from '@/components/Global/CardComponent.vue'
-import { getProfileData, updateProfile } from '@/services/ProfileService'
 import { useRouter } from 'vue-router'
 import { logout } from '@/services/AuthService'
 import { useUserStore } from '@/stores/UserStore'
-import { UserProfile } from '@/types/ProfileInterface'
+import { User } from '@/types/CommonInterface'
 
 const router = useRouter()
 
-const editedProfile = ref<Partial<UserProfile>>({})
+const editedProfile = ref<Partial<User>>({})
 
 const isEditing = ref(false)
 
 const userStore = useUserStore()
 
-const userProfile = ref<UserProfile | null>(
-  userStore.getUserProfile ? { ...(userStore.getUserProfile as UserProfile) } : null,
-)
+const User = ref<User | null>(userStore.getUserProfile ? { ...(userStore.getUserProfile as User) } : null)
 onMounted(async () => {
   if (!userStore.profile) {
     await userStore.fetchUserProfile()
   }
 
-  userProfile.value = userStore.getUserProfile
+  User.value = userStore.getUserProfile
 })
 
 const handleLogout = async () => {
@@ -158,8 +162,8 @@ const handleLogout = async () => {
   }
 }
 
-const handleInputChange = (field: keyof UserProfile, value: any) => {
-  const originalValue = userProfile.value?.[field]
+const handleInputChange = (field: keyof User, value: any) => {
+  const originalValue = User.value?.[field]
 
   if (originalValue !== value) {
     editedProfile.value[field] = value
@@ -176,8 +180,8 @@ const submitForm = async () => {
 
   try {
     console.log(editedProfile.value)
-    await userStore.updateUserProfile(editedProfile.value)
-    userProfile.value = userStore.getUserProfile
+    // await userStore.updateUser(editedProfile.value)
+    User.value = userStore.getUserProfile
     console.log('Updated user profile in store:', userStore.profile)
     editedProfile.value = {}
     isEditing.value = false
@@ -190,111 +194,111 @@ const submitForm = async () => {
 
 <style lang="scss" scoped>
 .settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 25px;
   // box-sizing: border-box;
   background: transparent;
   width: 100%;
   height: 100%;
-  border-radius: 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .title {
-  font-size: 1.2rem;
-  font-weight: bold;
   margin-left: 1rem;
   margin: 0.2rem;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
 .inner-cont {
   display: flex;
-  height: 100%;
   gap: 1rem;
+  height: 100%;
 }
 
 .header {
-  font-size: 0.8rem;
   width: 100%;
+  font-size: 0.8rem;
 }
 
 .card-header {
-  background: #004225;
-  color: white;
-  padding: 1.5rem;
   border-radius: 25px;
+  background: #004225;
+  padding: 1.5rem;
+  color: white;
 
   h2 {
-    font-size: 1.2rem;
     margin: 0;
+    font-size: 1.2rem;
   }
 }
 
 .user-card {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: 0.5rem;
+  width: 100%;
   // margin-bottom: 1.2rem;
 }
 
 .user {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 'user-profile button';
+  margin: 0.5rem;
   background: transparent;
   padding: 0.5rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  margin: 0.5rem;
-  grid-template-areas: 'user-profile button';
   // justify-content: space-between;
 
   .user-profile {
-    grid-area: user-profile;
     display: flex;
+    grid-area: user-profile;
     align-items: center;
     gap: 1rem;
     padding-left: 0.5rem;
   }
 
   .user-image {
+    border-radius: 50%;
     width: 10rem;
     height: 10rem;
-    border-radius: 50%;
     object-fit: cover;
   }
 
   .user-info {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
     justify-content: center;
     width: 100%;
-    flex-grow: 1;
 
     .name {
-      font-size: 2rem;
-      font-weight: bold;
       margin: 0;
       padding-left: 3rem;
+      font-weight: bold;
+      font-size: 2rem;
     }
 
     .role,
     .college {
-      font-size: 0.9rem;
-      color: #666;
       margin: 2px 0;
       padding-left: 3rem;
+      color: #666;
+      font-size: 0.9rem;
     }
   }
 
   .button-container {
-    grid-area: button;
     display: flex;
+    grid-area: button;
     flex-direction: column;
-    width: 9rem;
-    justify-items: center;
-    gap: 2rem;
     justify-content: center;
+    justify-items: center;
     justify-self: end;
+    gap: 2rem;
+    width: 9rem;
   }
 }
 
@@ -317,9 +321,9 @@ const submitForm = async () => {
     gap: 0.1rem;
 
     label {
-      font-size: 0.9rem;
-      font-weight: 500;
       color: #444;
+      font-weight: 500;
+      font-size: 0.9rem;
     }
   }
 }
