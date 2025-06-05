@@ -15,6 +15,7 @@
               name="select-type"
               v-model="selectedForm"
               width="100%"
+              class="type-select"
             >
               <option disabled value="">Select a Report Type</option>
               <option v-for="option in formOptions" :key="option.value" :value="option.value">
@@ -76,7 +77,7 @@
           <div class="drag-area-divs">DRAG FILES HERE</div>
           <div>or</div>
           <!-- <button class="choose-file-button" @click="triggerFileInput">Choose Files</button> -->
-          <BaseFormButton @click="triggerFileInput" variant="green" width="100%">CHOOSE FILES</BaseFormButton>
+          <BaseFormButton @click="triggerFileInput" variant="green" width="40%">CHOOSE FILES</BaseFormButton>
         </div>
         <input type="file" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
       </div>
@@ -298,10 +299,8 @@ const handleSubmit = async () => {
 .select {
   grid-area: select;
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
 }
 
 .form {
@@ -355,6 +354,7 @@ const handleSubmit = async () => {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  gap: 0.5em;
 }
 
 .drop-area-desc {
