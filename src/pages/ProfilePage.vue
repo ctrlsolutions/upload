@@ -35,7 +35,7 @@
     </div>
 
     <div class="lower-area">
-    <CardComponent width="100%" height="100%" :header="true" title="Personal Information">
+      <CardComponent width="100%" height="100%" :header="true" title="Personal Information">
         <div class="content">
           <div class="info-grid">
             <div class="info-container" id="left-info">
@@ -49,7 +49,7 @@
               </div>
               <div class="info-group">
                 <p class="info-type">Role</p>
-                <p class="info">{{ dashboardData?.role || 'N/A' }}</p>
+                <p class="info">{{ dashboardData?.role.name || 'N/A' }}</p>
               </div>
               <div class="info-group">
                 <p class="info-type">College</p>
@@ -84,8 +84,6 @@
 <script lang="ts" setup>
 import CardComponent from '@/components/Global/CardComponent.vue'
 import { ref, computed, onMounted } from 'vue'
-import { getProfileData } from '@/services/ProfileService'
-import { UserProfile } from '@/types/ProfileInterface'
 import { useUserStore } from '@/stores/UserStore'
 
 const userStore = useUserStore()
@@ -100,18 +98,18 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .profile_containers {
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  box-sizing: border-box;
-  margin: 0;
   display: grid;
-  grid-template-columns: 1fr;
   grid-template-rows: 0.3fr 0.4fr;
-  gap: 1%;
+  grid-template-columns: 1fr;
   grid-template-areas:
     'upper-area'
     'lower-area';
+  gap: 1%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-height: 100%;
   overflow: hidden;
 }
 
@@ -121,16 +119,16 @@ onMounted(async () => {
 
 .upper-area {
   display: grid;
-  grid-auto-columns: 1fr;
   grid-template-columns: 3.5fr 3fr;
-  gap: 0.5em;
+  grid-auto-columns: 1fr;
   grid-area: upper-area;
+  gap: 0.5em;
   height: 100%;
 }
 
 .lower-area {
-  height: 100%;
   grid-area: lower-area;
+  height: 100%;
   // overflow-y: hidden;
   // padding: 1rem;
 }
@@ -140,8 +138,8 @@ onMounted(async () => {
 }
 
 .lower-area::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
   border-radius: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .lower-area::-webkit-scrollbar-track {
@@ -149,35 +147,34 @@ onMounted(async () => {
 }
 
 .profile-card {
-  height: 100%;
-  background-color: #f4f4f8;
   opacity: 0.8;
   background-image: radial-gradient(#a4a4b3 0.5px, #f7f7f7 0.5px);
   background-size: 10px 10px;
+  background-color: #f4f4f8;
+  height: 100%;
   .content {
-    padding: 1rem 1rem;
-    justify-self: flex-start;
     display: flex;
     align-items: center;
+    justify-self: flex-start;
     gap: 1rem;
+    padding: 1rem 1rem;
     width: 100%;
-    text-align: center;
     height: 100%;
+    text-align: center;
   }
 
   .profile-image-container {
     display: flex;
     justify-content: center;
-    
 
     .profile-image {
-      width: 11rem;
-      height: 10.5rem;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid #014421;
       transition: transform 0.3s ease;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border: 3px solid #014421;
+      border-radius: 50%;
+      width: 11rem;
+      height: 10.5rem;
+      object-fit: cover;
 
       &:hover {
         transform: scale(1.05);
@@ -189,49 +186,46 @@ onMounted(async () => {
 .profile-container {
   margin-left: 2.5rem;
   // grid-area: lower-area;
-  
-  .name {
-    font-size: 2rem;
-    font-weight: 700;
 
+  .name {
     color: #333;
+    font-weight: 700;
+    font-size: 2rem;
   }
 
   .role {
-    font-size: 1rem;
     color: #666;
     font-weight: bold;
+    font-size: 1rem;
     text-align: left;
   }
 
   .college {
-    font-size: 1rem;
-    color: #888;
     margin: 0;
+    color: #888;
+    font-size: 1rem;
     text-align: left;
   }
 }
 
-
-
 .green-container {
-  background: linear-gradient(135deg, #014421, #036632, #007c3b);
-  border-radius: 20px;
-  color: white;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #014421, #036632, #007c3b);
   height: 100%;
+  color: white;
 
   .num-reports {
-    font-size: 10rem;
-    font-weight: bold;
-    margin-bottom: -3.5rem;
-    margin-top: -3rem;
-    color: rgba(255, 255, 255, 0.7);
     transition: transform 0.3s ease;
+    margin-top: -3rem;
+    margin-bottom: -3.5rem;
     height: fit-content;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: bold;
+    font-size: 10rem;
 
     &:hover {
       transform: scale(1.05);
@@ -245,15 +239,15 @@ onMounted(async () => {
     padding-left: 2rem;
 
     .desc {
-      font-size: 1.4rem;
       margin: 0;
+      font-size: 1.4rem;
       line-height: 1.5;
     }
 
     .year {
-      font-size: 1rem;
-      margin: 0.5rem 0 0;
       opacity: 0.9;
+      margin: 0.5rem 0 0;
+      font-size: 1rem;
     }
   }
 }
@@ -269,16 +263,16 @@ onMounted(async () => {
 .info-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
   justify-content: flex-start;
   align-items: flex-start;
+  gap: 0.5rem;
 
   .info-group {
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid #eee;
-    transition: transform 0.2s ease;
-    width: 100%;
     gap: 0.5rem;
+    transition: transform 0.2s ease;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1.5rem;
+    width: 100%;
 
     &:hover {
       transform: translateX(5px);
@@ -291,18 +285,18 @@ onMounted(async () => {
   }
 
   .info-type {
+    margin: 0 0 0.25rem;
     color: #666;
     font-size: 0.8rem;
-    margin: 0 0 0.25rem;
   }
 
   .info {
-    font-size: 1.1rem;
-    font-weight: 500;
     margin: 0;
-    color: #333;
-    padding-left: 1rem;
     border-left: 3px solid #014421;
+    padding-left: 1rem;
+    color: #333;
+    font-weight: 500;
+    font-size: 1.1rem;
   }
 }
 </style>
