@@ -10,10 +10,11 @@
     }"
     class="card-container"
   >
-    <header v-if="header" class="card-header">
-      <slot name="header">
+    <header v-if="header" class="card-header" :style="{ background: headerColor }">
+      <div class="header-content">
+        <slot name="icon"></slot>
         <h2 class="card-title">{{ title }}</h2>
-      </slot>
+      </div>
     </header>
 
     <div class="card-content">
@@ -29,6 +30,7 @@ defineProps({
   bgColor: { type: String, default: 'white' },
   header: { type: Boolean, default: false },
   title: { type: String, default: '' },
+  headerColor: { type: String, default: '#014421' },
 })
 </script>
 
@@ -43,7 +45,13 @@ defineProps({
   width: 100%;  
   box-sizing: border-box;
   height: fit-content;
-  justify-content: center;
+  display: flex;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between icon and title */
 }
 
 .card-title {
