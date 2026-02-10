@@ -305,6 +305,7 @@ const handleSubmit = async () => {
 
 .form {
   grid-area: form;
+  // background-color: gray;
   overflow: auto;
   max-height: 60vh;
 }

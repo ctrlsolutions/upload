@@ -59,7 +59,7 @@
                     </BaseFormButton>
                 </div>
                 <div class="date-header">{{ date }}</div>
-                <div v-for="(report, index) in reports.slice(0,8)" :key="index" class="report-item">
+                <div v-for="(report, index) in reports.slice(0,3)" :key="index" class="report-item">
                     <div class="check-box">
                         <Checkbox
                             v-model="selectedReports[report.id]"  
@@ -366,7 +366,7 @@ onMounted(async () => {
     "header header header header"
     "filter sort search search"
     "main main main main"; 
-  height: 100%;
+  height: 98vh;
   width: 100%;
   padding: 0;
   margin: 0;
@@ -437,12 +437,14 @@ onMounted(async () => {
   padding: 15px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
+  min-height: 0;
+  max-height: 100%;
 }
 
 .report-history-inner {
-    // height: 100%;
-    // overflow-y: auto;
-    flex-grow: 1;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .date-header {
